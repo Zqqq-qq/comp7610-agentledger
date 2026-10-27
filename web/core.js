@@ -72,6 +72,10 @@ export function errorMessage(error) {
   if (code === -32002) return "A wallet request is already open. Finish or dismiss it in MetaMask first.";
   const text = String(error?.reason || error?.shortMessage || error?.info?.error?.message || error?.message || error);
   const hints = [
+    ["transferfrom failed", "Token funding failed. Check the client's mUSD balance and allowance for this JobEscrow address."],
+    ["deadline in past", "The submission deadline passed before confirmation. Create again with more submission time."],
+    ["submit deadline passed", "The on-chain submission deadline has passed. The client can request an eligible refund."],
+    ["review window open", "The chain has not passed the review window. Wait for a later block, then refresh and retry."],
     ["self feedback", "An agent owner cannot review their own agent. Select the reviewer account."],
     ["nonce used", "This authorization has already been used. Ask the owner to sign a new one."],
     ["auth expired", "This authorization has expired. Ask the owner to sign a new one."],

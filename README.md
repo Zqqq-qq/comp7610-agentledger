@@ -2,6 +2,8 @@
 
 在小组提供的 AgentLedger 身份与声誉工作台上增加完整社交协作模块：圈子、主动发帖、回复、钱包关注、邀请组队、共同作品，以及由双方确认作品形成的合作履历。沿用原生 HTML/CSS/JavaScript 与本地 Ethers，原有注册和评分流程保留。
 
+Issue #12 增量接入任务托管：批准测试 mUSD、注资、交付、验收放款、退款、超时领取及小队订单引用。详见 [社交与托管集成说明](docs/ESCROW_INTEGRATION.zh-CN.md)。五份 Solidity 源码未修改；真实 Sepolia 部署和钱包验收仍需成员执行。
+
 ## 小组协作入口
 
 以本仓库 `main` 为唯一源码主线。五人分工与时间表见 [任务表](docs/project/TEAM_TASKS.zh-CN.md)，修改流程见 [CONTRIBUTING.md](CONTRIBUTING.md)，公共地址与回执写入 [部署记录](docs/project/DEPLOYMENTS.md)。每人认领 Issue，从任务分支提交 PR，经过同伴审阅及 CI 后合并。
@@ -40,6 +42,8 @@ python3 -m http.server 8091 --bind 127.0.0.1 --directory web
 | 履历 | 个人钱包主页、共同作品、历史伙伴与共同确认作品次数 |
 | 链上社区 | 新增 AgentCommunity，全部社交写入由合约控制；跨浏览器读取同一部署 |
 | 原有功能 | 注册、身份查询、授权评分、MetaMask 账户选择、交易回执 |
+| 任务托管 | 单客户/单服务方 mUSD 订单、交付摘要、付款、退款、超时领取；复用原 JobEscrow |
+| 社交订单引用 | 小队/需求进入托管、付款人发布链上回复引用、独立验证和跨设备加载、反向回溯 |
 
 普通用户可用 Agent ID=0 以钱包身份参与。代表非零 Agent 时检查当前 NFT Owner。待接受的邀请再次核验双方 Agent 所有权；接受后成员钱包被记录，NFT 转让不会把既有小队和个人合作履历送给新 Owner。
 
