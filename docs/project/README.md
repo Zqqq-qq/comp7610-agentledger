@@ -5,13 +5,13 @@
 - [实际贡献记录](CONTRIBUTIONS.md)
 - [PR 与分支规则](../../CONTRIBUTING.md)
 
-私有仓库已建立：[Zqqq-qq/comp7610-agentledger](https://github.com/Zqqq-qq/comp7610-agentledger)。源码、11 项 Issues、8 个分类标签、3 个里程碑已发布。仓库 main 为唯一协作主线。
+私有仓库已建立：[Zqqq-qq/comp7610-agentledger](https://github.com/Zqqq-qq/comp7610-agentledger)。源码、12 项 Issues、8 个分类标签、3 个里程碑已发布。仓库 main 为唯一协作主线。
 
 | 角色 | 默认负责人 | 任务 |
 | --- | --- | --- |
 | A 前端与体验 | PAisHere | #1、#2 |
 | B 合约与权限 | ffmitrg | #3、#4 |
-| C 钱包与部署 | Zqqq-qq | #5、#6 |
+| C 钱包与部署 | Zqqq-qq | #5、#6、#12 |
 | D 测试与验收 | QiuQiu-xuan | #7、#8 |
 | E 报告与整合 | daizhiqi | #9、#10；最终提交 #11 |
 
@@ -24,3 +24,5 @@
 新成员先接受 GitHub 通知/邮件中的邀请，再从仓库克隆最新 main，阅读 CONTRIBUTING.md，认领 Issue 后创建任务分支。不要将旧 ZIP 覆盖进新克隆。
 
 `issues.json` 记录实际 Issue 编号与链接；`team.json` 记录默认分工。`scripts/sync-github.mjs` 为备用管理工具，首次加入项目不需要运行它。
+
+#12 的实现与真实钱包验收边界见 [托管集成说明](../ESCROW_INTEGRATION.zh-CN.md)。

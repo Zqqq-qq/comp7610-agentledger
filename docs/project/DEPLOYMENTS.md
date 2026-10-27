@@ -12,7 +12,7 @@
 ## 新增 AgentCommunity
 
 - 状态：尚待由组员钱包部署，不要填写虚构地址。
-- Owner role: C（待绑定真实成员）
+- Owner role: C（Zqqq-qq）
 - Source commit: 部署时填写
 - Compiler: Solidity 0.8.30
 - Settings: optimizer 200, viaIR=true, EVM Shanghai
@@ -22,6 +22,16 @@
 - Block: 待填写
 - Deployer public wallet: 待填写
 - Verified source link: 待填写
+
+## JobEscrow 与 MockUSDC（Issue #12）
+
+- 状态：前端与本地 EVM 集成测试完成；真实 Sepolia 地址、部署及验收证据待用户钱包提供。
+- JobEscrow address / transaction / block: 待填写
+- MockUSDC address / transaction / block: 待填写
+- JobEscrow constructor identity: 上述 IdentityRegistry；MockUSDC 无构造参数，6 位小数 mUSD。
+- 沿用仓库原 Solidity，不代表已有这两份合约的有效部署证据。
+- 演示流程：批准 → 注资 → 发布社区引用 → 提交摘要 → 验收付款；另外创建订单验收退款与超时领取。
+- 请记录来源 Community / Post / Team、JobEscrow / jobId、社区引用回复 ID，以及所有操作的交易哈希。
 
 ## 双钱包验收回执
 

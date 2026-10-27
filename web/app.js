@@ -1,10 +1,14 @@
 import { DEPLOYMENT } from "./config.js";
+import { verifyEscrow } from "./escrow-core.js";
+import { createEscrowUI } from "./escrow.js";
+import { createEscrowLinkUI } from "./escrow-link-ui.js";
 import { FEEDBACK_TYPES, domainFor, agentId, scoreValue, cardUri, safeLink, tagValue, parseAuthorization, chooseAccount, requestAccounts, shortAddress, errorMessage } from "./core.js";
 
 const $ = (id) => document.getElementById(id);
 const sdk = globalThis.ethers;
 const STORAGE = "agent-ledger.sepolia.v1";
 const PAGE_SIZE = 15n;
+let escrowUI, escrowLinkUI;
 const IDENTITY_ABI = [
   "function register(string tokenURI_) returns (uint256)",
   "function agentCount() view returns (uint256)",
@@ -28,6 +32,8 @@ const state = {
 state.config = {
   identity: state.config.identity || DEPLOYMENT.identity || localStorage.getItem("sepolia_remix_id_addr") || "",
   reputation: state.config.reputation || DEPLOYMENT.reputation || localStorage.getItem("sepolia_remix_rep_addr") || "",
+  escrow: state.config.escrow || DEPLOYMENT.escrow || "",
+  token: state.config.token || DEPLOYMENT.token || "",
   rpcUrl: state.config.rpcUrl || DEPLOYMENT.rpcUrl,
 };
 
@@ -76,14 +82,14 @@ function status(id, title, { message = "", error = false, pending = false, hash 
 }
 function clearStatus(id) { $(id).hidden = true; $(id).replaceChildren(); }
 function configReady() { return !!state.config.identity && !!state.config.reputation; }
-function configKey(config) { return `${config.rpcUrl}|${config.identity.toLowerCase()}|${config.reputation.toLowerCase()}`; }
+function configKey(config) { return `${config.rpcUrl}|${config.identity.toLowerCase()}|${config.reputation.toLowerCase()}|${(config.escrow || "").toLowerCase()}|${(config.token || "").toLowerCase()}`; }
 
 function route() {
   const view = location.hash.slice(1) || "community";
-  const name = ["registry", "register", "reputation", "guide", "community", "circles", "network", "teams", "works"].includes(view) ? view : "registry";
+  const name = ["registry", "register", "jobs", "reputation", "guide", "community", "circles", "network", "teams", "works"].includes(view) ? view : "registry";
   document.querySelectorAll(".view").forEach(e => e.hidden = e.id !== `view-${name}`);
   document.querySelectorAll("[data-nav]").forEach(e => { e.classList.toggle("active", e.dataset.nav === name); if (e.dataset.nav === name) e.setAttribute("aria-current", "page"); else e.removeAttribute("aria-current"); });
-  $("breadcrumb").textContent = { registry: "Agent registry", register: "Register an agent", reputation: "Reputation", guide: "How it works", community: "Community", circles: "Circles", network: "People & partners", teams: "My teams", works: "Shared works" }[name];
+  $("breadcrumb").textContent = { registry: "Agent registry", register: "Register an agent", jobs: "Task escrow", reputation: "Reputation", guide: "How it works", community: "Community", circles: "Circles", network: "People & partners", teams: "My teams", works: "Shared works" }[name];
   document.title = `${$("breadcrumb").textContent} · Agent Ledger`;
   window.scrollTo({ top: 0, behavior: "instant" });
 }
@@ -102,7 +108,7 @@ async function applyAccounts(accounts, preferred = state.account) {
     state.walletChain = Number(BigInt(await window.ethereum.request({ method: "eth_chainId" })));
     store("agent-ledger.selected-account", state.account);
   } else { state.walletProvider = null; state.walletChain = null; }
-  renderWallet(); renderAgents(); inspectAuthorization(); window.dispatchEvent(new Event("ledger-account-changed"));
+  renderWallet(); renderAgents(); inspectAuthorization(); escrowUI?.accountChanged(); window.dispatchEvent(new Event("ledger-account-changed"));
 }
 function renderWallet() {
   $("walletButtonLabel").textContent = state.account ? shortAddress(state.account) : "Connect wallet";
@@ -115,6 +121,7 @@ function renderWallet() {
   $("walletNetworkLabel").textContent = state.walletChain === DEPLOYMENT.chainId ? "Ethereum Sepolia · ready to sign" : `Wallet network: ${state.walletChain ?? "not connected"}`;
   $("walletWarning").hidden = !state.account || state.walletChain === DEPLOYMENT.chainId;
   if (!state.account) $("walletPopover").hidden = true;
+  escrowUI?.render(); escrowLinkUI?.render();
 }
 async function connectWallet(reselect = false) {
   if (state.busy) return toast("Finish the current wallet action first.");
@@ -165,6 +172,7 @@ async function validatedProvider(config) {
     const reputation = new sdk.Contract(config.reputation, REPUTATION_ABI, provider);
     const [linkedIdentity] = await Promise.all([reputation.identity(), identity.agentCount(), reputation.getSummary(1)]);
     if (linkedIdentity.toLowerCase() !== config.identity.toLowerCase()) throw new Error("The reputation contract is linked to a different identity registry. Check both deployment addresses.");
+    await verifyEscrow(provider, config, sdk);
     return provider;
   } catch (error) { provider.destroy(); throw error; }
 }
@@ -181,10 +189,12 @@ async function contracts() {
 function openSettings() {
   if (state.busy) return toast("Finish the current wallet action before changing contracts.");
   $("identityAddress").value = state.config.identity; $("reputationAddress").value = state.config.reputation; $("rpcUrl").value = state.config.rpcUrl;
+  $("escrowAddress").value = state.config.escrow; $("tokenAddress").value = state.config.token;
   clearStatus("settingsStatus"); $("settingsDialog").showModal();
 }
 async function saveSettings(event) {
-  event.preventDefault(); const button = $("saveSettings"); button.disabled = true;
+  event.preventDefault(); if (state.busy) return;
+  const button = $("saveSettings"); button.disabled = true; setBusy(true);
   let provider;
   try {
     const identity = sdk.getAddress($("identityAddress").value.trim());
@@ -192,16 +202,22 @@ async function saveSettings(event) {
     if (identity === sdk.ZeroAddress || reputation === sdk.ZeroAddress || identity === reputation) throw new Error("Enter two different, non-zero registry contract addresses.");
     const rpcUrl = $("rpcUrl").value.trim(); const url = new URL(rpcUrl);
     if (!["https:", "http:"].includes(url.protocol) || url.username || url.password) throw new Error("Enter a public HTTP(S) RPC URL without embedded credentials.");
-    const config = { identity, reputation, rpcUrl };
-    status("settingsStatus", "Verifying your contracts…", { message: "Checking Sepolia, deployed bytecode and the identity link.", pending: true });
+    const escrow = $("escrowAddress").value.trim() ? sdk.getAddress($("escrowAddress").value.trim()) : "";
+    const token = $("tokenAddress").value.trim() ? sdk.getAddress($("tokenAddress").value.trim()) : "";
+    if (!!escrow !== !!token) throw new Error("Enter both JobEscrow and MockUSDC addresses, or leave both empty.");
+    const addresses = [identity, reputation, escrow, token].filter(Boolean);
+    if (addresses.includes(sdk.ZeroAddress) || new Set(addresses).size !== addresses.length) throw new Error("Use different, non-zero addresses for each contract.");
+    const config = { identity, reputation, rpcUrl, escrow, token };
+    status("settingsStatus", "Verifying your contracts…", { message: "Checking Sepolia contracts and the optional mUSD token.", pending: true });
     provider = await validatedProvider(config);
     state.generation++; state.readProvider?.destroy(); state.readProvider = provider;
     state.config = config; state.loadedConfig = configKey(config); state.page = 1n; state.total = null; state.agents = [];
     store(STORAGE, config); $("settingsDialog").close(); $("authorizationOutput").hidden = true;
+    escrowUI.invalidate(); escrowLinkUI.invalidate();
     renderRegistryState(); renderRecent(); inspectAuthorization();
-    window.dispatchEvent(new Event("ledger-config-changed")); toast("Sepolia registries verified and saved."); await loadRegistry();
+    window.dispatchEvent(new Event("ledger-config-changed")); toast("Sepolia contracts verified and saved."); await loadRegistry(); escrowUI.accountChanged();
   } catch (error) { if (provider && provider !== state.readProvider) provider.destroy(); status("settingsStatus", "Could not verify these settings", { message: errorMessage(error), error: true }); }
-  finally { button.disabled = false; }
+  finally { button.disabled = false; setBusy(false); }
 }
 
 async function loadRegistry() {
@@ -334,6 +350,7 @@ async function showAgent(agent) {
 function setBusy(value) {
   state.busy = value;
   for (const id of ["registerSubmit", "authorizeSubmit", "feedbackSubmit", "chooseAccounts", "accountSelect"]) $(id).disabled = value;
+  escrowUI?.render(); escrowLinkUI?.render();
 }
 async function runAction(statusId, operation) {
   if (state.busy) return;
@@ -356,7 +373,7 @@ async function confirmTransaction(tx, statusId, label, context) {
   }
   if (!receipt || receipt.status !== 1) throw new Error("The transaction did not succeed. Check its receipt on Sepolia Etherscan.");
   const hash = receipt.hash || tx.hash;
-  state.transactions.unshift({ hash, label, chainId: DEPLOYMENT.chainId, time: Date.now(), sender: context.sender, identity: context.identity, reputation: context.reputation, block: receipt.blockNumber });
+  state.transactions.unshift({ hash, label, chainId: DEPLOYMENT.chainId, time: Date.now(), sender: context.sender, identity: context.identity, reputation: context.reputation, escrow: context.escrow || "", token: context.token || "", scope: context.scope || "registry", block: receipt.blockNumber });
   state.transactions = state.transactions.slice(0, 12); store("agent-ledger.transactions.v1", state.transactions); renderRecent();
   return { receipt, hash };
 }
@@ -373,6 +390,7 @@ async function register(event) {
     const id = eventLog?.args.agentId;
     status("registerStatus", id !== undefined ? `Agent #${id} is registered` : "Registration confirmed", { message: `Owner ${shortAddress(context.sender)} · block ${receipt.blockNumber}. Your identity is now recorded on Sepolia.`, hash });
     if (id !== undefined) $("authAgentId").value = id.toString();
+    if (id !== undefined) { $("jobAgentId").value = id.toString(); $("jobProvider").value = context.sender; }
     if (configKey(context) === configKey(state.config)) {
       if (id !== undefined) state.page = (id - 1n) / PAGE_SIZE + 1n;
       await loadRegistry();
@@ -387,7 +405,7 @@ async function authorize(event) {
     const { identity } = await contracts(); const signer = await selectedSigner();
     const signerAddress = await signer.getAddress(); const owner = await identity.ownerOf(id);
     if (owner.toLowerCase() !== signerAddress.toLowerCase()) throw new Error(`Only the current agent owner (${shortAddress(owner)}) can authorize a review. Select that account.`);
-    if (client.toLowerCase() === owner.toLowerCase()) throw new Error("An owner cannot review themselves. Enter wallet B as the reviewer.");
+    if (client.toLowerCase() === owner.toLowerCase()) throw new Error("An owner cannot review themselves. For the task demo, B authorizes client A.");
     const ttl = Number($("authValidity").value);
     if (![3600, 86400, 604800].includes(ttl)) throw new Error("Choose a supported authorization lifetime.");
     const expiry = Math.floor(Date.now() / 1000) + ttl; const nonce = sdk.hexlify(sdk.randomBytes(32));
@@ -422,7 +440,7 @@ async function feedback(event) {
     const { identity, reputation } = await contracts(); const signer = await selectedSigner(); const sender = await signer.getAddress();
     if (sender.toLowerCase() !== auth.client.toLowerCase()) throw new Error(`Select the authorized reviewer ${shortAddress(auth.client)} in the wallet menu. The current account is ${shortAddress(sender)}.`);
     const owner = await identity.ownerOf(auth.agentId);
-    if (owner.toLowerCase() === sender.toLowerCase()) throw new Error("An agent owner cannot review themselves. Select wallet B.");
+    if (owner.toLowerCase() === sender.toLowerCase()) throw new Error("An agent owner cannot review themselves. Select the authorized client / reviewer account.");
     const domain = domainFor(DEPLOYMENT.chainId, state.config.reputation);
     const recovered = sdk.verifyTypedData(domain, FEEDBACK_TYPES, { agentId: auth.agentId, client: auth.client, expiry: auth.expiry, nonce: auth.nonce }, auth.signature);
     if (recovered.toLowerCase() !== owner.toLowerCase()) throw new Error("The signature is not from the current agent owner for these contracts. Ask the owner to issue a new authorization.");
@@ -437,7 +455,7 @@ async function feedback(event) {
   });
 }
 function renderRecent() {
-  const records = state.transactions.filter(tx => validStoredTx(tx) && tx.identity?.toLowerCase() === state.config.identity.toLowerCase() && tx.reputation?.toLowerCase() === state.config.reputation.toLowerCase()).slice(0, 4);
+  const records = state.transactions.filter(tx => validStoredTx(tx) && tx.identity?.toLowerCase() === state.config.identity.toLowerCase() && tx.reputation?.toLowerCase() === state.config.reputation.toLowerCase() && (tx.scope !== "escrow" || (tx.escrow?.toLowerCase() === state.config.escrow.toLowerCase() && tx.token?.toLowerCase() === state.config.token.toLowerCase()))).slice(0, 6);
   $("recentSection").hidden = !records.length; $("recentTransactions").replaceChildren();
   for (const tx of records) {
     $("recentTransactions").append(node("div", { class: "recent-item" }, [node("span", { class: "recent-check" }, [icon("check")]), node("div", {}, [node("strong", { text: tx.label }), node("p", { text: `${shortAddress(tx.sender)} · block ${tx.block} · ${new Date(tx.time).toLocaleString()}` })]), explorerLink("tx", tx.hash)]));
@@ -479,6 +497,9 @@ function bindEvents() {
 }
 async function boot() {
   if (!sdk) { $("libraryError").hidden = false; return; }
+  escrowLinkUI = createEscrowLinkUI({sdk,$,state,node,toast,selectedSigner,configKey,runAction,status});
+  escrowUI = createEscrowUI({ sdk, $, state, node, explorerLink, status, clearStatus, runAction, selectedSigner, contracts, confirmTransaction, configKey, openSettings, toast, store, readStored, setFeedbackStep, errorMessage, beforeFunding: values => escrowLinkUI.beforeFunding(values), jobLoaded: job => escrowLinkUI.jobLoaded(job), jobCleared: () => escrowLinkUI.jobCleared() });
+  escrowUI.bind(); escrowLinkUI.bind();
   bindEvents(); route(); renderWallet(); renderRegistryState(); renderRecent();
   // Read existing permissions silently. Never request wallet access on page load.
   if (window.ethereum?.request) {
@@ -488,4 +509,4 @@ async function boot() {
 }
 boot().catch(error => { $("libraryError").textContent = errorMessage(error); $("libraryError").hidden = false; });
 
-export const ledger = { get account(){ return state.account; }, get config(){ return state.config; }, selectedSigner, connectWallet, toast };
+export const ledger = { get account(){ return state.account; }, get config(){ return state.config; }, get busy(){return state.busy;}, setBusy, selectedSigner, connectWallet, toast };
