@@ -7,3 +7,8 @@
 | 待填写 | 待填写 | 待填写 | 待填写 | 待填写 | 待填写 |
 | 2026-10-27 | Zqqq-qq（使用 Codex 协助） | #5 | feat/5-deployment-evidence | 可复现部署包、浏览器证据导出和独立只读核验，真实 EVM 部署证据测试 | deployment-evidence.test.mjs；钱包尚未安装，公链部署待执行 |
 | 2026-10-27 | Zqqq-qq（使用 Codex 协助） | #12 | feat/12-social-escrow，PR 待关联 | 增量集成托管、小队链上引用及回溯，43 项自动测试；未代其他组员署名 | ESCROW_INTEGRATION.zh-CN.md；真实 Sepolia 验收及同伴审阅待完成 |
+
+
+## #6 钱包切换与失败恢复（Codex 辅助）
+
+Zqqq-qq 发起并负责交付；Codex 辅助实现钱包会话快照与过期响应隔离、签名账户复核、社区签名网络检查，以及本机双 Provider/双账户和故障恢复回归测试。详见 `WALLET_RECOVERY_VERIFICATION.zh-CN.md`。真实 MetaMask、跨浏览器和 Sepolia 验收待钱包准备及 #5 实际部署后执行，未将本机测试记作公链验收。

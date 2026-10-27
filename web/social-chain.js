@@ -43,6 +43,7 @@ export async function loadCommunity(address,account,limit,registry,rpc){
  }finally{p.destroy();}
 }
 export async function sendCommunity(address,registry,rpc,signer,action,onPending){
+ if(!signer.provider||BigInt(await signer.provider.send('eth_chainId',[]))!==11155111n)throw new Error('Switch the signing wallet to Ethereum Sepolia before sending a community transaction.');
  const e=sdk(),{c,p}=await reader(address,registry,rpc);
  try{
  const write=c.connect(signer);let tx;const a=action;
