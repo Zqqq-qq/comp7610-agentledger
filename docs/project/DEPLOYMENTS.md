@@ -63,13 +63,40 @@
 
 ## 双钱包验收回执
 
-| 操作 | 发起钱包 | 交易哈希 | 帖/小队/作品 ID | 验收人 |
-| --- | --- | --- | --- | --- |
-| 加入圈子 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 发布需求 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 回复 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 关注 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 邀请组队 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 接受邀请 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 提议作品 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 另一成员确认 | 待填写 | 待填写 | 待填写 | 待填写 |
+验收对象：社区 `0x8CDc9987D46D140a982713B359286bC451262406`，圈子 `Creative Studio`（id 2）。
+两个钱包同属一位成员的 MetaMask（同一助记词下的 Account 1 / Account 2），用于模拟两个独立 Agent。
+
+- A（客户方）：`0x4469dba9f67f878520949f6de646f586951e1723`
+- B（服务方）：`0xfa2B712C28e9CFE7b6737C62f59fdF235aD85239`
+
+| 操作 | 发起钱包 | 交易哈希 | 对象 | 区块 | 结果 |
+| --- | --- | --- | --- | --- | --- |
+| 加入圈子 | A | `0xb9a220fbd6d651d82923eadc9ba917851fc185edeac1d3fe0169fc97ece47e5d` | circle 2 | 12005903 | success |
+| 加入圈子 | B | `0x878cbd597b3af90139793fbe131096e5589cf6e9659905500eda80340cc2fffe` | circle 2 | 12005918 | success |
+| 发布需求 | A | `0x74be514cca1072da6a42b33eea4999e2af73666a93742ed7b7aca82470e3ef56` | post 2（kind=1） | 12005976 | success |
+| 回复 | B | `0x740ba01357883994dcb762233fe28ffa2284b9c36f2ef225c7a8ea56cb7225d8` | reply 2（post 2） | 12006011 | success |
+| 关注 | A | `0x7868a23a872b8b9a44fccc457e07d1076c9468d36ec06d33d873cb867784b856` | B（followerCount=1） | 12006028 | success |
+| 邀请组队 | A | `0xa2242c711f386000a20d493dc197cb97682d9d69a38202587bb42465250bcbf1` | team 1（Pending） | 12006044 | success |
+| 接受邀请 | B | `0x0737ae588b9aac998053e017a36d83b4cfe063dac5fadb35195a640c73d920f6` | team 1（Active） | 12006058 | success |
+| 提议作品 | A | `0x71afaafbe92d0b8f713f85890d604474f718a4f8b457749dfb5f575c85fde58c` | work 1（Proposed） | 12006079 | success |
+| 另一成员确认 | B | `0xa3c0004180b12a218ec433b07863cdc330b978b5df3398a2cc7cd65d43623095` | work 1（Confirmed） | 12006101 | success |
+
+### 验收后的链上状态（独立读取核对）
+
+| 检查项 | 结果 |
+| --- | --- |
+| `postCount` / `replyCount` | 2 / 2 |
+| `getPost(2)` | circleId=2、kind=1、author=A |
+| `getReply(2)` | postId=2、author=B |
+| `followerCount(B)` | 1 |
+| `getTeam(1)` | status=Active、host=A、guest=B、postId=2 |
+| 提议阶段 `collaborationCount(A,B)` | 0（未确认前不产生履历） |
+| `getWork(1)` | status=Confirmed、author=A |
+| 确认后 `collaborationCount` | A→B = 1，B→A = 1 |
+| 9 笔交易状态 | 全部 success |
+
+### 这次没有覆盖的
+
+- 第三钱包、自确认、重复确认、未入圈发帖等**拒绝路径**在真实钱包上未逐一取证；这些已由 `tests/d1-failure-path.test.mjs` 在本地 EVM 上断言到具体 revert 原因，链上部分待补。
+- 跨设备/跨浏览器读取未单独截图，仅由两个账户在同一浏览器内验证。
+- 平台原生扩展被禁用，Ganache 回退不影响结论，但这条链的基础费与 gas 计量与标准以太坊不同（见上文说明）。
