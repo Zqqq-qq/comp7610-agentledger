@@ -1,18 +1,20 @@
 {
   "roles": {
-    "A": null,
-    "B": null,
-    "C": null,
-    "D": null,
-    "E": null
+    "A": "daizhiqi",
+    "B": "ffmitrg",
+    "C": "PAisHere",
+    "D": "QiuQiu-xuan",
+    "E": "Zqqq-qq"
   },
   "releaseOwner": "Zqqq-qq",
   "repositoryOwner": "Zqqq-qq",
   "members": [
     "daizhiqi",
     "ffmitrg",
-    "PAisHere"
+    "PAisHere",
+    "QiuQiu-xuan"
   ],
-  "invitationStatus": "not sent; repository creation pending",
-  "fifthMember": "not yet supplied"
+  "invitationStatus": "four invitations sent; awaiting acceptance as of 2026-10-27",
+  "repositoryUrl": "https://github.com/Zqqq-qq/comp7610-agentledger",
+  "assignmentStatus": "Issue bodies name all owners; native assignees for collaborators pending invitation acceptance"
 }
