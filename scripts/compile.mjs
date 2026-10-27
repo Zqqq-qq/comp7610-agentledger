@@ -1,0 +1,11 @@
+import fs from 'node:fs/promises';
+import solc from 'solc';
+const source = await fs.readFile('contracts/AgentCommunity.sol','utf8');
+const result=JSON.parse(solc.compile(JSON.stringify({language:'Solidity',sources:{'AgentCommunity.sol':{content:source}},settings:{optimizer:{enabled:true,runs:200},viaIR:true,evmVersion:'shanghai',outputSelection:{'*':{'*':['abi','evm.bytecode.object','evm.deployedBytecode.object']}}}})));
+for(const e of result.errors||[]) console[e.severity==='error'?'error':'warn'](e.formattedMessage);
+if(result.errors?.some(e=>e.severity==='error'))process.exit(1);
+const a=result.contracts['AgentCommunity.sol'].AgentCommunity;
+if(a.evm.deployedBytecode.object.length/2>24576)throw new Error('Contract exceeds EIP170');
+await fs.mkdir('web/generated',{recursive:true});
+await fs.writeFile('web/generated/AgentCommunity.json',JSON.stringify({contractName:'AgentCommunity',compiler:solc.version(),abi:a.abi,bytecode:'0x'+a.evm.bytecode.object},null,2));
+console.log('AgentCommunity compiled; runtime bytes:',a.evm.deployedBytecode.object.length/2);

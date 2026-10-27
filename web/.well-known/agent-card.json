@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1",
+  "name": "COMP7610 Agent",
+  "description": "Agent identity and reputation demonstration on Ethereum Sepolia.",
+  "url": "http://127.0.0.1:8090/.well-known/agent-card.json",
+  "capabilities": [
+    "demo-service"
+  ],
+  "registrations": [
+    {
+      "network": "eip155:11155111"
+    }
+  ]
+}

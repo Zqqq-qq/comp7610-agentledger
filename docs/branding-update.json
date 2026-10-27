@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-27",
+  "changes": [
+    "Removed sidebar a/l mark",
+    "Removed identity-card a/l mark",
+    "Entire agentledger wordmark uses font-weight 700",
+    "Versioned CSS/app URLs avoid stale browser resources"
+  ],
+  "originalBackendFilesUnchanged": 25,
+  "browserVerification": {
+    "url": "http://127.0.0.1:8090/index.html?v=brand-20261027-registry-r2#registry",
+    "oldMarkCount": 0,
+    "computedWordmarkFontWeight": "700",
+    "screenshot": "branding-verified.png"
+  }
+}

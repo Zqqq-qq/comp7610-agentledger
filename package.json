@@ -1,0 +1,17 @@
+{
+  "name": "agentledger-social",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "compile": "node scripts/compile.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node scripts/compile.mjs && node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "solc": "0.8.30",
+    "ganache": "7.9.2"
+  }
+}

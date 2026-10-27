@@ -1,0 +1,24 @@
+{
+  "upstream": "https://github.com/Mnorbert87/arc-agent-registry",
+  "upstreamCommit": "3b7976a5bbcfe8fac063adfe07fd1244b2bf69de",
+  "backendSource": "../sepolia-remix/contracts",
+  "backendChanges": "None. Files copied byte-for-byte.",
+  "sha256": {
+    "IdentityRegistry.sol": "023f840bec71b73ff2ba66e1cc74f6b062d2f82541e946c6a2a207222735488d",
+    "JobEscrow.sol": "63f449f719e82043272ece2e2e78727162b0d21b09a24ea6721de8397ee6ce1e",
+    "MockUSDC.sol": "48783f227eadc77ff8fd36cfef7e35e65d20f8a2d2e421f7323a123db9878b2a",
+    "ReputationRegistry.sol": "17cd6d76fbecb7c206000e9d51f1fd69e42ffd2882d524290687550054e156f4"
+  },
+  "frontend": "New Agent Ledger frontend; same identity registration and reputation operations.",
+  "socialExtension": {
+    "date": "2026-10-27",
+    "newContract": "contracts/AgentCommunity.sol",
+    "existingContractsModified": false,
+    "frontendChanges": [
+      "social modules and CSS",
+      "additional navigation and routing",
+      "wallet/config change events",
+      "public registry defaults"
+    ]
+  }
+}

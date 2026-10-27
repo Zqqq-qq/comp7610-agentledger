@@ -1,0 +1,187 @@
+{
+  "repositoryName": "comp7610-agentledger",
+  "visibility": "private",
+  "tasks": [
+    {
+      "key": "A1",
+      "role": "A",
+      "priority": "P0",
+      "title": "[A1] 审阅并完善社区六类界面的交互与手机布局",
+      "due": "2026-10-30",
+      "milestone": "M1 · Testnet baseline",
+      "labels": [
+        "P0",
+        "area:A"
+      ],
+      "dependsOn": [],
+      "body": "## 目标\n\n审阅并完善社区六类界面的交互与手机布局。在现有社交版基础上审阅、验证和改进；不要另建并行版本。\n\n## 责任与范围\n\n- 责任角色：A（待绑定 GitHub 用户名）\n- 目标日期：2026-10-30，Asia/Shanghai\n- 主要文件：web/social.js、web/social.css、web/index.html\n- 依赖任务：无，可从当前基线开始\n\n## 验收条件\n\n- [ ] 每人从页面能找到圈子、发帖、回复、关注、小队和共同作品入口\n- [ ] 在 390px 与桌面宽度记录截图，无横向溢出或无法关闭的弹窗\n- [ ] 将发现的问题拆成明确修复提交，记录实际浏览器检查结果\n\n## 交付方式\n\n从 main 建任务分支；PR 关联本 Issue，附实际检查证据，请审阅搭档确认后合并。更新 docs/project/CONTRIBUTIONS.md。\n"
+    },
+    {
+      "key": "A2",
+      "role": "A",
+      "priority": "P1",
+      "title": "[A2] 完善小队与作品状态提示及用户引导",
+      "due": "2026-11-02",
+      "milestone": "M2 · Feature freeze",
+      "labels": [
+        "P1",
+        "area:A"
+      ],
+      "dependsOn": [
+        "B1",
+        "C1"
+      ],
+      "body": "## 目标\n\n完善小队与作品状态提示及用户引导。在现有社交版基础上审阅、验证和改进；不要另建并行版本。\n\n## 责任与范围\n\n- 责任角色：A（待绑定 GitHub 用户名）\n- 目标日期：2026-11-02，Asia/Shanghai\n- 主要文件：web/social.js、web/social.css\n- 依赖任务：B1、C1\n\n## 验收条件\n\n- [ ] Pending/Active/Declined/Cancelled 与作品三个状态有清楚说明\n- [ ] 发起人无法替受邀者接受，作品提议者无法单方确认的提示清楚\n- [ ] 需求—小队—共同作品的回溯入口在桌面和手机均可用\n\n## 交付方式\n\n从 main 建任务分支；PR 关联本 Issue，附实际检查证据，请审阅搭档确认后合并。更新 docs/project/CONTRIBUTIONS.md。\n"
+    },
+    {
+      "key": "B1",
+      "role": "B",
+      "priority": "P0",
+      "title": "[B1] 复核 AgentCommunity 权限、状态机与历史归属",
+      "due": "2026-10-30",
+      "milestone": "M1 · Testnet baseline",
+      "labels": [
+        "P0",
+        "area:B"
+      ],
+      "dependsOn": [],
+      "body": "## 目标\n\n复核 AgentCommunity 权限、状态机与历史归属。在现有社交版基础上审阅、验证和改进；不要另建并行版本。\n\n## 责任与范围\n\n- 责任角色：B（待绑定 GitHub 用户名）\n- 目标日期：2026-10-30，Asia/Shanghai\n- 主要文件：contracts/AgentCommunity.sol、tests/community-contract.test.mjs\n- 依赖任务：无，可从当前基线开始\n\n## 验收条件\n\n- [ ] 逐项核验成员资格、Agent Owner、受邀者权限和另一成员确认权限\n- [ ] 解释邀请接受前与接受后 NFT 转让的不同处理，并验证测试证据\n- [ ] 审阅结果写入权限表；需要修改时通过 PR 同步 ABI 与 C 联调\n\n## 交付方式\n\n从 main 建任务分支；PR 关联本 Issue，附实际检查证据，请审阅搭档确认后合并。更新 docs/project/CONTRIBUTIONS.md。\n"
+    },
+    {
+      "key": "B2",
+      "role": "B",
+      "priority": "P1",
+      "title": "[B2] 复核内容边界、公开性和合约产物一致性",
+      "due": "2026-11-02",
+      "milestone": "M2 · Feature freeze",
+      "labels": [
+        "P1",
+        "area:B"
+      ],
+      "dependsOn": [
+        "B1"
+      ],
+      "body": "## 目标\n\n复核内容边界、公开性和合约产物一致性。在现有社交版基础上审阅、验证和改进；不要另建并行版本。\n\n## 责任与范围\n\n- 责任角色：B（待绑定 GitHub 用户名）\n- 目标日期：2026-11-02，Asia/Shanghai\n- 主要文件：contracts/AgentCommunity.sol、scripts/compile.mjs、web/generated/\n- 依赖任务：B1\n\n## 验收条件\n\n- [ ] 核对 UTF-8 字节上限、错误状态、重复操作以及 URI 验证边界\n- [ ] 记录 compiler/optimizer/viaIR/EVM 参数，可从源码复现产物\n- [ ] 明确链上文本公开、外部 URL 可变、确认不证明质量及抗串通边界\n\n## 交付方式\n\n从 main 建任务分支；PR 关联本 Issue，附实际检查证据，请审阅搭档确认后合并。更新 docs/project/CONTRIBUTIONS.md。\n"
+    },
+    {
+      "key": "C1",
+      "role": "C",
+      "priority": "P0",
+      "title": "[C1] 部署 Sepolia 社区并发布共享地址与回执",
+      "due": "2026-10-30",
+      "milestone": "M1 · Testnet baseline",
+      "labels": [
+        "P0",
+        "area:C"
+      ],
+      "dependsOn": [
+        "B1"
+      ],
+      "body": "## 目标\n\n部署 Sepolia 社区并发布共享地址与回执。在现有社交版基础上审阅、验证和改进；不要另建并行版本。\n\n## 责任与范围\n\n- 责任角色：C（待绑定 GitHub 用户名）\n- 目标日期：2026-10-30，Asia/Shanghai\n- 主要文件：web/config.js、web/social-chain.js、docs/project/DEPLOYMENTS.md\n- 依赖任务：B1\n\n## 验收条件\n\n- [ ] 使用组员自己钱包部署 AgentCommunity，identity() 指向已有 IdentityRegistry\n- [ ] 保存实际合约地址、部署交易、区块、源码提交及编译参数\n- [ ] 另一成员验证同一地址并读取空社区或同一组实际链上记录；不提交私钥\n\n## 交付方式\n\n从 main 建任务分支；PR 关联本 Issue，附实际检查证据，请审阅搭档确认后合并。更新 docs/project/CONTRIBUTIONS.md。\n"
+    },
+    {
+      "key": "C2",
+      "role": "C",
+      "priority": "P0",
+      "title": "[C2] 验证账户切换、跨设备共享与失败恢复",
+      "due": "2026-11-02",
+      "milestone": "M2 · Feature freeze",
+      "labels": [
+        "P0",
+        "area:C"
+      ],
+      "dependsOn": [
+        "C1"
+      ],
+      "body": "## 目标\n\n验证账户切换、跨设备共享与失败恢复。在现有社交版基础上审阅、验证和改进；不要另建并行版本。\n\n## 责任与范围\n\n- 责任角色：C（待绑定 GitHub 用户名）\n- 目标日期：2026-11-02，Asia/Shanghai\n- 主要文件：web/app.js、web/social-chain.js、web/social.js\n- 依赖任务：C1\n\n## 验收条件\n\n- [ ] 两个钱包各自完成社区操作，切换账户后权限和视图正确\n- [ ] 两台设备/浏览器使用同一社区地址，刷新后内容一致\n- [ ] 错误网络、拒签、RPC 失败、无代码地址和错误 registry 关联有可恢复提示\n\n## 交付方式\n\n从 main 建任务分支；PR 关联本 Issue，附实际检查证据，请审阅搭档确认后合并。更新 docs/project/CONTRIBUTIONS.md。\n"
+    },
+    {
+      "key": "D1",
+      "role": "D",
+      "priority": "P0",
+      "title": "[D1] 运行双钱包端到端与权限失败路径验收",
+      "due": "2026-11-02",
+      "milestone": "M2 · Feature freeze",
+      "labels": [
+        "P0",
+        "area:D"
+      ],
+      "dependsOn": [
+        "C1"
+      ],
+      "body": "## 目标\n\n运行双钱包端到端与权限失败路径验收。在现有社交版基础上审阅、验证和改进；不要另建并行版本。\n\n## 责任与范围\n\n- 责任角色：D（待绑定 GitHub 用户名）\n- 目标日期：2026-11-02，Asia/Shanghai\n- 主要文件：tests/、docs/SOCIAL_DEMO.zh-CN.md、docs/project/DEPLOYMENTS.md\n- 依赖任务：C1\n\n## 验收条件\n\n- [ ] 真实跑通需求→回复→邀请→接受→提议作品→另一成员确认→合作履历\n- [ ] 验证第三钱包、自确认、重复确认、未入圈发帖等拒绝路径\n- [ ] 每条结果记录环境、期望、实际、回执/截图；失败项建缺陷 Issue\n\n## 交付方式\n\n从 main 建任务分支；PR 关联本 Issue，附实际检查证据，请审阅搭档确认后合并。更新 docs/project/CONTRIBUTIONS.md。\n"
+    },
+    {
+      "key": "D2",
+      "role": "D",
+      "priority": "P0",
+      "title": "[D2] 验证 CI、跨平台启动与冻结版本回归",
+      "due": "2026-11-06",
+      "milestone": "M3 · Rehearsal & release",
+      "labels": [
+        "P0",
+        "area:D"
+      ],
+      "dependsOn": [
+        "A2",
+        "B2",
+        "C2",
+        "D1"
+      ],
+      "body": "## 目标\n\n验证 CI、跨平台启动与冻结版本回归。在现有社交版基础上审阅、验证和改进；不要另建并行版本。\n\n## 责任与范围\n\n- 责任角色：D（待绑定 GitHub 用户名）\n- 目标日期：2026-11-06，Asia/Shanghai\n- 主要文件：tests/、.github/workflows/ci.yml、scripts/serve.mjs、start-frontend.ps1\n- 依赖任务：A2、B2、C2、D1\n\n## 验收条件\n\n- [ ] GitHub CI 实际运行成功，检查编译、测试、构建与合约产物差异\n- [ ] Mac 和 Windows 各一名成员从干净克隆启动，记录命令和问题\n- [ ] 对冻结候选提交执行主流程与失败路径回归，列出已知限制\n\n## 交付方式\n\n从 main 建任务分支；PR 关联本 Issue，附实际检查证据，请审阅搭档确认后合并。更新 docs/project/CONTRIBUTIONS.md。\n"
+    },
+    {
+      "key": "E1",
+      "role": "E",
+      "priority": "P0",
+      "title": "[E1] 更新报告与架构图以对应实际实现",
+      "due": "2026-11-03",
+      "milestone": "M2 · Feature freeze",
+      "labels": [
+        "P0",
+        "area:E"
+      ],
+      "dependsOn": [
+        "A1",
+        "B1",
+        "C1",
+        "D1"
+      ],
+      "body": "## 目标\n\n更新报告与架构图以对应实际实现。在现有社交版基础上审阅、验证和改进；不要另建并行版本。\n\n## 责任与范围\n\n- 责任角色：E（待绑定 GitHub 用户名）\n- 目标日期：2026-11-03，Asia/Shanghai\n- 主要文件：docs/、报告图与报告正文\n- 依赖任务：A1、B1、C1、D1\n\n## 验收条件\n\n- [ ] 区分 Implemented/Planned/Future Work，社交记录与支付分账不混淆\n- [ ] 报告覆盖问题、设计、权限、实现、测试、限制及来源许可\n- [ ] 整合真实测试网证据与成员实际贡献，不将演示样例写成链上交易\n\n## 交付方式\n\n从 main 建任务分支；PR 关联本 Issue，附实际检查证据，请审阅搭档确认后合并。更新 docs/project/CONTRIBUTIONS.md。\n"
+    },
+    {
+      "key": "E2",
+      "role": "E",
+      "priority": "P0",
+      "title": "[E2] 完成演示录屏、五人彩排与贡献记录",
+      "due": "2026-11-06",
+      "milestone": "M3 · Rehearsal & release",
+      "labels": [
+        "P0",
+        "area:E"
+      ],
+      "dependsOn": [
+        "E1",
+        "D1"
+      ],
+      "body": "## 目标\n\n完成演示录屏、五人彩排与贡献记录。在现有社交版基础上审阅、验证和改进；不要另建并行版本。\n\n## 责任与范围\n\n- 责任角色：E（待绑定 GitHub 用户名）\n- 目标日期：2026-11-06，Asia/Shanghai\n- 主要文件：docs/SOCIAL_DEMO.zh-CN.md、docs/project/CONTRIBUTIONS.md、最终录屏\n- 依赖任务：E1、D1\n\n## 验收条件\n\n- [ ] 五人能解释自己的模块和核心社交流程，各自留存贡献证据\n- [ ] 完成约 6–8 分钟演示、至少一条权限失败路径与录屏备份\n- [ ] 核对老师正式提交清单、格式、个人提交要求与截止时间\n\n## 交付方式\n\n从 main 建任务分支；PR 关联本 Issue，附实际检查证据，请审阅搭档确认后合并。更新 docs/project/CONTRIBUTIONS.md。\n"
+    },
+    {
+      "key": "R1",
+      "role": "release",
+      "priority": "P0",
+      "title": "[R1] 汇总冻结版本、提交物与备份",
+      "due": "2026-11-07",
+      "milestone": "M3 · Rehearsal & release",
+      "labels": [
+        "P0",
+        "area:release"
+      ],
+      "dependsOn": [
+        "D2",
+        "E2"
+      ],
+      "body": "## 目标\n\n汇总冻结版本、提交物与备份。在现有社交版基础上审阅、验证和改进；不要另建并行版本。\n\n## 责任与范围\n\n- 责任角色：release（待绑定 GitHub 用户名）\n- 目标日期：2026-11-07，Asia/Shanghai\n- 主要文件：main、docs/、最终源码包与提交材料\n- 依赖任务：D2、E2\n\n## 验收条件\n\n- [ ] 所有阻断问题关闭或明确记录，固定提交 SHA 并建立提交版本标记\n- [ ] 源码、报告、视频、合约地址和贡献记录对应同一最终版本\n- [ ] 11/08 按老师渠道提交，并保留实际提交回执\n\n## 交付方式\n\n从 main 建任务分支；PR 关联本 Issue，附实际检查证据，请审阅搭档确认后合并。更新 docs/project/CONTRIBUTIONS.md。\n"
+    }
+  ]
+}

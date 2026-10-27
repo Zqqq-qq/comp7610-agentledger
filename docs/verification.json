@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-27",
+  "frontendTests": 8,
+  "socialRuleTests": 7,
+  "communityEVMTests": 6,
+  "jsonRPCAdapterIntegrationTests": 1,
+  "totalPassed": 22,
+  "newContractRuntimeBytes": 10973,
+  "compiler": "solc 0.8.30, optimizer 200, viaIR, Shanghai",
+  "browserChecks": [
+    "post a task as Alex",
+    "reply as Maya",
+    "invite Maya from task",
+    "accept from invited account",
+    "propose work and require other-member confirmation",
+    "published shared portfolio and partner history",
+    "refresh preserves demo state",
+    "follow/unfollow",
+    "leave/rejoin a circle",
+    "search empty state",
+    "invalid zero community address rejected",
+    "mobile 390px viewport no horizontal overflow",
+    "existing Sepolia registry read returned one Agent"
+  ],
+  "deployment": {
+    "existingIdentity": "0x13eA93eCdDeed63259792A39d7a4738a28b3E91d",
+    "existingReputation": "0x213AEEd69B82DBaebB2800D3904CBb16f9443864",
+    "newCommunity": "not broadcast; user wallet deployment needed"
+  },
+  "limitations": [
+    "No Sepolia community signing E2E performed",
+    "No escrow or split payments in this extension",
+    "No independent security audit",
+    "Browser demo and chain records kept separate"
+  ]
+}
