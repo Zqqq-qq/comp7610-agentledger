@@ -1,0 +1,30 @@
+{
+  "schema": "agentledger-deployment-evidence-v1",
+  "network": "Ethereum Sepolia",
+  "chainId": 11155111,
+  "contract": "AgentCommunity",
+  "address": "0x8CDc9987D46D140a982713B359286bC451262406",
+  "identity": "0x13eA93eCdDeed63259792A39d7a4738a28b3E91d",
+  "transactionHash": "0x8a537cd6c49e68d4f2301683146bcabc0acc9a2bbde89e797b08dedb80a8ddc5",
+  "blockNumber": 12005434,
+  "deployer": "0xD3Ce5196125cd6e25212de4D04911093D3F62D5d",
+  "compiler": "0.8.30+commit.73712a01.Emscripten.clang",
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "viaIR": true,
+    "evmVersion": "shanghai"
+  },
+  "constructorArguments": [
+    "0x13eA93eCdDeed63259792A39d7a4738a28b3E91d"
+  ],
+  "creationBytecodeHash": "0x71c9098723ea3e4b4929493ebd3ddccfce0b684ddf95566332795e1c672f91e0",
+  "runtimeCodeHash": "0x42953724f77e05c99bf2f08f5faa057211268ec0973fe17e59cd072f61cafde7",
+  "verifiedAtBlock": 12005435,
+  "confirmations": 2,
+  "evidenceType": "direct-creation-receipt-and-artifact-match",
+  "sourceCommit": "fb6c325175675f210f5dd1b0fba54657043f3701",
+  "sourceNote": "Deployment used the local afb52eb checkout whose source files match the remote fb6c325 commit; subsequent draft-recovery fix does not change Solidity or the artifact."
+}

@@ -24,11 +24,11 @@
 
 - 完整自动套件：56/56 通过；编译、静态站点构建和空白差异检查通过。
 - 无扩展的内置浏览器：连接钱包显示安装提示；Sepolia 模式明确提示社区尚未配置；没有有效部署证据时不显示证据下载按钮；演示模式可恢复显示样例。
-- 真实 MetaMask / 双浏览器 / Sepolia：尚未执行。
+- 真实 MetaMask / 双浏览器 / Sepolia：2026-10-27 已执行基础验收，见 SEPOLIA_ACCEPTANCE_2026-10-27.zh-CN.md。
 
-## 待真实钱包验收
+## 真实钱包验收步骤与复现清单
 
-目前用户尚未安装 MetaMask，也未提供 AgentCommunity 的 Sepolia 部署地址，因此以下项目待执行。不要填写虚构交易或将 #6 提前关闭。
+状态更新：用户已安装 MetaMask 并完成 A/B 签名，社区地址、帖子、回复回执及浏览器结果已记录。下列步骤保留供同伴复核；不要以自动测试代替真实证据。
 
 1. 从 [MetaMask 官方网站](https://metamask.io/download) 在 Chrome/Edge 安装钱包；由钱包持有人自行保存恢复凭据。准备两个测试账户和少量 Sepolia ETH。
 2. 按 [部署交接说明](DEPLOYMENT_HANDOFF.zh-CN.md) 部署并核验社区。两个浏览器使用相同 Identity、Community 地址和 Sepolia RPC。

@@ -104,11 +104,12 @@ function setFeedbackStep(step) {
 
 async function applyAccounts(accounts, preferred = state.account) {
   const snapshot=await walletSession.load(accounts,preferred);
-  if(!snapshot)return;
+  if(!snapshot)return false;
   const {error,...session}=snapshot;Object.assign(state,session);
   if(state.account)store("agent-ledger.selected-account",state.account);
   renderWallet(); renderAgents(); inspectAuthorization(); escrowUI?.accountChanged(); window.dispatchEvent(new Event("ledger-account-changed"));
   if(error)throw error;
+  return true;
 }
 
 function renderWallet() {
@@ -117,7 +118,7 @@ function renderWallet() {
   $("metricWallet").title = state.account;
   $("registerOwner").textContent = state.account || "Connect your wallet";
   $("registerOwner").className = state.account ? "address" : "";
-  $("accountSelect").replaceChildren(...state.accounts.map((account, i) => node("option", { value: account, text: `Account ${i + 1} · ${shortAddress(account, 8, 6)}` })));
+  $("accountSelect").replaceChildren(...state.accounts.map(account => node("option", { value: account, text: shortAddress(account, 10, 8), title: account })));
   $("accountSelect").value = state.account;
   $("walletNetworkLabel").textContent = state.walletChain === DEPLOYMENT.chainId ? "Ethereum Sepolia · ready to sign" : `Wallet network: ${state.walletChain ?? "not connected"}`;
   $("walletWarning").hidden = !state.account || state.walletChain === DEPLOYMENT.chainId;
@@ -130,8 +131,8 @@ async function connectWallet(reselect = false) {
   try {
     const accounts = await requestAccounts(window.ethereum, reselect);
     const preferred = reselect ? accounts[0] : readStored("agent-ledger.selected-account", "");
-    await applyAccounts(accounts, preferred);
-    if (state.walletChain !== DEPLOYMENT.chainId) await switchNetwork();
+    if (!await applyAccounts(accounts, preferred)) return;
+    if (state.walletChain !== DEPLOYMENT.chainId && !await switchNetwork()) return;
     if (reselect || accounts.length > 1) $("walletPopover").hidden = false;
     toast(`Connected ${shortAddress(state.account)}. Use the wallet menu to select another authorized account.`);
   } catch (error) { toast(errorMessage(error), true); }
@@ -146,8 +147,9 @@ async function switchNetwork() {
     await window.ethereum.request({ method: "wallet_addEthereumChain", params: [{ chainId, chainName: DEPLOYMENT.chainName, nativeCurrency: { name: "Sepolia Ether", symbol: "ETH", decimals: 18 }, rpcUrls: [state.config.rpcUrl], blockExplorerUrls: [DEPLOYMENT.explorer] }] });
     await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId }] });
   }
-  await applyAccounts(null, state.account);
+  if (!await applyAccounts(null, state.account)) return false;
   if (state.account && state.walletChain !== DEPLOYMENT.chainId) throw new Error("The wallet is still on another network. Select Ethereum Sepolia and try again.");
+  return true;
 }
 async function selectedSigner() {
   const selected=state.account;
@@ -155,7 +157,7 @@ async function selectedSigner() {
   const accounts = await window.ethereum.request({ method: "eth_accounts" });
   if (!accounts.some(a => a.toLowerCase() === selected.toLowerCase())) throw new Error("The selected account is no longer authorized. Reconnect your wallet.");
   const chain = Number(BigInt(await window.ethereum.request({ method: "eth_chainId" })));
-  if (chain !== DEPLOYMENT.chainId) await switchNetwork();
+  if (chain !== DEPLOYMENT.chainId && !await switchNetwork()) throw new Error("Wallet connection changed. Wait for the wallet to finish switching, then try again.");
   // Explicit address matters: getSigner() without one always picks the first authorized account.
   if(selected!==state.account)throw new Error("Wallet account changed. Select your account and try again.");
   const signer = await state.walletProvider.getSigner(selected);

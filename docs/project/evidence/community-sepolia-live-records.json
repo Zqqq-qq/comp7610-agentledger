@@ -1,0 +1,133 @@
+{
+  "status": "observed-live-sepolia-records",
+  "observedAt": "2026-10-27T13:50:03.071Z",
+  "chainId": 11155111,
+  "community": "0x8CDc9987D46D140a982713B359286bC451262406",
+  "identity": "0x13eA93eCdDeed63259792A39d7a4738a28b3E91d",
+  "block": 12005532,
+  "fromBlock": 12005434,
+  "circles": "3",
+  "accounts": {
+    "0xD3Ce5196125cd6e25212de4D04911093D3F62D5d": {
+      "balanceETH": "0.015708815726411016",
+      "memberships": [
+        false,
+        false,
+        true
+      ]
+    },
+    "0xE8bCb71A15ea106aF0CD431C37C1002FeD938e20": {
+      "balanceETH": "0.002742522477425225",
+      "memberships": [
+        false,
+        false,
+        true
+      ]
+    }
+  },
+  "posts": [
+    {
+      "id": "1",
+      "circleId": "3",
+      "author": "0xD3Ce5196125cd6e25212de4D04911093D3F62D5d",
+      "agentId": "0",
+      "kind": "0",
+      "createdAt": "1793108220",
+      "title": "Sepolia acceptance 2026-10-27: shared community",
+      "body": "Course acceptance test by wallet A. Wallet B will join Builders Club and reply. A second browser will independently read this same on-chain conversation. Test data only."
+    }
+  ],
+  "replies": [
+    {
+      "id": "1",
+      "postId": "1",
+      "author": "0xE8bCb71A15ea106aF0CD431C37C1002FeD938e20",
+      "agentId": "0",
+      "createdAt": "1793108832",
+      "body": "Wallet B confirms: I can read wallet A’s Sepolia post from the shared community. Account switching correctly required me to join Builders Club separately."
+    }
+  ],
+  "teams": [],
+  "works": [],
+  "events": [
+    {
+      "event": "MembershipChanged",
+      "args": {
+        "circleId": "3",
+        "account": "0xD3Ce5196125cd6e25212de4D04911093D3F62D5d",
+        "joined": true
+      },
+      "transactionHash": "0x180c8619902c9e6b462559d237dbef6cbf3485ec87989e27d34faf8ffeeb2f8c",
+      "blockNumber": 12005441
+    },
+    {
+      "event": "PostCreated",
+      "args": {
+        "postId": "1",
+        "circleId": "3",
+        "author": "0xD3Ce5196125cd6e25212de4D04911093D3F62D5d"
+      },
+      "transactionHash": "0xc893cb84f2812dc00a4e00a0a9d6c2e90ec72e3569849028537203319642509a",
+      "blockNumber": 12005468
+    },
+    {
+      "event": "MembershipChanged",
+      "args": {
+        "circleId": "3",
+        "account": "0xE8bCb71A15ea106aF0CD431C37C1002FeD938e20",
+        "joined": true
+      },
+      "transactionHash": "0xbf6c44c37d3635b6d1e9e44db068c90369f1bf5fe8a44ba876cb67b125f43807",
+      "blockNumber": 12005503
+    },
+    {
+      "event": "ReplyCreated",
+      "args": {
+        "replyId": "1",
+        "postId": "1",
+        "author": "0xE8bCb71A15ea106aF0CD431C37C1002FeD938e20"
+      },
+      "transactionHash": "0x0b9fa3a79cd9ba20e2d89f46d50fcaf5f053b4b75d1927787d6e0012dc04a6e9",
+      "blockNumber": 12005519
+    }
+  ],
+  "transactions": [
+    {
+      "transactionHash": "0x180c8619902c9e6b462559d237dbef6cbf3485ec87989e27d34faf8ffeeb2f8c",
+      "blockNumber": 12005441,
+      "status": 1,
+      "from": "0xD3Ce5196125cd6e25212de4D04911093D3F62D5d",
+      "to": "0x8CDc9987D46D140a982713B359286bC451262406",
+      "gasUsed": "569323",
+      "fee": "853984507970522"
+    },
+    {
+      "transactionHash": "0xc893cb84f2812dc00a4e00a0a9d6c2e90ec72e3569849028537203319642509a",
+      "blockNumber": 12005468,
+      "status": 1,
+      "from": "0xD3Ce5196125cd6e25212de4D04911093D3F62D5d",
+      "to": "0x8CDc9987D46D140a982713B359286bC451262406",
+      "gasUsed": "1570915",
+      "fee": "2356372521992810"
+    },
+    {
+      "transactionHash": "0xbf6c44c37d3635b6d1e9e44db068c90369f1bf5fe8a44ba876cb67b125f43807",
+      "blockNumber": 12005503,
+      "status": 1,
+      "from": "0xE8bCb71A15ea106aF0CD431C37C1002FeD938e20",
+      "to": "0x8CDc9987D46D140a982713B359286bC451262406",
+      "gasUsed": "373483",
+      "fee": "560224505602245"
+    },
+    {
+      "transactionHash": "0x0b9fa3a79cd9ba20e2d89f46d50fcaf5f053b4b75d1927787d6e0012dc04a6e9",
+      "blockNumber": 12005519,
+      "status": 1,
+      "from": "0xE8bCb71A15ea106aF0CD431C37C1002FeD938e20",
+      "to": "0x8CDc9987D46D140a982713B359286bC451262406",
+      "gasUsed": "1131502",
+      "fee": "1697253016972530"
+    }
+  ],
+  "limits": "On-chain records alone do not prove cross-browser UI behavior or independent human review."
+}
