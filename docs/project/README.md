@@ -3,6 +3,7 @@
 - [五人任务与排期](TEAM_TASKS.zh-CN.md)
 - [共享部署地址与回执](DEPLOYMENTS.md)
 - [实际贡献记录](CONTRIBUTIONS.md)
+- [D2 验收记录：CI、跨平台启动与回归](ACCEPTANCE_D2.zh-CN.md)
 - [PR 与分支规则](../../CONTRIBUTING.md)
 
 私有仓库已建立：[Zqqq-qq/comp7610-agentledger](https://github.com/Zqqq-qq/comp7610-agentledger)。源码、11 项 Issues、8 个分类标签、3 个里程碑已发布。仓库 main 为唯一协作主线。
