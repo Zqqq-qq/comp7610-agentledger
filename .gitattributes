@@ -1,0 +1,10 @@
+.gitattributes text eol=lf
+
+# solc 的 metadata 哈希由源文件字节决定。若检出时被 core.autocrlf
+# 转成 CRLF，重新编译会得到与仓库不同的 bytecode，使 CI 的
+# `git diff --exit-code` 合约产物检查在 Windows 上失败。
+*.sol text eol=lf
+
+# 编译产物由 scripts/compile.mjs 以 LF 写出，同样需要固定行尾，
+# 否则 Windows 检出后与重新生成的内容不一致。
+web/generated/*.json text eol=lf
