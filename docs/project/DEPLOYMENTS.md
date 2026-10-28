@@ -22,6 +22,7 @@
 - Block: 待填写
 - Deployer public wallet: 待填写
 - Verified source link: 待填写
+- Evidence handoff: [部署与证据交接](DEPLOYMENT_HANDOFF.zh-CN.md)；浏览器可下载部署记录，也可运行 `scripts/verify-community.mjs` 独立核验。
 
 ## JobEscrow 与 MockUSDC（Issue #12）
 
