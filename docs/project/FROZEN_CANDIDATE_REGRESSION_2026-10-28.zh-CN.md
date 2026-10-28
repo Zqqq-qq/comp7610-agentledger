@@ -136,7 +136,7 @@ pnpm test && pnpm build
 
 | 项目 | 原因 |
 | --- | --- |
-| macOS 干净克隆启动 | 需要一名使用 Mac 的成员；本文只覆盖 Windows |
+| macOS 带凭据的真实 `git clone` | `install / test / build` 已在 macOS 26.6 / arm64 上通过（见 §八），但该机器无 GitHub 凭据，用归档包代替 clone，「干净克隆」不严格成立 |
 | 9 步社交流程在冻结候选上完整重跑 | 已在 PR #19 记录完整 9 步（当时构架接近但非本候选）；本次只做只读回放与失败路径 |
 | 托管付款/退款/领取在本候选上重跑 | 已由 PR #22 在 `583fd6d` 基线上完成；本次只做只读回放 |
 | MetaMask 弹窗交互自动化 | Chrome 156 禁止在默认配置启用调试端口；复制配置会破坏扩展完整性校验，无法稳定驱动签名窗口（本次改为人工在真实钱包上操作） |
@@ -146,28 +146,43 @@ pnpm test && pnpm build
 | # | 条件 | 状态 |
 | --- | --- | --- |
 | 1 | CI 实际通过，检查编译、测试、构建与合约产物差异 | 通过（本地等价检查 + 远端 CI） |
-| 2 | Mac 与 Windows 各一名成员从干净克隆启动 | Windows 完成；**macOS 未覆盖** |
+| 2 | Mac 与 Windows 各一名成员从干净克隆启动 | Windows 完成（真实 `git clone`）；**macOS 完成 `install / test / build`（64 项通过）但非真实 clone**，见 §八 |
 | 3 | 对冻结候选执行主流程与失败路径回归，列出已知限制 | 完成：自动化基线 + 只读回放 + 6 组失败路径 + 真实点击的拒绝呈现 + 1 笔真实写入 + 跨设备读取；限制见 §六 |
 
-## 八、剩余检查的交接说明
+## 八、macOS 启动（已由 Zqqq-qq 完成，附一点保留）
 
-### macOS 启动（#8 唯一缺口）
+2026-10-28，Zqqq-qq 在自己的 Mac 上执行了 `install / test / build`，记录如下：
 
-由一名使用 Mac 的成员在自己的机器上执行，把输出回传即可：
+| 项目 | 结果 |
+| --- | --- |
+| 环境 | macOS 26.6（25G72），arm64（Apple M5），Node v24.15.0，pnpm 11.25.0（corepack 按 `packageManager` 激活） |
+| `pnpm install --frozen-lockfile` | 39 个包，900 ms，无报错 |
+| `pnpm test` | **64 / 64 通过**，0 失败 |
+| `pnpm build` | 成功 |
+| `git status --short` | 空 |
+| `git diff --exit-code -- web/generated/AgentCommunity.json` | 通过 |
+| `contracts/*.sol` 行尾 | LF |
+
+**保留（这一条不能算「干净克隆」）**：该机器没有 GitHub 凭据，无法 `git clone`，改用 GitHub 归档包 `main.tar` 解压后 `git init` + 基线提交，其余步骤与下方命令一致。代码树是 main 原样、行尾已核对，但严格意义上不是一次带凭据的 clone。
+
+**已知警告（不影响结论）**：ganache 7.9.2 的 `@trufflesuite/uws-js-unofficial` 原生模块与 Node 24 的 ABI 不匹配，回退到纯 JS 实现（`Cannot find module '../binaries/uws_darwin_arm64_137.node'`）；测试与构建均通过。
+
+### 若还要补「带凭据的真实 clone」
+
+由一名有 GitHub 凭据、且使用 Mac 的成员执行：
 
 ```sh
 git clone https://github.com/Zqqq-qq/comp7610-agentledger.git
 cd comp7610-agentledger
-sw_vers                                  # 记录系统版本
-node --version                           # 需 v24.x
+sw_vers && node --version                # 需 v24.x
 pnpm install --frozen-lockfile
-pnpm test                                # 预期 64 项通过（#23 合并后为 64）
+pnpm test                                # 预期 64 项
 pnpm build                               # 预期成功
 git status --short                       # 预期为空（.gitattributes 应使 .sol 检出为 LF）
 git diff --exit-code -- web/generated/AgentCommunity.json   # 预期通过
 ```
 
-需要回传：`sw_vers` 输出、`node --version`、`pnpm test` 的 tests/pass/fail 三行、`git status` 是否为空。若 `git status` 出现 `contracts/*.sol` 或产物被改写，说明 `.gitattributes` 在该环境未生效，应记录并反馈。
+需要回传：`sw_vers`、`node --version`、`pnpm test` 的 tests/pass/fail 三行、`git status` 是否为空。若 `git status` 出现 `contracts/*.sol` 或产物被改写，说明 `.gitattributes` 在该环境未生效，应记录并反馈。
 
 ### 真实钱包项（#7）
 
@@ -179,4 +194,4 @@ git diff --exit-code -- web/generated/AgentCommunity.json   # 预期通过
 | 被拒绝的提交（`join circle first` 呈现在页面上、未产生交易） | §三「真实点击的界面反馈」 |
 | 用户主动取消签名（toast、按钮可再点、无中间态） | §三「用户在钱包里拒绝签名时的界面反馈」 |
 
-**没有遗留的真实钱包观察项。** 唯一仍未覆盖的是 macOS 启动（见上一节），属 #8 而非 #7。
+**没有遗留的真实钱包观察项。** macOS 侧见上一节：`install / test / build` 已通过，仅「带凭据的真实 clone」这一形式上的缺口，属 #8 而非 #7。
