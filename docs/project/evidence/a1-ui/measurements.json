@@ -1,0 +1,313 @@
+{
+  "date": "2026-10-28",
+  "mode": "Demo sandbox",
+  "browser": "ChatGPT in-app browser",
+  "measurements": [
+    {
+      "label": "mobile-people",
+      "dialog": [],
+      "focus": "\n\n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n\nSkip to content\n\n  agentledgerIDENTITY & COMMUNITY\n ",
+      "pageWidth": 390,
+      "url": "#network",
+      "width": 390
+    },
+    {
+      "label": "mobile-community",
+      "dialog": [],
+      "focus": "Community feed",
+      "pageWidth": 390,
+      "url": "#community",
+      "width": 390
+    },
+    {
+      "label": "mobile-compose",
+      "dialog": [
+        {
+          "bottom": 818.6796875,
+          "clientWidth": 368,
+          "closeHeight": 44,
+          "scrollTop": 0,
+          "scrollWidth": 368,
+          "title": "Start a conversation.",
+          "top": 25.3203125,
+          "width": 370
+        }
+      ],
+      "focus": "×",
+      "pageWidth": 390,
+      "url": "#community",
+      "width": 390
+    },
+    {
+      "label": "mobile-thread",
+      "dialog": [
+        {
+          "bottom": 818.6796875,
+          "clientWidth": 368,
+          "closeHeight": 44,
+          "scrollTop": 0,
+          "scrollWidth": 368,
+          "title": "Looking for a research + translation duo",
+          "top": 25.3203125,
+          "width": 370
+        }
+      ],
+      "focus": "×",
+      "pageWidth": 390,
+      "url": "#community",
+      "width": 390
+    },
+    {
+      "label": "mobile-invite",
+      "dialog": [
+        {
+          "bottom": 818.6796875,
+          "clientWidth": 368,
+          "closeHeight": 44,
+          "scrollTop": 0,
+          "scrollWidth": 368,
+          "title": "Invite a complementary partner.",
+          "top": 25.3203125,
+          "width": 370
+        }
+      ],
+      "focus": "×",
+      "pageWidth": 390,
+      "url": "#community",
+      "width": 390
+    },
+    {
+      "label": "mobile-teams",
+      "dialog": [],
+      "focus": "My teams",
+      "pageWidth": 390,
+      "url": "#teams",
+      "width": 390
+    },
+    {
+      "label": "mobile-team-review",
+      "dialog": [
+        {
+          "bottom": 818.6796875,
+          "clientWidth": 368,
+          "closeHeight": 44,
+          "scrollTop": 0,
+          "scrollWidth": 368,
+          "title": "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+          "top": 25.3203125,
+          "width": 370
+        }
+      ],
+      "focus": "×",
+      "pageWidth": 390,
+      "url": "#teams",
+      "width": 390
+    },
+    {
+      "label": "mobile-work-form",
+      "dialog": [
+        {
+          "bottom": 790.328125,
+          "clientWidth": 368,
+          "closeHeight": 44,
+          "scrollTop": 0,
+          "scrollWidth": 368,
+          "title": "Give shared work both names.",
+          "top": 53.671875,
+          "width": 370
+        }
+      ],
+      "focus": "×",
+      "pageWidth": 390,
+      "url": "#teams",
+      "width": 390
+    },
+    {
+      "label": "mobile-work-review",
+      "dialog": [
+        {
+          "bottom": 818.6796875,
+          "clientWidth": 368,
+          "closeHeight": 44,
+          "scrollTop": 0,
+          "scrollWidth": 368,
+          "title": "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+          "top": 25.3203125,
+          "width": 370
+        }
+      ],
+      "focus": "×",
+      "pageWidth": 390,
+      "url": "#teams",
+      "width": 390
+    },
+    {
+      "label": "mobile-works",
+      "dialog": [],
+      "focus": "Shared works",
+      "pageWidth": 390,
+      "url": "#works",
+      "width": 390
+    },
+    {
+      "label": "mobile-circles",
+      "dialog": [],
+      "focus": "\n\n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n\nSkip to content\n\n  agentledgerIDENTITY & COMMUNITY\n ",
+      "pageWidth": 390,
+      "url": "#circles",
+      "width": 390
+    },
+    {
+      "label": "desktop-community",
+      "dialog": [],
+      "focus": "\n\n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n\nSkip to content\n\n  agentledgerIDENTITY & COMMUNITY\n ",
+      "pageWidth": 1440,
+      "url": "#community",
+      "width": 1440
+    },
+    {
+      "label": "desktop-compose",
+      "dialog": [
+        {
+          "bottom": 934.0390625,
+          "clientWidth": 738,
+          "closeHeight": 31,
+          "scrollTop": 0,
+          "scrollWidth": 738,
+          "title": "Start a conversation.",
+          "top": 65.953125,
+          "width": 740
+        }
+      ],
+      "focus": "×",
+      "pageWidth": 1440,
+      "url": "#community",
+      "width": 1440
+    },
+    {
+      "label": "desktop-thread",
+      "dialog": [
+        {
+          "bottom": 950,
+          "clientWidth": 738,
+          "closeHeight": 31,
+          "scrollTop": 0,
+          "scrollWidth": 738,
+          "title": "Looking for a research + translation duo",
+          "top": 50,
+          "width": 740
+        }
+      ],
+      "focus": "×",
+      "pageWidth": 1440,
+      "url": "#community",
+      "width": 1440
+    },
+    {
+      "label": "desktop-invite",
+      "dialog": [
+        {
+          "bottom": 950,
+          "clientWidth": 738,
+          "closeHeight": 31,
+          "scrollTop": 0,
+          "scrollWidth": 738,
+          "title": "Invite a complementary partner.",
+          "top": 50,
+          "width": 740
+        }
+      ],
+      "focus": "×",
+      "pageWidth": 1440,
+      "url": "#community",
+      "width": 1440
+    },
+    {
+      "label": "desktop-circles",
+      "dialog": [],
+      "focus": "Explore circles",
+      "pageWidth": 1440,
+      "url": "#circles",
+      "width": 1440
+    },
+    {
+      "label": "desktop-people",
+      "dialog": [],
+      "focus": "People & partners",
+      "pageWidth": 1440,
+      "url": "#network",
+      "width": 1440
+    },
+    {
+      "label": "desktop-teams",
+      "dialog": [],
+      "focus": "My teams",
+      "pageWidth": 1440,
+      "url": "#teams",
+      "width": 1440
+    },
+    {
+      "label": "desktop-work-form",
+      "dialog": [
+        {
+          "bottom": 828.8359375,
+          "clientWidth": 738,
+          "closeHeight": 31,
+          "scrollTop": 0,
+          "scrollWidth": 738,
+          "title": "Give shared work both names.",
+          "top": 171.15625,
+          "width": 740
+        }
+      ],
+      "focus": "×",
+      "pageWidth": 1440,
+      "url": "#teams",
+      "width": 1440
+    },
+    {
+      "label": "desktop-works",
+      "dialog": [],
+      "focus": "Shared works",
+      "pageWidth": 1440,
+      "url": "#works",
+      "width": 1440
+    },
+    {
+      "label": "desktop-work-review",
+      "dialog": [
+        {
+          "bottom": 914.8046875,
+          "clientWidth": 738,
+          "closeHeight": 31,
+          "scrollTop": 0,
+          "scrollWidth": 738,
+          "title": "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+          "top": 85.1875,
+          "width": 740
+        }
+      ],
+      "focus": "×",
+      "pageWidth": 1440,
+      "url": "#works",
+      "width": 1440
+    }
+  ],
+  "baselineDefects": {
+    "postTitleWidth": 2101.296875,
+    "postCardWidth": 354,
+    "workFormClientWidth": 368,
+    "workFormScrollWidth": 933
+  },
+  "functionalChecks": [
+    "circle leave and rejoin",
+    "circle feed filter",
+    "publish post",
+    "reply to post",
+    "follow and unfollow",
+    "invite Maya and accept as Maya",
+    "propose work as Maya and confirm as Alex",
+    "Escape closes and restores trigger focus",
+    "nested dialogs reset scroll and retain original page trigger"
+  ]
+}
