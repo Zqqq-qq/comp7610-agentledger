@@ -84,4 +84,4 @@
 | Narration | Not recorded yet; this script is the missing piece |
 | Suggested pacing | Part 1 ≈ 30 s at a natural pace; Part 2 ≈ 80 s. If you speak faster, the stills can be held longer in the edit |
 | Language | English throughout, per the course requirement |
-| What not to claim | Do not say the cross-module "community team → escrow job" flow has been demonstrated: as of 2026-10-28 the acceptance team is still `Pending` and no escrow job has been funded from it |
+| Cross-module claim | Safe to say the "community team -> escrow job" flow was demonstrated: post 4 -> team 4 (Active) -> job 4 funded with 1 mUSD -> submitted -> released, balances 99 / 1 / 0 (2026-10-28) |
