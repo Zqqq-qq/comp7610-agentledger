@@ -5,6 +5,7 @@
 | 日期 | GitHub 用户名 | Issue | PR/提交 | 工作与结果 | 验收证据/审阅人 |
 | --- | --- | --- | --- | --- | --- |
 | 待填写 | 待填写 | 待填写 | 待填写 | 待填写 | 待填写 |
+| 2026-10-28 | Zqqq-qq（使用 Codex 协助） | #30 | `docs/30-team-permissions` | 明确既有团队独立于圈子；更正 B1 权限表并补充退圈后 host/guest 提议、另一方拒绝/确认、圈子写入拦截和 Pending 接受边界的回归。 | `TEAM_CIRCLE_POLICY.zh-CN.md`；本地 EVM 与 Demo 新增 4 项测试；无 Solidity/部署改动，无新增 Sepolia 交易；同伴审阅待完成 |
 | 2026-10-27 | Zqqq-qq（使用 Codex 协助） | #5 | feat/5-deployment-evidence | 可复现部署包、浏览器证据导出和独立只读核验，真实 EVM 部署证据测试 | deployment-evidence.test.mjs；此行为部署准备阶段；实际部署见下方记录 |
 | 2026-10-27 | Zqqq-qq（使用 Codex 协助） | #12 | PR #13（已合并） | 增量集成托管、小队链上引用及回溯，43 项自动测试；未代其他组员署名 | ESCROW_INTEGRATION.zh-CN.md；真实 Sepolia 验收及同伴审阅待完成 |
 | 2026-10-27 | QiuQiu-xuan | #8 | PR #15，`feature/ci-artifact-lf-qiuqiuxuan` | 定位 Windows 下合约产物不一致：`core.autocrlf` 把 `contracts/*.sol` 检出为 CRLF，solc 的 metadata 哈希随之改变；新增 `.gitattributes` 固定 `*.sol` 与生成产物为 LF，并把三份以 CRLF 存入索引的合约源文件规范化。另修正 README 中 `docs/VERIFICATION.json` 的大小写错误。 | 对照实验：同一源码按 LF 编译与仓库 bytecode 一致、按 CRLF 则不一致；修复后 `pnpm test` 22 项通过、`git diff --exit-code` 通过、工作区干净 |

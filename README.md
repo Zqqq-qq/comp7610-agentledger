@@ -243,6 +243,7 @@ flowchart LR
 | [托管集成说明](docs/ESCROW_INTEGRATION.zh-CN.md) | 托管订单与社区小队的关联设计 |
 | [实现说明](docs/IMPLEMENTATION.zh-CN.md) | 架构、状态机与边界说明 |
 | [部署记录](docs/project/DEPLOYMENTS.md) | 公开地址与部署回执 |
+| [圈子与团队权限](docs/project/TEAM_CIRCLE_POLICY.zh-CN.md) | 退圈后既有团队仍可协作，作品发布仍须另一方确认；权限边界与回归证据 |
 | [贡献指南](CONTRIBUTING.md) | 分支、PR 与审阅流程 |
 
 ## 致谢
