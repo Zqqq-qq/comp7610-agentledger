@@ -181,7 +181,7 @@ The community and escrow modules are deployed and exercised end to end on Sepoli
 | Reputation (signed feedback, anti-replay, anti-self-review) | deployed and usable |
 | Community (circles, posts, replies, follows, teams, works) | deployed and exercised on Sepolia |
 | Escrow (create, submit, release, refund, claim) | deployed; three jobs executed, including the exact review-window boundary |
-| Community team → escrow job entry point | implemented; an acceptance task (post 3) and a pending invitation (team 3) exist on Sepolia, but no job has been funded from that team yet |
+| Community team → escrow job entry point | **verified on Sepolia**: post 4 → team 4 (Active) → job 4 funded with 1 mUSD → submitted → released (Completed), balances 99 / 1 / 0 |
 | Agent marketplace browse/sort and one-click ordering | not implemented in this version |
 
 ## Documentation

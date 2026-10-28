@@ -315,18 +315,26 @@ Final snapshot at block 12010056: client **98 mUSD**, provider **2 mUSD**, escro
 
 Boundary: the second device was used for **read-only** verification only; no cross-device signed write was performed.
 
-### 7.6 Cross-module entry point: current status (started, not finished)
+### 7.6 Cross-module entry point: community team → funded escrow job (verified)
 
-The "community team → escrow job" entry point is implemented in the UI but has **not** been completed end to end with a real wallet. As of 2026-10-28 the on-chain state is:
+This flow spans both modules and was executed end to end with two wallets on Sepolia on 2026-10-28.
 
-| Observation | Value |
+| Step | On-chain result |
 | --- | --- |
-| Acceptance task post | post 3, circle 3, author `0xD3Ce…62D5d`, title "Sepolia team-to-escrow acceptance 2026-10-28" |
-| Team created from it | team 3, host `0xD3Ce…62D5d`, guest `0xE8bC…8e20`, status **Pending (1)** |
-| Escrow jobs created from that team | **none** — `nextJobId` on JobEscrow is still 4, i.e. the same three jobs as §7.4 |
+| A mints test mUSD | 100 mUSD to the client wallet |
+| A publishes a task post | post 4, circle 2, kind 1 ("open task") |
+| A invites B | team 4, host A, guest B, status Pending(1) |
+| B accepts | team 4 status **Active(2)** |
+| A approves 1 mUSD for the escrow | allowance consumed by the funding below |
+| A creates and funds the job from the team | **job 4**, 1 mUSD escrowed |
+| B submits a delivery digest | job 4 moves to submitted |
+| A accepts and releases | job 4 status **Completed(3)** |
 
-So the post and the invitation exist on-chain, but the invitation has not been accepted and no job has been funded from the team. This report therefore does **not** claim the cross-module path as verified; it is listed as remaining work in §10.
+Final balances after release, read at block 12012205: **client 99 mUSD, provider 1 mUSD, escrow contract 0 mUSD** — the 1 mUSD left the client exactly once and arrived at the provider exactly once, and no funds remain locked.
 
+The team is linked to the job in the application layer only: the UI associates a team with an escrow job and can publish a client-authored reference as a community reply so the link is publicly checkable. JobEscrow itself has no team field. As the UI states, references "do not enforce settlement, prove quality, split payments or make feedback order-verified." This is a deliberate boundary, not an oversight.
+
+> Earlier state (kept for accuracy): before this run, a task post (post 3) and a team invitation (team 3) existed on-chain between two accounts of the same operator, but the invitation was never accepted and no job was ever funded from that team. That is why an earlier version of this report listed the cross-module path as unverified.
 ### 7.7 Frozen-candidate regression (D2 / #8)
 
 Four layers were executed against the frozen candidate `992584e`: a fresh clone with 61 tests and a build; read-only replay of community and escrow state; six failure-path probes at a fixed block; and one real write (`0xfff88c7c…d7bd`, block 12010583) flipping `member(1,A)` from false to true. See `docs/project/FROZEN_CANDIDATE_REGRESSION_2026-10-28.zh-CN.md`.
@@ -381,7 +389,7 @@ Two points deserve honesty:
 2. Decide whether leaving a circle should revoke team rights; if it should, `proposeWork` / `reviewWork` need a membership re-check.
 3. Submit the source for block-explorer verification to lower the reproduction cost of "recompile locally and compare".
 4. Move long text off-chain with an on-chain hash to reduce write cost.
-5. Complete on-site acceptance of the "community team → escrow job" cross-module entry point. As of 2026-10-28 the acceptance task (post 3) and a pending invitation (team 3) exist on Sepolia, but no job has been funded from that team — see §7.6.
+5. ~~Complete on-site acceptance of the "community team → escrow job" cross-module entry point~~ **done**: post 4 / team 4 / job 4 completed, 1 mUSD released — see §7.6.
 
 ---
 
