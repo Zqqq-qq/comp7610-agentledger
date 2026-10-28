@@ -74,6 +74,34 @@ PY
 
 费用由 gasUsed × effectiveGasPrice / 10^18 计算。交易完整哈希、receipt、blockHash 及同高度区块头均在 JSON.deployments / raw。对数值异常仅报告该远程节点的返回；不能据此推导 Sepolia 或以太坊协议的 gas 规则发生变化。链 ID 单项也不是对链历史的独立认证。缺少具体交易哈希的“普通转账 gas 12000”观察不纳入本次已核验结论。本地 Ganache 的原生扩展回退仅属于本地运行环境，与这些远程 RPC 取证无关。
 
+## 2026-10-28 独立复跑记录（QiuQiu-xuan）
+
+审阅人指出需要可复核证据，本人在 Windows 11 + Node 24.15.0 + pnpm 11.25.0 上复跑：
+
+| 尝试 | 命令 | 结果 |
+| --- | --- | --- |
+| 固定旧区块 | `--block 12009736` | **失败**：`historical state 0xbbc4f857… is not available`。公共节点已裁剪该历史状态，脚本按设计报错退出，没有静默回退 latest。 |
+| 冻结新区块 | 不带 `--block` | **通过**：区块 `12009928`（`0xb741c8`），哈希 `0x2a6e3107166dd0a0718a7d7af56a9eddcdb6a946f539919b7f43b5234ffd938f` |
+
+新区块的 8 个用例结果与本文预期逐条一致：
+
+```
+third-wallet-accepts-pending-team          only invited partner
+invited-wallet-accepts-same-pending-team   success
+author-self-confirms-proposed-work         only other member
+other-member-confirms-same-proposed-work   success
+nonmember-posts-circle-1                   join circle first
+same-author-posts-member-circle-2          success
+repeat-confirm-confirmed-work              work not pending
+same-member-confirms-proposed-work-control success
+```
+
+同时核到：11 笔业务回执 success、两份部署 runtime 均 `runtimeMatches: true`、金额与 gas 数值与本文「部署 Gas」一节相同。
+
+**为什么换区块仍然有效**：`eth_call` 校验的是**持久状态**（team 2 仍 Pending、work 2 仍 Proposed、work 1 已 Confirmed），这些前置在复跑时未变；脚本每次冻结运行时的区块并在 preconditions 里重新读取，因此结论不依赖某一个特定高度。
+
+**局限**：若要精确复现 12009736 那一份，需要一个保留历史的归档 RPC；公共节点做不到。因此本文的固定区块是「记录当时的观测」，可复核性由「任意区块复跑仍得到同样判定」保证，而不是由复读旧区块保证。
+
 ## 快照时间线及未完成工作
 
 | 来源 | 区块 / 哈希 | 计数与边界 |
