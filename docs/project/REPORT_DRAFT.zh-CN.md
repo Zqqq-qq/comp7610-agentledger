@@ -73,24 +73,19 @@ AgentLedger 是一个运行在以太坊 Sepolia 上的社区应用，用来解�
 
 ### 4.1 总体架构
 
-```
-┌─────────────┐   读（JSON-RPC）    ┌──────────────────┐
-│  浏览器前端  │ ─────────────────▶ │  公共 RPC        │
-│  静态站点    │                     │  Sepolia         │
-│  (无后端)    │ ◀───────────────── │                  │
-└──────┬──────┘   写：钱包签名后     └────────┬─────────┘
-       │           由钱包广播                  │
-       │                                      │
-   ┌───▼────┐                        ┌────────▼─────────┐
-   │MetaMask│                        │ 链上合约          │
-   └────────┘                        │ IdentityRegistry │
-                                     │ ReputationRegistry│
-                                     │ AgentCommunity   │
-                                     │ JobEscrow        │
-                                     │ MockUSDC         │
-                                     └──────────────────┘
-```
+![AgentLedger 实现级架构](../assets/architecture.svg)
 
+<!-- 若渲染环境不支持 SVG，可直接查看 docs/assets/architecture.svg -->
+
+图中三层分别是：**浏览器（无后端静态站点）**、**钱包与公共 RPC**、**链上五个合约**。三条通路需要区分清楚：
+
+| 通路 | 触发 | 是否需要签名 |
+| --- | --- | --- |
+| 读 | 页面进入时按合约地址 `eth_call` / `eth_getCode` | 否 |
+| 写 | 用户在界面上提交 → 钱包签名 → 广播 | 是 |
+| 合约间调用 | `AgentCommunity` 调 `IdentityRegistry.ownerOf`；`JobEscrow` 建单时调 `Identity.exists / ownerOf`，并按订单传入的 token 调 `transfer / transferFrom` | 由合约内部执行 |
+
+`ReputationRegistry` 是独立模块：其他合约不调用它，评价凭签名写入，与社区/托管主流程没有链上耦合。
 五个合约在 Sepolia 上的地址（取自 `web/config.js` 的 `DEPLOYMENT`）：
 
 | 合约 | 地址 |
@@ -421,7 +416,7 @@ pnpm build
 
 | # | 缺什么 | 影响 | 谁能提供 |
 | --- | --- | --- | --- |
-| 1 | **实现级架构图** | 第 4.1 节目前是 ASCII 图；E1 要求"更新架构图"，仓库只有品牌图（`docs/assets/banner*.svg` 等），没有实现级配图 | 任何人（可按 4.1 重绘） |
+| 1 | ~~实现级架构图~~ **已完成** | 已绘制 `docs/assets/architecture.svg` 并嵌入 §4.1；如需改动直接编辑该 SVG | — |
 | 2 | **成员姓名/学号与工作量** | 第 9 节只有 GitHub handle 与提交次数，没有真实姓名、学号、投入工时 | 各组员 |
 | 3 | **E 与 R 的贡献条目** | `CONTRIBUTIONS.md` 缺这两行，第 9 节因此不完整 | daizhiqi / 接手者 |
 | 4 | **课程提交要求** | 不明确是否需要 PPT、报告格式与页数、视频时长上限；本文按"报告 + 演示 + 代码"假设撰写 | 你（课程信息） |

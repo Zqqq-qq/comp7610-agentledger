@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1460" height="980" viewBox="0 0 1460 980" font-family="'Segoe UI','Microsoft YaHei',system-ui,sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">AgentLedger 实现级架构</title>
+  <desc id="d">浏览器静态站经钱包写入、经公共 RPC 读取；AgentCommunity 与 JobEscrow 调用 IdentityRegistry，JobEscrow 通过 ERC20 接口搬运 mUSD。</desc>
+
+  <defs>
+    <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3f5b4e"/>
+    </marker>
+    <marker id="arw2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f6f4f"/>
+    </marker>
+    <marker id="arw3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7245"/>
+    </marker>
+  </defs>
+
+  <rect width="1460" height="980" fill="#f7f6f2"/>
+  <text x="40" y="46" font-size="24" font-weight="700" fill="#12201a">AgentLedger 实现级架构</text>
+  <text x="40" y="72" font-size="14" fill="#5b6b62">基线 main a2b38c9 · 无后端静态站点 + 钱包直连链上 · Sepolia chainId 11155111</text>
+
+  <!-- ============ 浏览器 ============ -->
+  <rect x="40" y="100" width="400" height="600" rx="14" fill="#ffffff" stroke="#d7d2c4"/>
+  <text x="60" y="128" font-size="15" font-weight="700" fill="#12201a">浏览器 · 静态站点（无后端）</text>
+
+  <rect x="60" y="144" width="360" height="58" rx="8" fill="#eef3ee" stroke="#c9d8cc"/>
+  <text x="76" y="166" font-size="14" font-weight="600" fill="#12201a">界面与路由</text>
+  <text x="76" y="188" font-size="12.5" fill="#4b5b52" font-family="ui-monospace,Consolas,monospace">web/app.js</text>
+
+  <rect x="60" y="212" width="360" height="92" rx="8" fill="#eef3ee" stroke="#c9d8cc"/>
+  <text x="76" y="236" font-size="14" font-weight="600" fill="#12201a">社区模块</text>
+  <text x="76" y="258" font-size="12.5" fill="#4b5b52" font-family="ui-monospace,Consolas,monospace">social.js（渲染 + syncPostGate）</text>
+  <text x="76" y="278" font-size="12.5" fill="#4b5b52" font-family="ui-monospace,Consolas,monospace">social-chain.js（reader / sendCommunity）</text>
+  <text x="76" y="296" font-size="12.5" fill="#4b5b52" font-family="ui-monospace,Consolas,monospace">social-core.js（状态与纯函数）</text>
+
+  <rect x="60" y="314" width="360" height="92" rx="8" fill="#eef3ee" stroke="#c9d8cc"/>
+  <text x="76" y="338" font-size="14" font-weight="600" fill="#12201a">托管模块</text>
+  <text x="76" y="360" font-size="12.5" fill="#4b5b52" font-family="ui-monospace,Consolas,monospace">escrow.js / escrow-core.js</text>
+  <text x="76" y="380" font-size="12.5" fill="#4b5b52" font-family="ui-monospace,Consolas,monospace">escrow-link-ui.js / escrow-links.js</text>
+  <text x="76" y="398" font-size="12.5" fill="#4b5b52" font-family="ui-monospace,Consolas,monospace">escrow-deploy.js（部署记录）</text>
+
+  <rect x="60" y="416" width="360" height="82" rx="8" fill="#eef3ee" stroke="#c9d8cc"/>
+  <text x="76" y="440" font-size="14" font-weight="600" fill="#12201a">通用层</text>
+  <text x="76" y="462" font-size="12.5" fill="#4b5b52" font-family="ui-monospace,Consolas,monospace">core.js（errorMessage，20 条映射）</text>
+  <text x="76" y="482" font-size="12.5" fill="#4b5b52" font-family="ui-monospace,Consolas,monospace">config.js（DEPLOYMENT）· wallet-session.js</text>
+
+  <rect x="60" y="508" width="360" height="58" rx="8" fill="#f3efe4" stroke="#ddd1a7"/>
+  <text x="76" y="531" font-size="14" font-weight="600" fill="#12201a">localStorage</text>
+  <text x="76" y="552" font-size="12.5" fill="#4b5b52">社区地址 · 托管地址 · 运行模式 · 会话</text>
+
+  <rect x="60" y="576" width="360" height="56" rx="8" fill="#fdf2f1" stroke="#e8c4bf"/>
+  <text x="76" y="599" font-size="12.5" font-weight="600" fill="#7a2f26">写入前校验：chainId 11155111 → 成员门控 → 错误映射</text>
+  <text x="76" y="619" font-size="12" fill="#7a2f26">任一不满足即在弹出钱包之前拦下</text>
+
+  <text x="60" y="668" font-size="12" fill="#7b8298">读：直接用 RPC，无需钱包</text>
+  <text x="60" y="688" font-size="12" fill="#7b8298">写：必须经钱包签名，页面不持有私钥</text>
+
+  <!-- ============ 中间层 ============ -->
+  <rect x="500" y="170" width="230" height="120" rx="12" fill="#e8eef4" stroke="#b9c9d8"/>
+  <text x="518" y="198" font-size="14" font-weight="700" fill="#12201a">MetaMask</text>
+  <text x="518" y="222" font-size="12.5" fill="#44586b">账户选择 · 交易签名</text>
+  <text x="518" y="242" font-size="12.5" fill="#44586b">eth_sendTransaction</text>
+  <text x="518" y="262" font-size="12.5" fill="#44586b">用户可拒绝（取消）</text>
+  <text x="518" y="280" font-size="11.5" fill="#6b7c8c" font-style="italic">私钥不出钱包；签名后由钱包广播</text>
+
+  <rect x="500" y="360" width="230" height="116" rx="12" fill="#e8eef4" stroke="#b9c9d8"/>
+  <text x="518" y="388" font-size="14" font-weight="700" fill="#12201a">公共 RPC</text>
+  <text x="518" y="412" font-size="12.5" fill="#44586b" font-family="ui-monospace,Consolas,monospace">ethereum-sepolia-rpc</text>
+  <text x="518" y="430" font-size="12.5" fill="#44586b" font-family="ui-monospace,Consolas,monospace">.publicnode.com</text>
+  <text x="518" y="452" font-size="12.5" fill="#44586b">eth_call / eth_getCode</text>
+  <text x="518" y="470" font-size="11.5" fill="#6b7c8c" font-style="italic">只读，无需签名</text>
+
+  <!-- ============ 链上 ============ -->
+  <rect x="800" y="100" width="620" height="600" rx="14" fill="#ffffff" stroke="#d7d2c4"/>
+  <text x="820" y="128" font-size="15" font-weight="700" fill="#12201a">链上 · Sepolia（chainId 11155111）</text>
+
+  <rect x="820" y="144" width="280" height="112" rx="8" fill="#e6f0e8" stroke="#9fc0a8" stroke-width="1.6"/>
+  <text x="836" y="168" font-size="14.5" font-weight="700" fill="#12201a">AgentCommunity</text>
+  <text x="836" y="189" font-size="12" fill="#3f5b4e" font-family="ui-monospace,Consolas,monospace">0x8CDc…2406</text>
+  <text x="836" y="208" font-size="12" fill="#3f5b4e">圈子 / 帖子 / 回复 / 关注 / 小队 / 作品</text>
+  <text x="836" y="226" font-size="12" fill="#3f5b4e">135 行 · 无 owner · 写入即快照</text>
+  <text x="836" y="244" font-size="11" fill="#2f6f4f" font-style="italic">→ 调 IdentityRegistry.ownerOf</text>
+
+  <rect x="1130" y="144" width="270" height="112" rx="8" fill="#eef0f6" stroke="#b9bfd4"/>
+  <text x="1146" y="168" font-size="14.5" font-weight="700" fill="#12201a">IdentityRegistry</text>
+  <text x="1146" y="189" font-size="12" fill="#3f455c" font-family="ui-monospace,Consolas,monospace">0x13eA…E91d</text>
+  <text x="1146" y="208" font-size="12" fill="#3f455c">Agent NFT：ownerOf / exists / register</text>
+  <text x="1146" y="226" font-size="12" fill="#3f455c">117 行 · 沿用既有实现</text>
+  <text x="1146" y="244" font-size="11.5" fill="#5a6480" font-style="italic">身份与所有权的事实来源</text>
+
+  <rect x="820" y="286" width="280" height="126" rx="8" fill="#eef0f6" stroke="#b9bfd4"/>
+  <text x="836" y="310" font-size="14.5" font-weight="700" fill="#12201a">JobEscrow</text>
+  <text x="836" y="331" font-size="12" fill="#3f455c" font-family="ui-monospace,Consolas,monospace">0x3C12…9f63</text>
+  <text x="836" y="350" font-size="12" fill="#3f455c">createJob / submit / release / claim / refund</text>
+  <text x="836" y="368" font-size="12" fill="#3f455c">180 行 · 每单持有客户资金</text>
+  <text x="836" y="386" font-size="11" fill="#2f6f4f" font-style="italic">→ 建单时校验 Agent 所有权</text>
+  <text x="836" y="404" font-size="11" fill="#8a7245" font-style="italic">→ ERC20 transfer / transferFrom</text>
+
+  <rect x="1130" y="286" width="270" height="126" rx="8" fill="#eef0f6" stroke="#b9bfd4"/>
+  <text x="1146" y="310" font-size="14.5" font-weight="700" fill="#12201a">ReputationRegistry</text>
+  <text x="1146" y="331" font-size="12" fill="#3f455c" font-family="ui-monospace,Consolas,monospace">0x213A…3864</text>
+  <text x="1146" y="350" font-size="12" fill="#3f455c">签名评价：giveFeedback / getSummary</text>
+  <text x="1146" y="368" font-size="12" fill="#3f455c">122 行 · 沿用既有实现</text>
+  <text x="1146" y="386" font-size="11" fill="#5a6480" font-style="italic">独立模块：其他合约不调用它</text>
+  <text x="1146" y="404" font-size="11" fill="#5a6480" font-style="italic">评价凭签名写入</text>
+
+  <rect x="820" y="446" width="280" height="88" rx="8" fill="#f4efe6" stroke="#d6c8ad"/>
+  <text x="836" y="470" font-size="14.5" font-weight="700" fill="#12201a">MockUSDC（mUSD）</text>
+  <text x="836" y="491" font-size="12" fill="#5a4c34" font-family="ui-monospace,Consolas,monospace">0x6a92…9C85</text>
+  <text x="836" y="510" font-size="12" fill="#5a4c34">ERC20 · 6 位小数 · 42 行</text>
+  <text x="836" y="527" font-size="11.5" fill="#7a6a4a" font-style="italic">测试币，无货币价值</text>
+
+  <rect x="1130" y="446" width="270" height="88" rx="8" fill="#f7f6f2" stroke="#ded8ca"/>
+  <text x="1146" y="470" font-size="13" font-weight="700" fill="#12201a">资金流</text>
+  <text x="1146" y="491" font-size="12" fill="#4b5b52">客户 approve → JobEscrow</text>
+  <text x="1146" y="509" font-size="12" fill="#4b5b52">createJob 时 transferFrom 进托管</text>
+  <text x="1146" y="527" font-size="12" fill="#4b5b52">release / claim / refund 时转出</text>
+
+  <rect x="820" y="556" width="580" height="124" rx="8" fill="#f7f6f2" stroke="#ded8ca"/>
+  <text x="836" y="580" font-size="13" font-weight="700" fill="#12201a">读与写的分工</text>
+  <text x="836" y="602" font-size="12" fill="#4b5b52">读：进入社区 / 作品 / 订单页时按地址重新 eth_call，不缓存业务数据；刷新后与链上一致，</text>
+  <text x="836" y="621" font-size="12" fill="#4b5b52">     换设备 / 换浏览器读到同一份数据（已在验收中实测）。</text>
+  <text x="836" y="645" font-size="12" fill="#4b5b52">写：只有钱包签名才产生状态；九笔社区交易与托管三订单均留回执与事件，可逐笔复核。</text>
+  <text x="836" y="666" font-size="11.5" fill="#7b8298" font-style="italic">合约无可升级入口，写入的历史不会被后台改写。</text>
+
+  <!-- ============ 连线 ============ -->
+  <!-- 浏览器 → MetaMask -->
+  <path d="M 420 240 L 500 230" stroke="#3f5b4e" stroke-width="2" fill="none" marker-end="url(#arw)"/>
+  <text x="428" y="222" font-size="11.5" fill="#3f5b4e">写</text>
+
+  <!-- MetaMask → 链上 -->
+  <path d="M 730 216 C 770 206, 780 196, 800 196" stroke="#2f6f4f" stroke-width="2.2" fill="none" marker-end="url(#arw2)"/>
+
+  <!-- 浏览器 → RPC -->
+  <path d="M 420 400 L 500 410" stroke="#3f5b4e" stroke-width="2" fill="none" marker-end="url(#arw)"/>
+  <text x="428" y="392" font-size="11.5" fill="#3f5b4e">读</text>
+
+  <!-- RPC → 链上 -->
+  <path d="M 730 424 C 770 430, 780 440, 800 440" stroke="#2f6f4f" stroke-width="2" fill="none" marker-end="url(#arw2)"/>
+
+  <!-- 合约之间：AgentCommunity → IdentityRegistry -->
+  <path d="M 1100 200 L 1130 200" stroke="#3f5b4e" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+  <!-- JobEscrow → IdentityRegistry -->
+  <path d="M 1100 340 L 1130 340" stroke="#3f5b4e" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+  <!-- JobEscrow → MockUSDC -->
+  <path d="M 960 412 L 960 446" stroke="#8a7245" stroke-width="1.8" fill="none" marker-end="url(#arw3)"/>
+
+  <!-- ============ 图例 ============ -->
+  <rect x="40" y="722" width="1380" height="120" rx="10" fill="#ffffff" stroke="#d7d2c4"/>
+  <text x="60" y="748" font-size="13.5" font-weight="700" fill="#12201a">图例与边界</text>
+
+  <line x1="60" y1="770" x2="110" y2="770" stroke="#3f5b4e" stroke-width="2" marker-end="url(#arw)"/>
+  <text x="120" y="775" font-size="12.5" fill="#3f5b4e">应用内调用</text>
+
+  <line x1="250" y1="770" x2="300" y2="770" stroke="#2f6f4f" stroke-width="2.2" marker-end="url(#arw2)"/>
+  <text x="310" y="775" font-size="12.5" fill="#2f6f4f">钱包 / RPC 到链上的通路</text>
+
+  <line x1="530" y1="770" x2="580" y2="770" stroke="#8a7245" stroke-width="1.8" marker-end="url(#arw3)"/>
+  <text x="590" y="775" font-size="12.5" fill="#8a7245">合约间调用（含代币搬运）</text>
+
+  <text x="60" y="802" font-size="12.5" fill="#4b5b52">· 合约层没有 owner / admin / pause / upgrade：不存在中心化后门，也没有"召回"已写入内容的能力。</text>
+  <text x="60" y="824" font-size="12.5" fill="#4b5b52">· 前端不保存业务数据，只保存社区与托管地址等配置；所有展示内容来自链上读取。</text>
+
+  <text x="40" y="880" font-size="12" fill="#7b8298">数据来源：contracts/*.sol、web/*.js、web/config.js（DEPLOYMENT）；地址与回执见 docs/project/DEPLOYMENTS.md。图中行数为源文件实测值。</text>
+</svg>
