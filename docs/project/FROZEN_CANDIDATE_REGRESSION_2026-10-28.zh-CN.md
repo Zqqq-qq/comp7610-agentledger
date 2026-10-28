@@ -18,7 +18,7 @@ pnpm test && pnpm build
 
 | 检查 | 结果 |
 | --- | --- |
-| `pnpm test` | **61 / 61 通过** |
+| `pnpm test` | **61 / 61 通过**（候选 `992584e` 当时的用例数；#23 合并进 main 后为 **64 项**） |
 | `pnpm build` | `Static site built in dist/` |
 | 测试后 `git status` | 干净（`.gitattributes` 生效，产物未被改写） |
 | `git diff --exit-code -- web/generated/AgentCommunity.json` | 通过，字节一致 |
@@ -95,7 +95,9 @@ pnpm test && pnpm build
 | 用户主动取消 | `Request cancelled in your wallet. No action was completed.` | 清楚，说明了后果 |
 | 合约规则拒绝（估算阶段） | `join circle first` | 合约原文，没有解释 |
 
-同一条错误展示路径，前者被映射成用户能懂的话，后者直接透出英文 revert 串。建议后续在同一个 `errorMessage` 里为常见 revert 原因补上映射（例如 `join circle first` → 「先加入该圈子再操作」）。这属于文案改进，未包含在 PR #23 中。
+同一条错误展示路径，前者被映射成用户能懂的话，后者直接透出英文 revert 串。
+
+**已补齐**：PR #23（merge commit `a6692bd`）在同一个 `errorMessage` 里补了 10 条常见 revert 原因的映射，`join circle first` 现在显示为「Join this circle before posting or replying — the contract only accepts members.」。同一 PR 还让界面在选圈时就禁用提交，多数情况下用户不会走到这条报错；两者合起来构成修复。
 
 ## 四、写入路径
 
@@ -159,7 +161,7 @@ cd comp7610-agentledger
 sw_vers                                  # 记录系统版本
 node --version                           # 需 v24.x
 pnpm install --frozen-lockfile
-pnpm test                                # 预期 61 项通过
+pnpm test                                # 预期 64 项通过（#23 合并后为 64）
 pnpm build                               # 预期成功
 git status --short                       # 预期为空（.gitattributes 应使 .sol 检出为 LF）
 git diff --exit-code -- web/generated/AgentCommunity.json   # 预期通过
@@ -167,6 +169,14 @@ git diff --exit-code -- web/generated/AgentCommunity.json   # 预期通过
 
 需要回传：`sw_vers` 输出、`node --version`、`pnpm test` 的 tests/pass/fail 三行、`git status` 是否为空。若 `git status` 出现 `contracts/*.sol` 或产物被改写，说明 `.gitattributes` 在该环境未生效，应记录并反馈。
 
-### 若还要补的真实钱包项（#7）
+### 真实钱包项（#7）
 
-本次已在真实钱包上完成：正常写入（加入圈子）、被拒绝的提交（`join circle first` 呈现在页面上、未产生交易）。仍未覆盖的是**签名被用户拒绝**（MetaMask 里点取消）时的界面表现，可在任意一次写操作中取消签名来观察，成本为零。
+三项观察均已在真实钱包上完成，各自可回溯到本文对应章节：
+
+| 项目 | 位置 |
+| --- | --- |
+| 正常写入（加入圈子） | §四，交易 `0xfff88c7c…d7bd`（区块 12010583） |
+| 被拒绝的提交（`join circle first` 呈现在页面上、未产生交易） | §三「真实点击的界面反馈」 |
+| 用户主动取消签名（toast、按钮可再点、无中间态） | §三「用户在钱包里拒绝签名时的界面反馈」 |
+
+**没有遗留的真实钱包观察项。** 唯一仍未覆盖的是 macOS 启动（见上一节），属 #8 而非 #7。
