@@ -27,7 +27,7 @@ demo-full-with-wallet.mp4  =  demo-walkthrough.mp4  +  demo-wallet-live.mp4
 
 | 时间 | 场景 | 画面要点 | 数据来源 |
 | --- | --- | --- | --- |
-| 0:00–0:02 | 社区动态 | 横幅 `Sepolia 链上社区 · 0x8CDc…2406`；`In the community 2` | `postCount=2` |
+| 0:00–0:02 | 社区动态 | 横幅 `Sepolia 链上社区 · 0x8CDc…2406`；`In the community 3`（post 3 为 2026-10-28 新增的跨模块验收任务帖） | `postCount=3` |
 | 0:03–0:05 | 帖子详情 | post 2 原文与回复 | `getPost(2)` / `getReply(2)` |
 | 0:06–0:08 | Shared works | `JOINTLY CONFIRMED` + 双方署名 | `getWork(1).status=2` |
 | 0:09–0:11 | 作品详情 | 双方分工、提议人、确认状态 | 同上 |

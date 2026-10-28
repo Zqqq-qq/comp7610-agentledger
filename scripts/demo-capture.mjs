@@ -213,7 +213,7 @@ try {
     const b = [...document.querySelectorAll('button[data-social="thread"]')].find((x) => x.dataset.id === id);
     return !!b;
   }, POST_ID, `找不到帖子 #${POST_ID} 的入口——可能链上没有该帖子或读取失败`);
-  await caption("1/7  社区动态 · Sepolia 链上真实数据 · 0x8CDc…2406");
+  await caption("1/7  Community feed · live Sepolia data · 0x8CDc…2406");
   await hold();
 
   // 2) 帖子详情
@@ -227,7 +227,7 @@ try {
     const h2 = d.querySelector("h2");
     return !!h2 && h2.textContent.trim().length > 0;
   }, POST_ID, "帖子详情弹窗未打开或标题为空");
-  await caption("2/7  帖子详情 · 需求原文与回复 · 圈子按钮随成员资格变化");
+  await caption("2/7  Post detail · requirement and replies · the circle button reflects membership");
   await hold();
   await page.evaluate(() => document.querySelector('#socialDialog button[data-social="close"]')?.click());
 
@@ -239,7 +239,7 @@ try {
   await mustWait((id) => {
     return !![...document.querySelectorAll('button[data-social="work"]')].find((x) => x.dataset.id === id);
   }, WORK_ID, `找不到作品 #${WORK_ID} 的入口`);
-  await caption("3/7  Shared works · 双方确认后才发布 · JOINTLY CONFIRMED");
+  await caption("3/7  Shared works · published only after both parties confirm");
   await hold();
 
   // 4) 作品详情
@@ -253,7 +253,7 @@ try {
     const h2 = d.querySelector("h2");
     return !!h2 && h2.textContent.trim().length > 0;
   }, null, "作品详情弹窗未打开或标题为空");
-  await caption("4/7  作品详情 · 双方分工、提议人与确认状态");
+  await caption("4/7  Work detail · roles, proposer and confirmation state");
   await hold();
   await page.evaluate(() => document.querySelector('#socialDialog button[data-social="close"]')?.click());
 
@@ -265,13 +265,13 @@ try {
     return !!f && !!document.getElementById("lookupJobForm");
   }, null, "托管页没有订单查询表单——可能托管配置未生效");
   await loadJob(1);
-  await caption("5/7  Task escrow · Job #1 已完成（链上 3 · Completed）");
+  await caption("5/7  Task escrow · Job #1 completed (on-chain status 3)");
   await hold();
 
   // 6) 托管 Job 2 / Job 3
   currentStep = "场景 6/7 托管 Job 2 / Job 3";
   await loadJob(2);
-  await caption("6/7  Job #2 已退款（4 · Refunded）· Job #3 由服务方超时后领取");
+  await caption("6/7  Job #2 refunded (4) · Job #3 claimed after the review window");
   await hold();
   await loadJob(3);
   await hold();
@@ -281,12 +281,12 @@ try {
   await scene("circles", 1200);
   await assertLive();
   await mustWait(() => document.querySelectorAll(".circle-card").length >= 3, null, "圈子卡片少于 3 个——读取失败");
-  await caption("7/7  Explore circles · 未连接钱包时统一显示 Join circle（成员状态需连接钱包后读取）");
+  await caption("7/7  Explore circles · without a wallet every circle shows Join circle");
   await hold(8);
 
   // 收尾卡
   await page.evaluate(() => {
-    document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;font:600 30px/1.5 ui-sans-serif,system-ui;color:#12201a;background:#f6f4ee;text-align:center;flex-direction:column;gap:14px"><div>Agent Ledger</div><div style="font-size:17px;font-weight:400;color:#5b6b62">Sepolia 链上社区 · 演示结束</div></div>`;
+    document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;font:600 30px/1.5 ui-sans-serif,system-ui;color:#12201a;background:#f6f4ee;text-align:center;flex-direction:column;gap:14px"><div>Agent Ledger</div><div style="font-size:17px;font-weight:400;color:#5b6b62">Sepolia community · end of demonstration</div></div>`;
   });
   await hold(8);
 
