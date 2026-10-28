@@ -141,7 +141,7 @@ await loadJob(3);
 await hold();
 
 await scene("circles", 6000);
-await caption("7/7  Explore circles · 已加入显示 Leave circle，未加入显示 Join circle");
+await caption("7/7  Explore circles · 未连接钱包时统一显示 Join circle（成员状态需连接钱包后读取）");
 await hold(8);
 
 await page.evaluate(() => {
