@@ -1,0 +1,61 @@
+{
+  "recordedAt": "2026-10-28T09:02:32.788741+00:00",
+  "repository": "https://github.com/Zqqq-qq/comp7610-agentledger.git",
+  "method": "Authenticated git clone, followed by detached checkout of exact commit; no archive reconstruction",
+  "commit": "7db718a54ed439b442d01560acf8c57486e74788",
+  "tree": "afc673de65da9e02ce2da6380a9148463a235a93",
+  "shallow": "false",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6\nBuildVersion:\t\t25G72",
+  "architecture": "arm64",
+  "node": "v24.22.1",
+  "pnpm": "11.25.0",
+  "install": {
+    "command": "pnpm install --frozen-lockfile",
+    "exitCode": 0,
+    "packagesAdded": 39,
+    "packagesReusedFromStore": 39,
+    "coldCache": false
+  },
+  "test": {
+    "command": "pnpm test",
+    "exitCode": 0,
+    "tests": 64,
+    "pass": 64,
+    "fail": 0
+  },
+  "build": {
+    "command": "pnpm build",
+    "exitCode": 0
+  },
+  "cleanStatusBeforeEvidenceFiles": "",
+  "artifactDiffExitCode": 0,
+  "lineEndings": "i/lf    w/lf    attr/text eol=lf      \tcontracts/AgentCommunity.sol\ni/lf    w/lf    attr/text eol=lf      \tcontracts/IdentityRegistry.sol\ni/lf    w/lf    attr/text eol=lf      \tcontracts/JobEscrow.sol\ni/lf    w/lf    attr/text eol=lf      \tcontracts/MockUSDC.sol\ni/lf    w/lf    attr/text eol=lf      \tcontracts/ReputationRegistry.sol\ni/lf    w/lf    attr/text eol=lf      \tweb/generated/AgentCommunity.json",
+  "hashes": {
+    "web/generated/AgentCommunity.json": {
+      "bytes": 42739,
+      "sha256": "026410e7c2c8b38867c8db6147adeb2d3c6d04b28ad2b50bc80988998f081a85"
+    },
+    "contracts/AgentCommunity.sol": {
+      "bytes": 9212,
+      "sha256": "ccbdcee86e97a46380ce83afb914d12067ed59192f843d559e13f6086fd8a8c3"
+    },
+    "contracts/IdentityRegistry.sol": {
+      "bytes": 5774,
+      "sha256": "44033281eef840c8e7117cf38caf62b43acdb104e5eff8cd29a7ab5f9824cc72"
+    },
+    "package.json": {
+      "bytes": 415,
+      "sha256": "f04f7458bce56b0c24e49d431f3a1f059b8c71d1b6773c0e222bfc3e62d638d5"
+    },
+    "pnpm-lock.yaml": {
+      "bytes": 10198,
+      "sha256": "feab9156a6f6265f8abb5fb5a630c33bb494f5f9b342bdf95493a0493be12f86"
+    }
+  },
+  "frontend": {
+    "command": "PORT=8093 node scripts/serve.mjs",
+    "url": "http://127.0.0.1:8093/#community",
+    "mode": "Demo sandbox",
+    "walletConnected": false
+  }
+}
