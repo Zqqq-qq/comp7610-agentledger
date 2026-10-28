@@ -36,20 +36,6 @@
 - Job 1 Completed、Job 2 Refunded、Job 3 Completed；均为 1 mUSD、Agent ID 0 独立钱包订单。本轮未发布社区小队引用；应用引用校验不等于合约强制绑定。
 - 以后演示沿用这两个共享地址，不需要每人重新部署。单钱包/浏览器已有存储配置时，可在 Contracts 中手动更新到上述地址。
 
-## 双钱包验收回执
-
-| 操作 | 发起钱包 | 交易哈希 | 帖/小队/作品 ID | 验收人 |
-| --- | --- | --- | --- | --- |
-| 加入圈子 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 发布需求 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 回复 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 关注 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 邀请组队 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 接受邀请 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 提议作品 | 待填写 | 待填写 | 待填写 | 待填写 |
-| 另一成员确认 | 待填写 | 待填写 | 待填写 | 待填写 |
-
-
 ## 2026-10-27 真实 Sepolia 基础验收
 
 社区地址见上文。A=`0xD3Ce5196125cd6e25212de4D04911093D3F62D5d`，B=`0xE8bCb71A15ea106aF0CD431C37C1002FeD938e20`。所有签名由用户在 MetaMask 亲自完成。
@@ -61,4 +47,92 @@
 | 加入 Builders Club | B | [0xbf6c44c37d…](https://sepolia.etherscan.io/tx/0xbf6c44c37d3635b6d1e9e44db068c90369f1bf5fe8a44ba876cb67b125f43807) | 12005503 / circle 3 |
 | 回复验收讨论 | B | [0x0b9fa3a79c…](https://sepolia.etherscan.io/tx/0x0b9fa3a79cd9ba20e2d89f46d50fcaf5f053b4b75d1927787d6e0012dc04a6e9) | 12005519 / reply 1 → post 1 |
 
-机器记录：[链上记录与成功回执](evidence/community-sepolia-live-records.json)。两浏览器为 Chrome（MetaMask，A/B 签名）与内置浏览器（独立配置社区地址，只读）；两者显示相同 post 1 / reply 1。完整边界见 [本次验收报告](SEPOLIA_ACCEPTANCE_2026-10-27.zh-CN.md)。上方社交全流程模板未执行的项目仍待填；托管资金实测已于 2026-10-28 完成，见专门验收报告。
+机器记录：[链上记录与成功回执](evidence/community-sepolia-live-records.json)。两浏览器为 Chrome（MetaMask，A/B 签名）与内置浏览器（独立配置社区地址，只读）；两者显示相同 post 1 / reply 1。完整边界见 [本次验收报告](SEPOLIA_ACCEPTANCE_2026-10-27.zh-CN.md)。这是区块 12005532 的早期快照（post 1 / reply 1），不代表后续计数；后续社交交易见下节。托管资金实测已于 2026-10-28 完成，见 [托管验收报告](ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28.zh-CN.md)。
+
+
+## 重复部署 B（保留历史，不作为共享地址）
+
+- 地址：`0xe398d0103f693cd756e46b69d16ed9f4016968ac`
+- 交易：`0x5f2f498b7013c5442ee8049c3ba3f3ea7550211167d204a7d2783f3a3620f9ca`
+- 区块：12005696；部署者：`0x4469dba9f67f878520949f6de646f586951e1723`。
+- QiuQiu-xuan 记录：当时部署 A 尚未同步，因此重复部署。保留链上合约，统一使用上方部署 A，避免状态分裂。
+- 作者原记源码基线 `39092a5`；本次只证明其创建输入、构造参数和运行时代码与已固定的仓库源码/产物一致，不能据此证明部署者当时使用的 Git 提交。
+- 本次固定区块 12009736：B 的 post / reply / team / work 计数均为 0。
+
+## QiuQiu-xuan 的社交全流程交易记录（PR #19）
+
+共享社区为部署 A，圈子 Creative Studio（circle 2）。以下 D-A / D-B 是该成员在同一浏览器 MetaMask 中的两个账户，与前节 Zqqq-qq 的 A / B 不同；不能当作两位成员独立操作或全流程跨浏览器验收。
+
+- D-A：`0x4469dba9f67f878520949f6de646f586951e1723`
+- D-B：`0xfa2b712c28e9cfe7b6737c62f59fdf235ad85239`
+
+| 操作 | 发起钱包 | 交易哈希 | 对象 | 区块 | 结果 |
+| --- | --- | --- | --- | --- | --- |
+| 加入圈子 | D-A | `0xb9a220fbd6d651d82923eadc9ba917851fc185edeac1d3fe0169fc97ece47e5d` | circle 2 | 12005903 | success |
+| 加入圈子 | D-B | `0x878cbd597b3af90139793fbe131096e5589cf6e9659905500eda80340cc2fffe` | circle 2 | 12005918 | success |
+| 发布需求 | D-A | `0x74be514cca1072da6a42b33eea4999e2af73666a93742ed7b7aca82470e3ef56` | post 2（kind=1） | 12005976 | success |
+| 回复 | D-B | `0x740ba01357883994dcb762233fe28ffa2284b9c36f2ef225c7a8ea56cb7225d8` | reply 2（post 2） | 12006011 | success |
+| 关注 | D-A | `0x7868a23a872b8b9a44fccc457e07d1076c9468d36ec06d33d873cb867784b856` | B（followerCount=1） | 12006028 | success |
+| 邀请组队 | D-A | `0xa2242c711f386000a20d493dc197cb97682d9d69a38202587bb42465250bcbf1` | team 1（Pending） | 12006044 | success |
+| 接受邀请 | D-B | `0x0737ae588b9aac998053e017a36d83b4cfe063dac5fadb35195a640c73d920f6` | team 1（Active） | 12006058 | success |
+| 提议作品 | D-A | `0x71afaafbe92d0b8f713f85890d604474f718a4f8b457749dfb5f575c85fde58c` | work 1（Proposed） | 12006079 | success |
+| 另一成员确认 | D-B | `0xa3c0004180b12a218ec433b07863cdc330b978b5df3398a2cc7cd65d43623095` | work 1（Confirmed） | 12006101 | success |
+
+
+### 拒绝调用的前置业务交易
+
+以下两笔是成功的业务交易，用于保留 Pending / Proposed 状态，不能计为失败交易。
+
+| 操作 | 发起钱包 | 交易哈希 | 对象 | 区块 | 状态 |
+| --- | --- | --- | --- | --- | --- |
+| 再邀请 B（Rejection test team） | D-A | `0x854afcdfcfa8d63550003c97ba6c1cdf31811e4b4bd8de304599a007b3607645` | team 2 | 12006224 | Pending（保留，未接受） |
+| 再提议作品（Localisation draft） | D-A | `0x3bc6786768f1f083cc8df18ff3429076090d28105d4568911770ac25ed045a2c` | work 2 | 12006235 | Proposed（保留，未确认） |
+
+
+### 固定快照与可复现核验（2026-10-28）
+
+- RPC：`https://ethereum-sepolia.publicnode.com`；chain ID 11155111。完整请求、响应、节点版本和交易所属区块哈希见 [原始证据 JSON](evidence/pr19-reproducible-audit.json)。来源为上述远程 RPC，不是本地 Ganache。
+- 记录快照：**12009736**（`0xb74108`），哈希 `0x3a5c54c63428b4546139a723c4929f8857b43b2622a8ed4c89fc8fa4739baf5c`。该区块的状态在公共节点上已被裁剪，精确复读需要归档 RPC。
+- 复跑快照：**12009928**（`0xb741c8`），哈希 `0x2a6e3107166dd0a0718a7d7af56a9eddcdb6a946f539919b7f43b5234ffd938f`。2026-10-28 由 QiuQiu-xuan 在不带 `--block` 的情况下重跑，8 个用例（4 拒绝 + 4 成功对照）、11 笔回执、两份 runtime 匹配均复现，逐条结果见 [复现说明](PR19_REPRODUCTION.zh-CN.md)。
+- A 的 post / reply / team / work = **2 / 2 / 2 / 2**；team 2 Pending，work 2 Proposed，work 1 Confirmed；D-A→D-B 与 D-B→D-A 合作计数均为 1。
+- 早期 **12005532** 快照的 1 帖 / 1 回复来自 #16 已提交记录；本次只重读其区块头，未重新计算旧状态。原记录的「提议阶段计数 0」为作者历史报告，本次不冒充已复算。
+- 9 笔主流程、2 笔前置交易回执均返回 success，并核对目标地址与各自所属区块哈希。两份部署的创建输入及运行时代码也逐字节匹配。
+- 4 条拒绝调用与 4 条成功对照全部通过。完整 from / to / calldata / block 参数、原始 revert data、编译及 immutable 回填步骤见 [复现说明](PR19_REPRODUCTION.zh-CN.md)。
+
+### 前端拒绝路径的界面核对（2026-10-28）
+
+方法：用 Playwright 驱动 Chromium，注入一个**只读的 EIP-1193 provider** 模拟「当前账户」，逐账户核对按钮门控。全程不安装钱包、不签名、不广播。它验证的是**应用如何按账户与状态渲染界面**，不是 MetaMask 弹窗或失败交易的界面反馈。
+
+| 拒绝路径 | 账户 | 界面行为 | 结论 |
+| --- | --- | --- | --- |
+| 作者确认自己的作品（work 2） | D-A（作者） | 动作区只有 `Team workspace`，无 `Confirm & publish` / `Request changes` | 已阻止 |
+| 同一作品，换另一成员 | D-B | 出现 `Request changes` + `Confirm & publish` | 正向对照 |
+| 重复确认（work 1 已 Confirmed） | D-B（本来有权限） | 无 `Confirm & publish` / `Request changes` | 已阻止（按状态） |
+| 第三方接受 Pending 小队（team 2） | `0xd3ce…62d5d`（非 host 非 guest） | 只有导航，无 `Accept invitation` / `Decline` | 已阻止 |
+| 未入圈发帖（circle 1） | D-A（未加入 circle 1） | 下拉标注 `join first`，但 **`Publish post` 仍可点击** | **未阻止**，已建 Issue #21 |
+
+第 2、3 行是正向对照：同一作品、同一状态，只更换账户，按钮的有无正好对应角色与状态限制，排除了「弹窗本身没渲染动作区」的解释。
+
+第 5 行是本次发现的缺陷：界面知道账户没加入该圈子（有 `join first` 标注），却没有禁用提交，用户会发出一笔必然以 `join circle first` 回滚的交易。
+
+### 跨浏览器只读核对（2026-10-28）
+
+用 Microsoft Edge 156 新建独立临时配置（无钱包扩展），写入社区地址后加载页面：
+
+- 社区页显示 `Sepolia 链上社区 · 0x8CDc…2406`，可见 post 2。
+- Shared works 页显示 `JOINTLY CONFIRMED` 的 work 1 与双方署名，页脚 `Confirmed at block 12010030`。
+- 全程未连接钱包（右上角仍为 Connect wallet），说明内容完全来自链上读取。
+
+**边界**：这是同一台机器上的另一个浏览器引擎，证明读取不依赖单个浏览器配置；**跨设备**仍未验证。
+
+### 验收边界与 Issue 状态
+
+**#5、#7 继续保持未完成。**
+
+- #5：仍需另一成员完成部署记录的独立现场复核。
+- #7：**界面按钮门控**已核对（见上节），剩余缺口是「MetaMask 弹窗与真实失败交易的界面反馈」，以及**跨设备**读取（本次只到同机跨浏览器引擎）。
+- 新发现缺陷 Issue #21（未入圈仍可提交发帖）。
+
+`eth_call` 使用任意公开 from 模拟调用，不签名、不广播、不改变状态；成功对照之间也不共享模拟写入。它证明固定状态下的合约判断，不能替代 MetaMask 拒签、浏览器失败提示或真实失败交易回执。界面核对使用的是注入的只读 provider，同样不能替代真实钱包交互。#18 是本地合约测试，不提升为公链 UI 验收。#16 的 Chrome / 内置浏览器结果仅覆盖前节 post 1 / reply 1。
+
+本次未发送新交易，也不将 Codex 复算记作其他组员批准。JobEscrow / MockUSDC 的公链部署与托管验收已于 2026-10-28 完成（PR #22），见 [托管验收报告](ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28.zh-CN.md)；本节只覆盖社区侧。
