@@ -1,0 +1,9 @@
+{
+  "network": "Ethereum Sepolia",
+  "community": "0x8CDc9987D46D140a982713B359286bC451262406",
+  "test": "live read adapter with deliberately wrong expected IdentityRegistry; no transaction",
+  "expectedWrongRegistry": "0x213AEEd69B82DBaebB2800D3904CBb16f9443864",
+  "rejectedWith": "This community uses a different identity registry.",
+  "correctRegistryRetry": "passed",
+  "evidenceType": "live-read-adapter-not-browser-ui"
+}
