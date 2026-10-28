@@ -425,11 +425,16 @@ pnpm build
 
 | # | Missing | Impact | Owner |
 | --- | --- | --- | --- |
-| 1 | ~~Implementation architecture diagram~~ **done** | Drawn at `docs/assets/architecture.svg` and embedded in §4.1; edit the SVG directly if changes are needed | — |
+| 1 | ~~Implementation architecture diagram~~ **done** | `docs/assets/architecture.svg` (English) and `architecture.zh-CN.svg`, embedded in §4.1 | — |
 | 2 | **Member names, student IDs, effort** | §9 currently has only GitHub handles and commit counts | Team members |
 | 3 | **E and R contribution entries** | `CONTRIBUTIONS.md` lacks these two rows, so §9 is incomplete | daizhiqi / whoever takes over |
-| 4 | **Peer assignment** (individual submission) | The course requires it; it is not tracked anywhere in this repository, and its format is currently unknown | Course information needed |
-| 5 | **Demo narration** | The video has visuals (`demo-full-with-wallet.mp4`, including real wallet interaction) but no audio track | Recorder |
+| 4 | **Peer assignment** (individual submission) | Required by the course; not tracked anywhere in this repository, format still unknown | Course information needed |
+| 5 | **Demo narration audio** | Script is complete (`docs/project/DEMO_SCRIPT.en.md`, timecoded, English); the video itself has visuals plus the real wallet segment but no audio track | Recorder |
 | 6 | **A1 interface acceptance data** | `A1_UI_ACCEPTANCE` and 22 screenshots are in PR #32, not yet merged | Zqqq-qq (sync the branch) |
 | 7 | **Leave-circle policy document** | `TEAM_CIRCLE_POLICY` is in PR #34, not yet merged | Zqqq-qq (sync the branch) |
 | 8 | **Deployment gas attribution** | §5.3 reports receipt values only; explaining the 17.18M figure needs the deployer's account of how it was sent | Zqqq-qq |
+
+Two items that were open when this report was first drafted are now closed and are recorded here so the record is not silently edited:
+
+- **Cross-module entry point** (community team → funded escrow job): executed end to end on 2026-10-28 (post 4 → team 4 → job 4, Completed, balances 99 / 1 / 0). See §7.6.
+- **English deliverables**: the report, the README, the architecture diagram and the demo captions now exist in English; the remaining English gap is the narration audio (item 5).
