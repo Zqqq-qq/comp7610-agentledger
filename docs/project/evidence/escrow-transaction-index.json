@@ -1,0 +1,58 @@
+[
+  {
+    "step": "deploy-mockusdc",
+    "transactionHash": "0x45673f45fa0c9b156bb276b8e113213369ffc19e2295f14cc9384211d9929dd3"
+  },
+  {
+    "step": "deploy-escrow",
+    "transactionHash": "0x3a35a1d2409018d5f9b14d3be7d3f9fc3a113467d9d6407f75125c5c2fa1170d"
+  },
+  {
+    "step": "mint",
+    "transactionHash": "0x86129805c86ecaffb17e69d1db8e158ce5b86cd61b0aa4a178c63d8e127931de"
+  },
+  {
+    "step": "approve-job1",
+    "transactionHash": "0xfb12a841747381d11302ef1763666ccc6666785cab56fbdbda1cf039e165e0e0"
+  },
+  {
+    "step": "fund-job1",
+    "transactionHash": "0xab535a6b10d6f1b04616069295a75c23278fb667671c59265aa8c3a056dcf532"
+  },
+  {
+    "step": "submit-job1",
+    "transactionHash": "0x8a7c020fb63fa3a07c2e8703b7fe62ce65167bf52e2665bb78be105585859385"
+  },
+  {
+    "step": "release-job1",
+    "transactionHash": "0x42c80407fe5d811887316c4b5b290b896c81abd0d018e022db17d58d6c7c07f1"
+  },
+  {
+    "step": "approve-job2",
+    "transactionHash": "0x044aecdb4577b0edf97a5088ee259cfe3b3807668b0294b1834547cd9720c9a6"
+  },
+  {
+    "step": "fund-job2",
+    "transactionHash": "0x6ae20b9d1d5fbf9bc14e3ff075f298aebff8daa72da5d90bdd718358d7020119"
+  },
+  {
+    "step": "refund-job2",
+    "transactionHash": "0xa8fb20cab443390c24f86cd83792cb6fcc097382ef99b3861f94dca203a65d36"
+  },
+  {
+    "step": "approve-job3",
+    "transactionHash": "0x204af299e265f35c37190916855bcea57446248c48d4d09a33eb10cac761b3c6"
+  },
+  {
+    "step": "fund-job3",
+    "transactionHash": "0xafc87f1a84818f3817d00c1835ae9788d5f6071f51c6140acc7070990265cf96"
+  },
+  {
+    "step": "submit-job3",
+    "transactionHash": "0xe077da083f1079acb7a5cdc22f6fe3d12be0d21aae5d9b46a90576133f66f48e"
+  },
+  {
+    "step": "claim-job3",
+    "transactionHash": "0x6b8fafe725e5b268b55cd5758889085bb58cff6f6628b59ffbe01650d7c10e1e"
+  }
+]
