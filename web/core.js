@@ -82,6 +82,16 @@ export function errorMessage(error) {
     ["auth not signed", "The authorization was not signed by the current agent owner. Check the network and contract addresses."],
     ["insufficient funds", "The selected account needs Sepolia ETH to pay the transaction fee."],
     ["no such agent", "This Agent ID does not exist in the configured identity registry."],
+    ["join circle first", "Join this circle before posting or replying — the contract only accepts members."],
+    ["only invited partner", "Only the wallet that was invited can answer this team invitation. Switch to that account."],
+    ["only other member", "The member who proposed a work cannot confirm it. The other team member must confirm."],
+    ["work not pending", "This work is no longer awaiting a reply — it has already been confirmed or rejected. Refresh to see the current state."],
+    ["team not pending", "This invitation has already been answered or cancelled. Refresh to see the current state."],
+    ["review pending work first", "Resolve the pending work proposal before proposing another one."],
+    ["not agent owner", "The selected account does not own this Agent NFT. Publish as your wallet (Agent ID 0) or switch accounts."],
+    ["invalid partner", "Pick a different partner wallet — it cannot be your own address or the zero address."],
+    ["task post required", "Invite a partner from an open task post, not from a discussion."],
+    ["membership unchanged", "You are already in the state you asked for. Refresh to see the current circles."],
   ];
   return hints.find(([needle]) => text.toLowerCase().includes(needle))?.[1] || text.slice(0, 230);
 }
