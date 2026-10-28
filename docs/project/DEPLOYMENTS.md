@@ -11,45 +11,19 @@
 
 ## 新增 AgentCommunity
 
-- 状态：**已部署**，但同一天发生了**两次**部署，两份合约字节码完全相同（`keccak256` 均为 `0x4295...cafde7`），状态各自独立。两人在同一社区写入才会互相可见，因此必须统一使用一份，见下「重复部署的处理」。
-- Owner role: C（Zqqq-qq）负责 #5。
-- Source commit: `39092a5`（两次部署所用 main；`contracts/` 与 `web/generated/` 在 #13 合并后的 `92420f7` 中未变）
+- 状态：2026-10-27 已由 Zqqq-qq 的 MetaMask 测试钱包部署，独立只读工具已核验；另一成员人工复核待完成。
+- Owner role: C（Zqqq-qq）
+- Source commit: `fb6c325175675f210f5dd1b0fba54657043f3701`（部署时本机 `afb52eb`；源码及产物与远端该提交一致）
 - Compiler: Solidity 0.8.30
 - Settings: optimizer 200, viaIR=true, EVM Shanghai
-- Constructor identity: `0x13eA93eCdDeed63259792A39d7a4738a28b3E91d`（上面的 IdentityRegistry）
-
-### 部署 A（建议作为统一地址）
-
+- Constructor identity: 上面的 IdentityRegistry
 - Contract address: `0x8CDc9987D46D140a982713B359286bC451262406`
-- Deployment transaction: `0x8a537cd6c49e68d4f2301683146bcabc0acc9a2bbde89e797b08dedb80a8ddc5`
+- Deployment transaction: [回执](https://sepolia.etherscan.io/tx/0x8a537cd6c49e68d4f2301683146bcabc0acc9a2bbde89e797b08dedb80a8ddc5)
 - Block: `12005434`
-- Deployer public wallet: `0xd3ce5196125cd6e25212de4d04911093d3f62d5d`
-- 当前状态：`postCount` 1、`replyCount` 1，为 #16 双账户验收时写入。
-
-### 部署 B（重复部署，不采用）
-
-- Contract address: `0xe398d0103f693cd756e46b69d16ed9f4016968ac`
-- Deployment transaction: `0x5f2f498b7013c5442ee8049c3ba3f3ea7550211167d204a7d2783f3a3620f9ca`
-- Block: `12005696`
-- Deployer public wallet: `0x4469dba9f67f878520949f6de646f586951e1723`
-- 当前状态：空的（postCount / teamCount / workCount / replyCount 均为 0），未写入任何记录。
-- 成因：部署 A 的地址当时尚未同步到本记录，D 按既有流程自行部署，导致重复。
-
-### 重复部署的处理
-
-- **统一使用部署 A `0x8CDc...2406`**：它更早、已带 #16 的验收数据、且属于 C 的 #5 责任范围。
-- 部署 B 保留记录但不使用，避免他人误连造成状态分裂；不主张删除链上合约（合约无自毁）。
-- 后续任何人配置社区地址前先查本节，不要各自部署。
-- Verified source link: 两份均未向 Etherscan 提交源码；改用本地重编译逐字节比对，见下节。
-
-### 部署核验（独立复算，2026-10-27）
-
-- 两份合约链上运行时字节码均为 `10,973` 字节，`keccak256` 均为 `0x42953724f77e05c99bf2f08f5faa057211268ec0973fe17e59cd072f61cafde7`。
-- 合约含 `public immutable identity`，部署时会替换该槽位。按 `immutableReferences` 回填 2 处后，与按上述源码和编译参数重编译的结果**逐字节一致**（两份均已比对）。
-- 两份链上 `identity()` 均返回 `0x13eA93eCdDeed63259792A39d7a4738a28b3E91d`，与配置的 IdentityRegistry 一致。
-- 部署 B 的交易 input 与 `web/generated/AgentCommunity.json` 的 `bytecode` + ABI 编码构造参数完全一致。
-- 部署 B 交易状态 SUCCESS，gasUsed `17,182,618`，effectiveGasPrice `16 wei`，实付 `0.000000000275 ETH`。
-- 两者差别**仅在于状态**，不在代码：A 有 1 帖 1 回复，B 为空。
+- Deployer public wallet: `0xD3Ce5196125cd6e25212de4D04911093D3F62D5d`
+- Verified source link: 尚未进行区块浏览器源码发布验证；独立核验已确认创建输入与仓库产物/构造参数匹配。
+- Machine-readable evidence: [真实部署证据](evidence/community-sepolia-deployment.json)
+- Evidence handoff: [部署与证据交接](DEPLOYMENT_HANDOFF.zh-CN.md)；浏览器可下载部署记录，也可运行 `scripts/verify-community.mjs` 独立核验。
 
 ## JobEscrow 与 MockUSDC（Issue #12）
 
@@ -61,66 +35,72 @@
 - 演示流程：批准 → 注资 → 发布社区引用 → 提交摘要 → 验收付款；另外创建订单验收退款与超时领取。
 - 请记录来源 Community / Post / Team、JobEscrow / jobId、社区引用回复 ID，以及所有操作的交易哈希。
 
-## 双钱包验收回执
+## 2026-10-27 真实 Sepolia 基础验收
 
-验收对象：社区 `0x8CDc9987D46D140a982713B359286bC451262406`，圈子 `Creative Studio`（id 2）。
-两个钱包同属一位成员的 MetaMask（同一助记词下的 Account 1 / Account 2），用于模拟两个独立 Agent。
+社区地址见上文。A=`0xD3Ce5196125cd6e25212de4D04911093D3F62D5d`，B=`0xE8bCb71A15ea106aF0CD431C37C1002FeD938e20`。所有签名由用户在 MetaMask 亲自完成。
 
-- A（客户方）：`0x4469dba9f67f878520949f6de646f586951e1723`
-- B（服务方）：`0xfa2B712C28e9CFE7b6737C62f59fdF235aD85239`
+| 操作 | 钱包 | 交易哈希 | 区块 / 记录 |
+| --- | --- | --- | --- |
+| 加入 Builders Club | A | [0x180c861990…](https://sepolia.etherscan.io/tx/0x180c8619902c9e6b462559d237dbef6cbf3485ec87989e27d34faf8ffeeb2f8c) | 12005441 / circle 3 |
+| 发布验收讨论 | A | [0xc893cb84f2…](https://sepolia.etherscan.io/tx/0xc893cb84f2812dc00a4e00a0a9d6c2e90ec72e3569849028537203319642509a) | 12005468 / post 1 |
+| 加入 Builders Club | B | [0xbf6c44c37d…](https://sepolia.etherscan.io/tx/0xbf6c44c37d3635b6d1e9e44db068c90369f1bf5fe8a44ba876cb67b125f43807) | 12005503 / circle 3 |
+| 回复验收讨论 | B | [0x0b9fa3a79c…](https://sepolia.etherscan.io/tx/0x0b9fa3a79cd9ba20e2d89f46d50fcaf5f053b4b75d1927787d6e0012dc04a6e9) | 12005519 / reply 1 → post 1 |
+
+机器记录：[链上记录与成功回执](evidence/community-sepolia-live-records.json)。两浏览器为 Chrome（MetaMask，A/B 签名）与内置浏览器（独立配置社区地址，只读）；两者显示相同 post 1 / reply 1。完整边界见 [本次验收报告](SEPOLIA_ACCEPTANCE_2026-10-27.zh-CN.md)。这是区块 12005532 的早期快照（post 1 / reply 1），不代表后续计数；后续社交交易见下节，托管公链验收仍待完成。
+
+
+## 重复部署 B（保留历史，不作为共享地址）
+
+- 地址：`0xe398d0103f693cd756e46b69d16ed9f4016968ac`
+- 交易：`0x5f2f498b7013c5442ee8049c3ba3f3ea7550211167d204a7d2783f3a3620f9ca`
+- 区块：12005696；部署者：`0x4469dba9f67f878520949f6de646f586951e1723`。
+- QiuQiu-xuan 记录：当时部署 A 尚未同步，因此重复部署。保留链上合约，统一使用上方部署 A，避免状态分裂。
+- 作者原记源码基线 `39092a5`；本次只证明其创建输入、构造参数和运行时代码与已固定的仓库源码/产物一致，不能据此证明部署者当时使用的 Git 提交。
+- 本次固定区块 12009736：B 的 post / reply / team / work 计数均为 0。
+
+## QiuQiu-xuan 的社交全流程交易记录（PR #19）
+
+共享社区为部署 A，圈子 Creative Studio（circle 2）。以下 D-A / D-B 是该成员在同一浏览器 MetaMask 中的两个账户，与前节 Zqqq-qq 的 A / B 不同；不能当作两位成员独立操作或全流程跨浏览器验收。
+
+- D-A：`0x4469dba9f67f878520949f6de646f586951e1723`
+- D-B：`0xfa2b712c28e9cfe7b6737c62f59fdf235ad85239`
 
 | 操作 | 发起钱包 | 交易哈希 | 对象 | 区块 | 结果 |
 | --- | --- | --- | --- | --- | --- |
-| 加入圈子 | A | `0xb9a220fbd6d651d82923eadc9ba917851fc185edeac1d3fe0169fc97ece47e5d` | circle 2 | 12005903 | success |
-| 加入圈子 | B | `0x878cbd597b3af90139793fbe131096e5589cf6e9659905500eda80340cc2fffe` | circle 2 | 12005918 | success |
-| 发布需求 | A | `0x74be514cca1072da6a42b33eea4999e2af73666a93742ed7b7aca82470e3ef56` | post 2（kind=1） | 12005976 | success |
-| 回复 | B | `0x740ba01357883994dcb762233fe28ffa2284b9c36f2ef225c7a8ea56cb7225d8` | reply 2（post 2） | 12006011 | success |
-| 关注 | A | `0x7868a23a872b8b9a44fccc457e07d1076c9468d36ec06d33d873cb867784b856` | B（followerCount=1） | 12006028 | success |
-| 邀请组队 | A | `0xa2242c711f386000a20d493dc197cb97682d9d69a38202587bb42465250bcbf1` | team 1（Pending） | 12006044 | success |
-| 接受邀请 | B | `0x0737ae588b9aac998053e017a36d83b4cfe063dac5fadb35195a640c73d920f6` | team 1（Active） | 12006058 | success |
-| 提议作品 | A | `0x71afaafbe92d0b8f713f85890d604474f718a4f8b457749dfb5f575c85fde58c` | work 1（Proposed） | 12006079 | success |
-| 另一成员确认 | B | `0xa3c0004180b12a218ec433b07863cdc330b978b5df3398a2cc7cd65d43623095` | work 1（Confirmed） | 12006101 | success |
+| 加入圈子 | D-A | `0xb9a220fbd6d651d82923eadc9ba917851fc185edeac1d3fe0169fc97ece47e5d` | circle 2 | 12005903 | success |
+| 加入圈子 | D-B | `0x878cbd597b3af90139793fbe131096e5589cf6e9659905500eda80340cc2fffe` | circle 2 | 12005918 | success |
+| 发布需求 | D-A | `0x74be514cca1072da6a42b33eea4999e2af73666a93742ed7b7aca82470e3ef56` | post 2（kind=1） | 12005976 | success |
+| 回复 | D-B | `0x740ba01357883994dcb762233fe28ffa2284b9c36f2ef225c7a8ea56cb7225d8` | reply 2（post 2） | 12006011 | success |
+| 关注 | D-A | `0x7868a23a872b8b9a44fccc457e07d1076c9468d36ec06d33d873cb867784b856` | B（followerCount=1） | 12006028 | success |
+| 邀请组队 | D-A | `0xa2242c711f386000a20d493dc197cb97682d9d69a38202587bb42465250bcbf1` | team 1（Pending） | 12006044 | success |
+| 接受邀请 | D-B | `0x0737ae588b9aac998053e017a36d83b4cfe063dac5fadb35195a640c73d920f6` | team 1（Active） | 12006058 | success |
+| 提议作品 | D-A | `0x71afaafbe92d0b8f713f85890d604474f718a4f8b457749dfb5f575c85fde58c` | work 1（Proposed） | 12006079 | success |
+| 另一成员确认 | D-B | `0xa3c0004180b12a218ec433b07863cdc330b978b5df3398a2cc7cd65d43623095` | work 1（Confirmed） | 12006101 | success |
 
-### 验收后的链上状态（独立读取核对）
 
-| 检查项 | 结果 |
-| --- | --- |
-| `postCount` / `replyCount` | 2 / 2 |
-| `getPost(2)` | circleId=2、kind=1、author=A |
-| `getReply(2)` | postId=2、author=B |
-| `followerCount(B)` | 1 |
-| `getTeam(1)` | status=Active、host=A、guest=B、postId=2 |
-| 提议阶段 `collaborationCount(A,B)` | 0（未确认前不产生履历） |
-| `getWork(1)` | status=Confirmed、author=A |
-| 确认后 `collaborationCount` | A→B = 1，B→A = 1 |
-| 9 笔交易状态 | 全部 success |
+### 拒绝调用的前置业务交易
 
-### 拒绝路径取证（对已部署合约的 eth_call）
-
-用 `eth_call` 直接调用已部署合约，合约照常执行检查并回滚，可取得精确 revert 原因。虽不产生交易回执（回滚本身没有回执），但执行的是**真实部署的字节码与真实链上状态**，不是本地模拟。
-
-每组都附**正向对照**：同一状态、同一函数，只更换调用方，用于排除"调用本身有问题"。
-
-| # | 拒绝路径 | 调用方 | 合约返回 | 正向对照 |
-| --- | --- | --- | --- | --- |
-| 1 | 第三钱包接受 Pending 小队（team 2） | `0xd3ce5196…62d5d` | `only invited partner` | 受邀者 B 调用 → 无回滚 |
-| 2 | 提议人确认自己提议的作品（work 2） | A | `only other member` | 另一成员 B 调用 → 无回滚 |
-| 3 | 未加入圈子的钱包发帖（circle 1） | A | `join circle first` | — |
-| 4 | 重复确认已确认的作品（work 1） | B | `work not pending` | — |
-
-补充观察：合约的检查顺序是「状态 → 角色」。对已确认作品，作者与非作者都得到 `work not pending` 而非 `only other member`；对已激活小队，任何人都是 `team not pending`。因此第 1、2 条的取证必须先构造 Pending 小队（team 2）与 Proposed 作品（work 2），否则命中的是状态检查而非角色检查。
-
-为构造上述前置状态，A 额外发起了两笔交易（见下表），它们本身是合法业务操作，不是失败交易。
+以下两笔是成功的业务交易，用于保留 Pending / Proposed 状态，不能计为失败交易。
 
 | 操作 | 发起钱包 | 交易哈希 | 对象 | 区块 | 状态 |
 | --- | --- | --- | --- | --- | --- |
-| 再邀请 B（Rejection test team） | A | `0x854afcdfcfa8d63550003c97ba6c1cdf31811e4b4bd8de304599a007b3607645` | team 2 | 12006224 | Pending（保留，未接受） |
-| 再提议作品（Localisation draft） | A | `0x3bc6786768f1f083cc8df18ff3429076090d28105d4568911770ac25ed045a2c` | work 2 | 12006235 | Proposed（保留，未确认） |
+| 再邀请 B（Rejection test team） | D-A | `0x854afcdfcfa8d63550003c97ba6c1cdf31811e4b4bd8de304599a007b3607645` | team 2 | 12006224 | Pending（保留，未接受） |
+| 再提议作品（Localisation draft） | D-A | `0x3bc6786768f1f083cc8df18ff3429076090d28105d4568911770ac25ed045a2c` | work 2 | 12006235 | Proposed（保留，未确认） |
 
-这两项未清理，作为拒绝路径取证的前置状态保留；若最终演示需要干净状态，可由 A 取消 team 2、由 B 拒绝 work 2。
 
-### 这次没有覆盖的
+### 固定快照与可复现核验（2026-10-28）
 
-- 拒绝路径已改为对已部署合约取证（见上节），不再只依赖本地测试。
-- 跨设备/跨浏览器读取未单独截图，仅由两个账户在同一浏览器内验证。
-- 平台原生扩展被禁用，Ganache 回退不影响结论，但这条链的基础费与 gas 计量与标准以太坊不同（见上文说明）。
+- RPC：`https://ethereum-sepolia.publicnode.com`；chain ID 11155111。完整请求、响应、节点版本和交易所属区块哈希见 [原始证据 JSON](evidence/pr19-reproducible-audit.json)。来源为上述远程 RPC，不是本地 Ganache。
+- 本次固定区块：**12009736**（`0xb74108`），哈希 `0x3a5c54c63428b4546139a723c4929f8857b43b2622a8ed4c89fc8fa4739baf5c`。所有状态与拒绝调用使用此区块，开始与结束核对相同哈希。
+- A 的 post / reply / team / work = **2 / 2 / 2 / 2**；team 2 Pending，work 2 Proposed，work 1 Confirmed；D-A→D-B 与 D-B→D-A 合作计数均为 1。
+- 早期 **12005532** 快照的 1 帖 / 1 回复来自 #16 已提交记录；本次只重读其区块头，未重新计算旧状态。原记录的「提议阶段计数 0」为作者历史报告，本次不冒充已复算。
+- 9 笔主流程、2 笔前置交易回执均返回 success，并核对目标地址与各自所属区块哈希。两份部署的创建输入及运行时代码也逐字节匹配。
+- 4 条拒绝调用与 4 条成功对照全部通过。完整 from / to / calldata / block 参数、原始 revert data、编译及 immutable 回填步骤见 [复现说明](PR19_REPRODUCTION.zh-CN.md)。
+
+### 验收边界与 Issue 状态
+
+**#5、#7 继续保持未完成。** #5 仍需另一成员完成部署记录的独立现场复核；#7 仍需补齐前端拒绝路径的界面反馈证据，以及该完整社交流程的跨浏览器读取与同伴验收。
+
+`eth_call` 使用任意公开 from 模拟调用，不签名、不广播、不改变状态；成功对照之间也不共享模拟写入。它证明固定状态下的合约判断，不能替代 MetaMask 拒签、浏览器失败提示或真实失败交易回执。#18 是本地合约测试，不提升为公链 UI 验收。#16 的 Chrome / 内置浏览器结果仅覆盖前节 post 1 / reply 1。
+
+本次未发送新交易，也不将 Codex 复算记作其他组员批准。#12 的 JobEscrow / MockUSDC 部署与公链验收继续待完成。

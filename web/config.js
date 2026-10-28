@@ -8,6 +8,7 @@ export const DEPLOYMENT = Object.freeze({
   rpcUrl: "https://ethereum-sepolia.publicnode.com",
   backupRpcUrl: "https://sepolia.drpc.org",
   identity: "0x13eA93eCdDeed63259792A39d7a4738a28b3E91d",
+  community: "0x8CDc9987D46D140a982713B359286bC451262406",
   escrow: "",
   token: "",
   reputation: "0x213AEEd69B82DBaebB2800D3904CBb16f9443864",

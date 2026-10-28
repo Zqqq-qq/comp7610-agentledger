@@ -1,108 +1,250 @@
-# AgentLedger Social · COMP7610
+<div align="center">
 
-在小组提供的 AgentLedger 身份与声誉工作台上增加完整社交协作模块：圈子、主动发帖、回复、钱包关注、邀请组队、共同作品，以及由双方确认作品形成的合作履历。沿用原生 HTML/CSS/JavaScript 与本地 Ethers，原有注册和评分流程保留。
+<img src="docs/assets/banner.svg" alt="AgentLedger: decentralized AI agent network. Every agent on-chain. Every reputation earned." width="100%">
 
-Issue #12 增量接入任务托管：批准测试 mUSD、注资、交付、验收放款、退款、超时领取及小队订单引用。详见 [社交与托管集成说明](docs/ESCROW_INTEGRATION.zh-CN.md)。五份 Solidity 源码未修改；真实 Sepolia 部署和钱包验收仍需成员执行。
+<p>
+<img alt="Ethereum Sepolia" src="https://img.shields.io/badge/Ethereum-Sepolia-627EEA?style=flat-square&logo=ethereum&logoColor=white">
+<img alt="Solidity" src="https://img.shields.io/badge/Solidity-0.8-363636?style=flat-square&logo=solidity&logoColor=white">
+<img alt="ERC-721" src="https://img.shields.io/badge/ERC--721-Agent%20Identity-4f46e5?style=flat-square">
+<img alt="EIP-712" src="https://img.shields.io/badge/EIP--712-Signed%20reviews-b45309?style=flat-square">
+<img alt="Zero build" src="https://img.shields.io/badge/Frontend-Zero%20build-0f766e?style=flat-square">
+</p>
 
-## 小组协作入口
+<p>
+<a href="#项目简介"><b>项目简介</b></a> ·
+<a href="#使用流程"><b>使用流程</b></a> ·
+<a href="#功能全景图"><b>全景图</b></a> ·
+<a href="#系统架构"><b>架构</b></a> ·
+<a href="#现有功能"><b>现有功能</b></a> ·
+<a href="#路线图"><b>路线图</b></a> ·
+<a href="#团队"><b>团队</b></a>
+</p>
 
-以本仓库 `main` 为唯一源码主线。五人分工与时间表见 [任务表](docs/project/TEAM_TASKS.zh-CN.md)，修改流程见 [CONTRIBUTING.md](CONTRIBUTING.md)，公共地址与回执写入 [部署记录](docs/project/DEPLOYMENTS.md)。每人认领 Issue，从任务分支提交 PR，经过同伴审阅及 CI 后合并。
+</div>
 
-## 立即运行
+## 项目简介
 
-安装了 Node.js 20+：
+**AgentLedger 是一个基于以太坊的 AI Agent 开放分享平台。** 开发者发布自己的 Agent，任何人都可以发现、使用并评价它们，每个 Agent 的信誉由真实使用记录在链上逐步积累。
 
-```sh
-node scripts/serve.mjs
+- **开放分享**：Agent 由开发者自行部署，在链上注册身份 NFT，名片公开服务地址、能力与价格
+- **口碑驱动**：使用者经授权后留下链上评价，记录不可篡改，长期积累为 Agent 的信誉
+- **安全结算**：付费任务通过托管合约结算，交付后放款，超时可退款，资金不经过任何第三方
+- **协作网络**：开发者与 Agent 可在链上组队，共同作品经双方确认后公开，形成可追溯的合作记录
+
+## 使用流程
+
+一个 Agent 从发布到获得评价，共经过 8 个步骤。图中同时标注了各步骤的当前实现进度。
+
+<img src="docs/assets/journey.png" alt="使用流程：8 个步骤及实现进度" width="100%">
+
+<details>
+<summary>文字版</summary>
+
+> 🟢 已完成　🟡 部分完成　⚪ 尚未开始
+
+| 步骤 | 角色 | 做什么 | 现状 |
+| :-: | :-- | :-- | :-- |
+| 1 | 分享者 | **部署 Agent 服务**：Agent 程序跑在自己的服务器上，对外提供接口 | ⚪ 尚未开始 |
+| 2 | 分享者 | **发布名片，注册身份 NFT**：名片 JSON 写服务地址、技能、价格；铸造 NFT 时 `tokenURI` 指向名片 | 🟡 能注册，名片只有示例 |
+| 3 | 使用者 | **浏览市场，按口碑挑选**：列出所有 Agent 及其平均分、评价次数 | 🟡 能浏览，不能筛选排序 |
+| 4 | 使用者 | **查看名片，拿到服务地址**：从链上读 `tokenURI`，下载名片，解析出服务地址和价格 | 🟡 只显示原始 JSON |
+| 5 | 使用者 | **一键下单，钱进托管**：用 `ownerOf` 自动填收款钱包和 Agent ID，授权 mUSD 后创建订单 | 🟡 界面已有，需手填，合约未部署 |
+| 6 | Agent | **收到订单，执行，提交交付**：Agent 服务监听订单事件，完成任务后提交交付哈希 | ⚪ 现在只能人工提交 |
+| 7 | 使用者 | **验收放款**：放款、超时退款、超时领取，都按托管合约的状态机走 | 🟡 合约和界面就绪，未部署 |
+| 8 | 使用者 | **评价，口碑回流市场**：完成订单后获得评价资格，评分影响市场排名 | 🟡 能评价，但和订单没绑定 |
+
+</details>
+
+## 功能全景图
+
+<img src="docs/assets/map.png" alt="功能全景图：分享者、链上合约、使用者与 Agent 服务之间的关系" width="100%">
+
+<details>
+<summary>Mermaid 源码</summary>
+
+```mermaid
+flowchart LR
+  subgraph SELLER["分享者 / Agent 主人"]
+    direction TB
+    S1["部署 Agent 服务<br/>某台服务器上的 AI 程序"]
+    S2["发布名片 agent-card.json<br/>服务地址 · 技能 · 价格"]
+    S3["注册身份 NFT<br/>tokenURI 指向名片"]
+    S1 --> S2 --> S3
+  end
+  subgraph CHAIN["链上合约 · Ethereum Sepolia"]
+    direction TB
+    C1[("IdentityRegistry<br/>身份 NFT · ERC-721")]
+    C2[("ReputationRegistry<br/>评分 0-100")]
+    C3[("JobEscrow<br/>托管付款")]
+    C4[("MockUSDC<br/>测试币 mUSD · ERC-20")]
+    C5[("AgentCommunity<br/>圈子 · 帖子 · 组队 · 作品")]
+  end
+  subgraph BUYER["使用者"]
+    direction TB
+    B1["浏览 Agent 市场<br/>按口碑筛选排序"]
+    B2["查看详情<br/>解析名片拿到服务地址"]
+    B3["一键下单<br/>自动填收款地址"]
+    B4["验收放款"]
+    B5["评价<br/>与订单绑定"]
+    B1 --> B2 --> B3 --> B4 --> B5
+  end
+  A1["Agent 服务收到订单<br/>执行任务"]
+  A2["提交交付哈希"]
+  S3 --> C1
+  C1 -. 身份 .-> B1
+  C2 -. 评分 .-> B1
+  B2 -. 下载名片 .-> S2
+  C4 -- 付款代币 --> C3
+  B3 --> C3
+  C3 -. 订单事件 .-> A1
+  A1 --> A2 --> C3
+  B4 --> C3
+  B5 --> C2
+  C1 -. 验证 Agent 归属 .-> C5
+  C5 -. 小队关联订单 .-> C3
+  classDef done fill:#e3f3e9,stroke:#1d7a46,color:#12351f,stroke-width:1.5px;
+  classDef part fill:#fbefd9,stroke:#9a5b00,color:#3d2600,stroke-width:1.5px;
+  classDef todo fill:#f1f2f4,stroke:#8a919c,color:#2c313a,stroke-width:1.5px,stroke-dasharray:5 4;
+  class C1,C2,C5 done;
+  class S2,S3,C3,C4,B1,B2,B3,B4,B5,A2 part;
+  class S1,A1 todo;
 ```
 
-打开 http://127.0.0.1:8091 。运行网页不需要安装依赖。Windows 也可使用 `start-frontend.ps1`，默认 8091，自动查找 Node.js 或 Python，不再依赖某位成员的绝对路径。已有 Python 时：
+</details>
 
-```sh
-python3 -m http.server 8091 --bind 127.0.0.1 --directory web
+## 交易时序
+
+一笔付费任务从注册到评价，各方与合约之间的调用顺序如下。
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Seller as 分享者 / Agent 主人
+    participant Agent as Agent 服务
+    participant ID as IdentityRegistry
+    participant Rep as ReputationRegistry
+    participant Esc as JobEscrow
+    actor Buyer as 使用者
+
+    Seller->>ID: register(名片链接) → 获得身份 NFT
+    Buyer->>ID: 浏览 Agent 目录
+    Buyer->>Rep: 查看平均分与评价次数
+    Buyer->>Seller: 读取名片：服务地址 · 技能 · 价格
+    Buyer->>Esc: createJob：资金存入托管
+    Esc-->>Agent: JobCreated 事件
+    Agent->>Agent: 执行任务
+    Agent->>Esc: submit(交付哈希)
+    Buyer->>Esc: release：放款给 Agent
+    Seller-->>Buyer: 签发评价授权（EIP-712）
+    Buyer->>Rep: giveFeedback：评分上链
 ```
 
-默认打开 Demo sandbox。顶部明确标识样例只在当前浏览器保存，不向链上发交易。Act as 可切换 Alex、Maya、Jamie；Reset samples 恢复初始样例。种子包含 3 个钱包、4 条帖子、3 条回复、1 个已接受小队和 1 件双方确认作品。演示模式切换身份不是钱包授权。
+## 系统架构
 
-身份注册/评分页面独立读取真实 Sepolia；演示样例不会进入它们的列表。已有两个地址已填入 `web/config.js`：
-
-- IdentityRegistry：`0x13eA93eCdDeed63259792A39d7a4738a28b3E91d`
-- ReputationRegistry：`0x213AEEd69B82DBaebB2800D3904CBb16f9443864`
-
-## 功能与权限
-
-| 模块 | 已实现 |
-| --- | --- |
-| 圈子 | 三个固定主题圈，加入/退出、成员数、按圈查看内容 |
-| 发帖 | 动态、开放需求、作品分享；标题、正文、代表身份 |
-| 回复 | 需求详情讨论串，作者、代表 Agent、时间；同圈成员可回复 |
-| 关注 | 钱包关注/取消关注、关注者数、Following 动态流 |
-| 组队 | 由需求邀请一名伙伴，公开双方角色；受邀者接受/拒绝，发起人撤回未接受邀请 |
-| 共同作品 | 活跃小队成员提议结果，另一成员确认或要求修改；只有双方确认后公开入作品集 |
-| 履历 | 个人钱包主页、共同作品、历史伙伴与共同确认作品次数 |
-| 链上社区 | 新增 AgentCommunity，全部社交写入由合约控制；跨浏览器读取同一部署 |
-| 原有功能 | 注册、身份查询、授权评分、MetaMask 账户选择、交易回执 |
-| 任务托管 | 单客户/单服务方 mUSD 订单、交付摘要、付款、退款、超时领取；复用原 JobEscrow |
-| 社交订单引用 | 小队/需求进入托管、付款人发布链上回复引用、独立验证和跨设备加载、反向回溯 |
-
-普通用户可用 Agent ID=0 以钱包身份参与。代表非零 Agent 时检查当前 NFT Owner。待接受的邀请再次核验双方 Agent 所有权；接受后成员钱包被记录，NFT 转让不会把既有小队和个人合作履历送给新 Owner。
-
-关注对象是运营者钱包；它不随 NFT 转让转移。作品确认是两名钱包对贡献说明和引用的认可，不是独立质量审计，不证明 AI 自动完成任务，也不是付款证据。原有卖家授权评分保持单独展示。
-
-## Sepolia 多人使用
-
-社交合约尚未代用户广播部署。代码和编译产物已就绪，新增合约只需部署一次：
-
-1. 用装有 MetaMask 的 Chrome/Edge 打开网页。连接钱包并准备 Sepolia ETH。
-2. 点击 **Sepolia community → Community contract**。
-3. 点击 **Deploy AgentCommunity**，在自己的钱包确认部署；构造参数自动使用当前 IdentityRegistry。
-4. 确认后地址保存到当前浏览器。复制给其他成员。
-5. 其他成员在同一弹窗填地址，点击 **Verify & save address**。校验网络、合约代码、identity() 关联及圈子数量。
-6. 每人分别连接自己的钱包，加入相同圈子，按需求—回复—邀请—接受—作品—确认流程操作。Refresh 读取链上最新状态。
-
-也可用 Remix 部署 `contracts/AgentCommunity.sol`：Solidity 0.8.30、优化 200 次、viaIR=true、EVM Shanghai，构造参数填现有身份合约地址。合约无外部依赖。前端不索取或保存私钥。
-
-### 数据与查询
-
-- 新合约在 Sepolia 上存储短文本、作者钱包、引用关系、成员、关注、小队和作品状态；不依赖本机后端。跨设备的真实共享依赖同一社区合约地址。
-- 此课程实现直接存短文本，写入需要测试网 gas。标题最长 160 UTF-8 字节；帖子与作品说明 6000；回复 3000；分工 300；作品 URI 1024。
-- 页面默认加载最近 40 条帖子/小队/作品、80 条回复和最近 40 个参与钱包，再补充关联的旧小队和来源帖。Load older records 每次扩大 40。合作次数与 Following 列表以当前加载范围为准；未加载记录不代表不存在。
-- 页面进行整次读取，显示读取区块；RPC 失败清空本次社区展示并提示，避免误认为成功读取。网络与合约地址校验后才保存配置。
-- 浏览器数值输入支持 0 到 2^53-1 的安全整数；原有身份/评分模块的大整数处理保留。
-- 记录不可通过界面删除或修改。链上文本公开且无内容审核，请使用课程测试内容；作品 URL 可变，合约不会抓取或永久保存目标文件。
-- 不同钱包不等于不同真人，共同确认仍可能串通。合约没有声称保证质量。
-
-## 编译和测试
-
-运行网页不依赖 node_modules。仅编译/测试需要安装开发依赖：
-
-```sh
-pnpm install
-pnpm compile
-pnpm test
-pnpm build
+```mermaid
+flowchart LR
+  subgraph Client["浏览器 · 零构建前端"]
+    UI["Agent 市场 · 注册 · 评价<br/>托管订单 · 社区"]
+  end
+  subgraph Chain["Ethereum Sepolia"]
+    ID[("IdentityRegistry<br/>ERC-721 身份")]
+    REP[("ReputationRegistry<br/>EIP-712 口碑")]
+    ESC[("JobEscrow<br/>托管结算")]
+    USD[("MockUSDC<br/>ERC-20 测试币")]
+    COM[("AgentCommunity<br/>协作网络")]
+  end
+  subgraph OffChain["链下"]
+    CARD["Agent 名片<br/>agent-card.json"]
+    SVC["Agent 服务<br/>任意服务器"]
+  end
+  UI -- ethers v6 --> ID & REP & ESC & COM
+  ID -. tokenURI .-> CARD
+  CARD -. 服务地址 .-> SVC
+  REP -- ownerOf --> ID
+  ESC -- ownerOf --> ID
+  COM -- ownerOf --> ID
+  USD -- 付款代币 --> ESC
+  SVC -- submit --> ESC
 ```
 
-`compile` 生成 `web/generated/AgentCommunity.json`；`build` 将网页复制到 `dist/`。测试使用 Ganache 本地 EVM；live-adapter 测试会临时监听 127.0.0.1 的随机端口，退出即关闭。可选原生扩展被禁用，Ganache 使用 JS 回退不影响测试结论。
+**设计原则**
 
-测试包含原有前端用例、演示状态权限、社区合约权限与状态转换，以及与网页相同的 JSON-RPC 适配器端到端读写。详见 `docs/VERIFICATION.json`。
+- **零后端依赖**：网页直接读写链上合约，任何静态托管都能运行，不保存私钥。
+- **身份是唯一锚点**：口碑、托管、社区三份合约都通过 `ownerOf` 回到同一个身份 NFT。
+- **可复现部署**：编译参数固定，部署证据可由任何人用只读脚本独立核验。
 
-## 实现范围
+## 现有功能
 
-已实现这里列出的社交功能。未包含此前 v2 大方案中的双人托管分账、订单验证评价、实时私信、动态创建圈子、自动 AI 执行、完整 ERC-8004/ERC-721 兼容升级或身份 Card 的线上托管。不能把本次交付写成这些扩展已完成。
+"已上链"指合约已部署到 Sepolia。JobEscrow 和 MockUSDC 的代码和界面都已完成，部署后即可在线使用。
 
-现有两个 Registry 合约没有被修改；新增社区引用它们的身份地址。原身份 Card 的 localhost URI 需要原 Owner 自行更新，社区开发不会自动更改它。
+| 模块 | 功能 | 对应合约 / 文件 | 状态 |
+| :-- | :-- | :-- | :-- |
+| 身份 | 注册 Agent，铸造身份 NFT（Agent ID 即 NFT 编号） | `IdentityRegistry.register` | 🟢 已上链 |
+| 身份 | 修改名片链接、转让身份 | `updateRegistration` · `transferFrom` | 🟢 合约支持 |
+| 身份 | Agent 目录：列出全部 Agent 及评分 | `web/app.js` · `loadRegistry` | 🟢 可用 |
+| 身份 | Agent 详情、下载名片（目前只显示原始 JSON） | `web/app.js` · `showAgent` | 🟡 部分 |
+| 口碑 | Agent 主人签发评价授权（链下签名，不花 gas） | EIP-712 `FeedbackAuth` | 🟢 可用 |
+| 口碑 | 评价人上链打分，查平均分；防自评、防重放、授权会过期 | `ReputationRegistry.giveFeedback` | 🟢 已上链 |
+| 托管 | 领取测试币 mUSD | `MockUSDC.mint` | 🟡 待部署 |
+| 托管 | 授权扣款，创建并注资订单 | `JobEscrow.createJob` | 🟡 待部署 |
+| 托管 | 提交交付；放款 / 退款 / 超时领取 | `submit` · `release` · `refund` · `claim` | 🟡 待部署 |
+| 托管 | 订单关联社区小队，跨设备恢复关联 | `web/escrow-links.js` | 🟡 待部署 |
+| 社区 | 3 个圈子，加入 / 退出 | `AgentCommunity.setMembership` | 🟢 已上链 |
+| 社区 | 发帖（讨论 / 任务 / 展示）、回复、关注 | `createPost` · `createReply` · `setFollow` | 🟢 已上链 |
+| 社区 | 基于任务帖组队：邀请、接受、拒绝、取消 | `inviteTeam` · `respondTeam` · `cancelTeam` | 🟢 已上链 |
+| 社区 | 共同作品：一人提交、另一人确认、合作次数 +1 | `proposeWork` · `reviewWork` | 🟢 已上链 |
+| 社区 | 演示模式：不连钱包，在浏览器本地体验 | `web/social-core.js` | 🟢 可用 |
+| 基础设施 | 钱包连接、多账户切换、自动切到 Sepolia | `web/wallet-session.js` | 🟢 可用 |
+| 基础设施 | 部署证据导出、独立核验脚本、CI | `scripts/verify-community.mjs` | 🟢 可用 |
 
-## 文件入口
+### 已部署合约
 
-- `web/social.js`：社区页面、表单、交互、两种模式。
-- `web/social-core.js`：演示规则、种子数据、合作履历派生。
-- `web/social-chain.js`：链上验证、读写、钱包部署。
-- `web/social.css`：延续原 AgentLedger 的视觉与响应式样式。
-- `contracts/AgentCommunity.sol`：新增社区合约。
-- `docs/SOCIAL_DEMO.zh-CN.md`：演示与双钱包验收步骤。
-- `docs/IMPLEMENTATION.zh-CN.md`：供报告使用的架构、状态机、贡献及边界说明。
-- `docs/LEGACY_README.md`：原包说明，保留溯源。
-- `backend-provenance.json`、`LICENSE.backend`、`web/vendor/LICENSE.ethers.md`：原来源和许可。
+| 合约 | 地址（Sepolia） |
+| :-- | :-- |
+| IdentityRegistry | [`0x13eA93eCdDeed63259792A39d7a4738a28b3E91d`](https://sepolia.etherscan.io/address/0x13eA93eCdDeed63259792A39d7a4738a28b3E91d) |
+| ReputationRegistry | [`0x213AEEd69B82DBaebB2800D3904CBb16f9443864`](https://sepolia.etherscan.io/address/0x213AEEd69B82DBaebB2800D3904CBb16f9443864) |
+| AgentCommunity | [`0x8CDc9987D46D140a982713B359286bC451262406`](https://sepolia.etherscan.io/address/0x8CDc9987D46D140a982713B359286bC451262406) |
 
-原注册/评分签名域 ArcAgentReputation 保持不变。新增社交代码不依赖旧 ReputationRegistry 的卖家授权逻辑。
+## 路线图
+
+按"先让完整旅程跑通，再提升体验"排序。P0 完成后，上面 8 个步骤就能完整演示一遍。
+
+| 优先级 | 功能 | 具体做什么 | 改哪一层 | 对应步骤 |
+| :-: | :-- | :-- | :-- | :-: |
+| P0 | 部署托管合约 | 把 JobEscrow 和 MockUSDC 部署到 Sepolia，地址写进 `web/config.js` | 部署 | 5 · 7 |
+| P0 | 名片标准与生成器 | 定好名片字段（服务地址、技能、价格、付款方式）；注册页提供表单生成名片 JSON | 前端 + 文档 | 2 |
+| P0 | 名片解析展示 | 详情页把名片渲染成卡片，突出服务地址、技能和价格 | 前端 | 4 |
+| P0 | 一键下单 | 详情页加"使用"按钮：`ownerOf` 自动填收款钱包和 Agent ID，价格从名片带入 | 前端 | 5 |
+| P0 | 示例 Agent 服务 | 最小 Agent 服务器：监听 `JobCreated`，完成任务后自动 `submit` 交付哈希 | 后端 | 1 · 6 |
+| P1 | 市场筛选排序 | 按平均分、评价次数、技能标签筛选和排序 | 前端 | 3 |
+| P1 | 评价与订单绑定 | 放款后由 Agent 主人自动签发评价授权；或新增合约，只允许完成订单的使用者评价 | 前端 / 新合约 | 8 |
+| P1 | 订单动态 | "我的订单"页：分享者 / 使用者视角的订单列表和状态提示 | 前端 | 5 – 7 |
+| P2 | x402 按次付费 | 小额调用不走托管：服务器回 402，付款后直接拿结果 | 后端 | 4 – 5 |
+| P2 | 社区与市场打通 | Agent 主页展示参与的小队和已确认作品，作为评分之外的信誉证据 | 前端 | 3 |
+
+## 团队
+
+<table>
+<tr>
+<td align="center"><a href="https://github.com/PAisHere"><img src="https://github.com/PAisHere.png?size=96" width="64" alt="PAisHere"><br><sub><b>PAisHere</b></sub></a><br><sub>界面与体验</sub></td>
+<td align="center"><a href="https://github.com/ffmitrg"><img src="https://github.com/ffmitrg.png?size=96" width="64" alt="ffmitrg"><br><sub><b>ffmitrg</b></sub></a><br><sub>合约复核</sub></td>
+<td align="center"><a href="https://github.com/Zqqq-qq"><img src="https://github.com/Zqqq-qq.png?size=96" width="64" alt="Zqqq-qq"><br><sub><b>Zqqq-qq</b></sub></a><br><sub>部署与集成</sub></td>
+<td align="center"><a href="https://github.com/QiuQiu-xuan"><img src="https://github.com/QiuQiu-xuan.png?size=96" width="64" alt="QiuQiu-xuan"><br><sub><b>QiuQiu-xuan</b></sub></a><br><sub>测试与 CI</sub></td>
+<td align="center"><a href="https://github.com/daizhiqi"><img src="https://github.com/daizhiqi.png?size=96" width="64" alt="daizhiqi"><br><sub><b>daizhiqi</b></sub></a><br><sub>报告与发布</sub></td>
+</tr>
+</table>
+
+## 文档
+
+| 文档 | 内容 |
+| :-- | :-- |
+| [功能蓝图](docs/BLUEPRINT.zh-CN.md) | 现有功能盘点、完整旅程、全景图、待补功能 |
+| [开发与运行说明](docs/DEVELOPMENT.zh-CN.md) | 本地运行、Sepolia 多人使用、编译与测试 |
+| [托管集成说明](docs/ESCROW_INTEGRATION.zh-CN.md) | 托管订单与社区小队的关联设计 |
+| [实现说明](docs/IMPLEMENTATION.zh-CN.md) | 架构、状态机与边界说明 |
+| [部署记录](docs/project/DEPLOYMENTS.md) | 公开地址与部署回执 |
+| [贡献指南](CONTRIBUTING.md) | 分支、PR 与审阅流程 |
+
+## 致谢
+
+身份、口碑与托管合约源自 [Mnorbert87/arc-agent-registry](https://github.com/Mnorbert87/arc-agent-registry)（MIT），逐字节沿用，来源记录见 [`backend-provenance.json`](backend-provenance.json)。本项目是 COMP7610 课程项目，在其基础上新增了社区合约，以及托管和社区的完整前端。

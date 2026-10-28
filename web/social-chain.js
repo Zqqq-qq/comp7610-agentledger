@@ -1,4 +1,5 @@
 import { DEPLOYMENT } from './config.js';
+import {verifyDeployment} from './deployment-evidence.js';
 const sdk=()=>globalThis.ethers;
 let artifact;
 export async function communityArtifact(){if(!artifact){const r=await fetch('./generated/AgentCommunity.json');if(!r.ok)throw new Error('Community build artifact is missing. Run the compiler first.');artifact=await r.json();}return artifact;}
@@ -42,6 +43,7 @@ export async function loadCommunity(address,account,limit,registry,rpc){
  }finally{p.destroy();}
 }
 export async function sendCommunity(address,registry,rpc,signer,action,onPending){
+ if(!signer.provider||BigInt(await signer.provider.send('eth_chainId',[]))!==11155111n)throw new Error('Switch the signing wallet to Ethereum Sepolia before sending a community transaction.');
  const e=sdk(),{c,p}=await reader(address,registry,rpc);
  try{
  const write=c.connect(signer);let tx;const a=action;
@@ -64,4 +66,14 @@ export async function sendCommunity(address,registry,rpc,signer,action,onPending
  return receipt.hash||tx.hash;
  }finally{p.destroy();}
 }
-export async function deployCommunity(registry,signer,onPending){const e=sdk(),a=await communityArtifact();const c=await new e.ContractFactory(a.abi,a.bytecode,signer).deploy(registry);onPending?.(c.deploymentTransaction().hash);await c.waitForDeployment();return await c.getAddress();}
+export async function deployCommunity(registry,signer,onPending,onEvidence){
+ const e=sdk(),provider=signer.provider;
+ if(!provider||BigInt(await provider.send('eth_chainId',[]))!==11155111n)throw new Error('Switch your wallet to Ethereum Sepolia before deploying.');
+ if(!e.isAddress(registry)||registry===e.ZeroAddress||await provider.getCode(registry)==='0x')throw new Error('IdentityRegistry has no contract code on Sepolia.');
+ const a=await communityArtifact(),c=await new e.ContractFactory(a.abi,a.bytecode,signer).deploy(registry),tx=c.deploymentTransaction();
+ onPending?.(tx.hash);await c.waitForDeployment();const address=await c.getAddress();
+ // Deployment already exists if evidence reading fails. Preserve its address/hash for recovery.
+ try{const evidence=await verifyDeployment({provider,sdk:e,artifact:a,registry,transactionHash:tx.hash,address});onEvidence?.(evidence);}
+ catch(error){onEvidence?.({schema:'agentledger-deployment-evidence-v1',status:'deployed-verification-pending',address,transactionHash:tx.hash,identity:registry,error:String(error.message||error)});}
+ return address;
+}
