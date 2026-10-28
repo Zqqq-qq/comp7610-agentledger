@@ -76,6 +76,27 @@ pnpm test && pnpm build
 
 界面允许点击这一点本身是缺陷（Issue #21），修复见 PR #23：改为在选圈时禁用提交并给出说明。**注意该缺陷不造成资损**，Issue #21 已据此更正优先级与描述。
 
+### 用户在钱包里拒绝签名时的界面反馈
+
+同一天在真实钱包上做了第二次观察：点 Creative Studio 的 `Joined ✓`（该按钮是开关，已加入时点击即退出圈子），MetaMask 弹出交易请求后，在钱包里点 **取消**。
+
+| 观察点 | 实际结果 |
+| --- | --- |
+| 页面提示 | 底部红色 toast：**`Request cancelled in your wallet. No action was completed.`** |
+| 文案来源 | `web/core.js:71` 对错误码 `4001` / `ACTION_REJECTED` 的映射 |
+| 按钮状态 | `Joined ✓` 保持不变，可再次点击 |
+| 是否残留中间态 | 无，没有卡在 pending |
+| 链上状态 | A 的 nonce 仍为 14；`member(1..3, A)` 未变 |
+
+### 两种拒绝的文案不一致
+
+| 拒绝来源 | 页面文案 | 是否可读 |
+| --- | --- | --- |
+| 用户主动取消 | `Request cancelled in your wallet. No action was completed.` | 清楚，说明了后果 |
+| 合约规则拒绝（估算阶段） | `join circle first` | 合约原文，没有解释 |
+
+同一条错误展示路径，前者被映射成用户能懂的话，后者直接透出英文 revert 串。建议后续在同一个 `errorMessage` 里为常见 revert 原因补上映射（例如 `join circle first` → 「先加入该圈子再操作」）。这属于文案改进，未包含在 PR #23 中。
+
 ## 四、写入路径
 
 在冻结候选的页面（由该提交构建、`node scripts/serve.mjs` 提供）上，由账户 A 通过 MetaMask 亲自确认一笔真实社区写入：加入 `Research & Insights`（circle 1）。
