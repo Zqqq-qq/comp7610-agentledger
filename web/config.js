@@ -9,7 +9,7 @@ export const DEPLOYMENT = Object.freeze({
   backupRpcUrl: "https://sepolia.drpc.org",
   identity: "0x13eA93eCdDeed63259792A39d7a4738a28b3E91d",
   community: "0x8CDc9987D46D140a982713B359286bC451262406",
-  escrow: "",
-  token: "",
+  escrow: "0x3C129b436247368dA71cC31512984c3DB17F1f63",
+  token: "0x6a920b13d6396B7b58BfE562c274Ea76a6409C85",
   reputation: "0x213AEEd69B82DBaebB2800D3904CBb16f9443864",
 });

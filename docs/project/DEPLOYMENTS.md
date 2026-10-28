@@ -27,13 +27,14 @@
 
 ## JobEscrow 与 MockUSDC（Issue #12）
 
-- 状态：前端与本地 EVM 集成测试完成；真实 Sepolia 地址、部署及验收证据待用户钱包提供。
-- JobEscrow address / transaction / block: 待填写
-- MockUSDC address / transaction / block: 待填写
-- JobEscrow constructor identity: 上述 IdentityRegistry；MockUSDC 无构造参数，6 位小数 mUSD。
-- 沿用仓库原 Solidity，不代表已有这两份合约的有效部署证据。
-- 演示流程：批准 → 注资 → 发布社区引用 → 提交摘要 → 验收付款；另外创建订单验收退款与超时领取。
-- 请记录来源 Community / Post / Team、JobEscrow / jobId、社区引用回复 ID，以及所有操作的交易哈希。
+- 状态：2026-10-28 已部署并完成双钱包正常付款、未交付退款、交付后超时领取；待同伴审阅交付材料。
+- JobEscrow：`0x3C129b436247368dA71cC31512984c3DB17F1f63`；交易 `0x3a35a1d2409018d5f9b14d3be7d3f9fc3a113467d9d6407f75125c5c2fa1170d`；区块 12009914。
+- MockUSDC：`0x6a920b13d6396B7b58BfE562c274Ea76a6409C85`；交易 `0x45673f45fa0c9b156bb276b8e113213369ffc19e2295f14cc9384211d9929dd3`；区块 12009909；6 位小数 mUSD。
+- JobEscrow constructor identity 为上述 IdentityRegistry；MockUSDC 无构造参数。
+- 实际部署源码基线 `583fd6d1a1932a56c508d1faef617868e8ccb85c`，保留原始 CRLF 快照，避免后续 LF 规范化改变 metadata 后无法复现。solc 0.8.30 / optimizer 200 / viaIR / Shanghai。
+- [完整验收报告](ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28.zh-CN.md)；[原始回执与固定区块证据](evidence/escrow-sepolia-acceptance.json)。
+- Job 1 Completed、Job 2 Refunded、Job 3 Completed；均为 1 mUSD、Agent ID 0 独立钱包订单。本轮未发布社区小队引用；应用引用校验不等于合约强制绑定。
+- 以后演示沿用这两个共享地址，不需要每人重新部署。单钱包/浏览器已有存储配置时，可在 Contracts 中手动更新到上述地址。
 
 ## 双钱包验收回执
 
@@ -60,4 +61,4 @@
 | 加入 Builders Club | B | [0xbf6c44c37d…](https://sepolia.etherscan.io/tx/0xbf6c44c37d3635b6d1e9e44db068c90369f1bf5fe8a44ba876cb67b125f43807) | 12005503 / circle 3 |
 | 回复验收讨论 | B | [0x0b9fa3a79c…](https://sepolia.etherscan.io/tx/0x0b9fa3a79cd9ba20e2d89f46d50fcaf5f053b4b75d1927787d6e0012dc04a6e9) | 12005519 / reply 1 → post 1 |
 
-机器记录：[链上记录与成功回执](evidence/community-sepolia-live-records.json)。两浏览器为 Chrome（MetaMask，A/B 签名）与内置浏览器（独立配置社区地址，只读）；两者显示相同 post 1 / reply 1。完整边界见 [本次验收报告](SEPOLIA_ACCEPTANCE_2026-10-27.zh-CN.md)。上方其余社交全流程和托管验收模板尚未执行的项目仍保留待填。
+机器记录：[链上记录与成功回执](evidence/community-sepolia-live-records.json)。两浏览器为 Chrome（MetaMask，A/B 签名）与内置浏览器（独立配置社区地址，只读）；两者显示相同 post 1 / reply 1。完整边界见 [本次验收报告](SEPOLIA_ACCEPTANCE_2026-10-27.zh-CN.md)。上方社交全流程模板未执行的项目仍待填；托管资金实测已于 2026-10-28 完成，见专门验收报告。
