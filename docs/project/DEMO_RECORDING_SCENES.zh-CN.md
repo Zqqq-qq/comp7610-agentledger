@@ -8,10 +8,18 @@
 
 | 文件 | 时长 | 性质 | 用途 |
 | --- | --- | --- | --- |
-| `docs/project/assets/demo-full-with-wallet.mp4` | **1:49** | 前 29 秒定格走查 + 后 80 秒**真实桌面录制（含 MetaMask）** | **推荐作为演示主片** |
-| `docs/project/assets/demo-wallet-live.mp4` | **1:20** | 真实桌面录制节选，含钱包确认与取消 | 单独展示钱包交互 |
+| `docs/project/assets/demo-full-with-wallet.mp4` | **1:49** | 0:00–0:29 定格走查 **+** 0:29–1:49 真实桌面录制（含 MetaMask） | **推荐作为演示主片** |
+| `docs/project/assets/demo-wallet-live.mp4` | **1:20** | **只含**那 80 秒真实桌面录制，**不含**走查段 | 单独展示钱包交互 |
+| `docs/project/assets/demo-walkthrough.mp4` | **0:29** | **只含** 7 幕定格走查，**不含**钱包操作 | 纯链上数据走查 |
 
-两者前半段（7 幕走查）来源相同，区别在于后半段是否包含真实钱包操作。
+三个文件的包含关系：
+
+```
+demo-full-with-wallet.mp4  =  demo-walkthrough.mp4  +  demo-wallet-live.mp4
+        (1:49)                      (0:29)                 (1:20)
+```
+
+`demo-wallet-live.mp4` 与 `demo-walkthrough.mp4` **没有共同片段**，前者是后者的续接，不是替代。
 
 ## 二、前半段：7 幕走查（0:00–0:29，定格序列）
 
@@ -56,7 +64,28 @@ ffmpeg -y -framerate 2 -i demo-frames/f%05d.png \
   -c:v libx264 -pix_fmt yuv420p -crf 20 -movflags +faststart demo-walkthrough.mp4
 ```
 
-脚本参数化社区/托管地址，读 `PW_CORE` 或 `playwright-core`。
+脚本通过环境变量参数化（不写死）：
+
+| 变量 | 默认 | 说明 |
+| --- | --- | --- |
+| `DEMO_APP` | `http://127.0.0.1:8091` | 应用地址 |
+| `DEMO_COMMUNITY` / `DEMO_ESCROW` / `DEMO_TOKEN` / `DEMO_IDENTITY` / `DEMO_REPUTATION` / `DEMO_RPC` | 本仓库 Sepolia 部署值 | 换部署时改这里 |
+| `DEMO_POST_ID` / `DEMO_WORK_ID` | `2` / `1` | 要展示的帖子与作品 |
+| `DEMO_JOB_STATES` | `1=3 · Completed;2=4 · Refunded;3=3 · Completed` | 每个订单的**期望状态**，用于断言 |
+| `DEMO_OUT` / `DEMO_HOLD` | `demo-frames` / `6` | 输出目录与每场景帧数 |
+
+**脚本的安全与正确性约定**（2026-10-28 按审阅意见加入）：
+
+1. **不删除任何已有目录**：若 `DEMO_OUT` 已存在且非空，改用带时间戳的唯一子目录并打印提示；`DEMO_HOLD` 必须是 1–60 的整数，否则在加载浏览器前直接失败。
+2. **不靠等待代替成功判定**：每个场景都断言真实数据已加载——
+   - 页面处于 live 模式、横幅地址与 `DEMO_COMMUNITY` 前 6 位一致、**不是** Demo sandbox；
+   - 目标帖子/作品的入口按钮实际存在；详情弹窗已打开且标题非空；
+   - 订单查询后 `#loadedJob` **自身**可见（不再强行把 `hidden` 置 false），且 `#loadedJobState` 与 `DEMO_JOB_STATES` 期望值**完全相等**；
+   - 圈子卡片数 ≥ 3。
+   任一断言失败即以非零码退出、不写 `meta.json`，不会出现「空卡片配 Completed 字幕」。
+3. 固定延迟只用于画面停留，不承担成功判定。
+
+实测：正确配置下 58 帧、退出码 0；故意把 `DEMO_COMMUNITY` 换成不存在的地址时，在「场景 1/7」断言失败并退出 1，且不生成 `meta.json`。
 
 ### 后半段（真实钱包）
 
