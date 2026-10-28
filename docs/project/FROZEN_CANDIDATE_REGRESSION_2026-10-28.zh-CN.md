@@ -55,6 +55,27 @@ pnpm test && pnpm build
 
 社区状态在本次回归时仍为 `post/reply/team/work = 2/2/2/2`，与 PR #19 的记录一致。
 
+### 真实点击的界面反馈（不是模拟）
+
+在冻结候选的页面上，用账户 A（未加入 Builders Club）实际点击 **Publish post**，观察前端如何呈现合约拒绝：
+
+| 观察点 | 实际结果 |
+| --- | --- |
+| MetaMask 是否弹窗 | **没有弹窗** |
+| 页面提示 | 表单顶部出现红色提示，内容为合约原始 revert 字符串 **`join circle first`** |
+| 是否产生交易 | **没有**：A 的 nonce 仍为 14、余额未变、`postCount` 仍为 2，最近 20 个区块内无 A 的交易 |
+| 是否消耗 gas | **没有** |
+
+机制：ethers 在发送前先做 `eth_estimateGas`，节点在估算阶段即按合约规则回滚，异常在 `social-chain.js` 的 `await write.createPost(...)` 处抛出，**不会走到 `eth_sendTransaction`**。
+
+因此这条链路的准确结论是：
+
+- 前端**能**把合约的拒绝原因显示出来，不会静默失败；
+- 但显示的是未翻译的英文 revert 字符串，没有「先加入圈子」这类可操作引导；
+- 也不会出现「交易已提交后回滚」的界面，因为根本没发出。
+
+界面允许点击这一点本身是缺陷（Issue #21），修复见 PR #23：改为在选圈时禁用提交并给出说明。**注意该缺陷不造成资损**，Issue #21 已据此更正优先级与描述。
+
 ## 四、写入路径
 
 在冻结候选的页面（由该提交构建、`node scripts/serve.mjs` 提供）上，由账户 A 通过 MetaMask 亲自确认一笔真实社区写入：加入 `Research & Insights`（circle 1）。
