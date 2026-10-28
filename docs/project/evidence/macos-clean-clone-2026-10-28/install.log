@@ -1,0 +1,15 @@
+✓ Lockfile passes supply-chain policies (verified 1d ago)
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +39
++++++++++++++++++++++++++++++++++++++++
+Packages are cloned from the content-addressable store to the virtual store.
+  Content-addressable store is at: /Users/sschy/Library/pnpm/store/v11
+  Virtual store is at:             node_modules/.pnpm
+Progress: resolved 39, reused 39, downloaded 0, added 39, done
+
+devDependencies:
++ ganache 7.9.2
++ solc 0.8.30
+
+Done in 471ms using pnpm v11.25.0
