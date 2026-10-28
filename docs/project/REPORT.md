@@ -315,11 +315,23 @@ Final snapshot at block 12010056: client **98 mUSD**, provider **2 mUSD**, escro
 
 Boundary: the second device was used for **read-only** verification only; no cross-device signed write was performed.
 
-### 7.6 Frozen-candidate regression (D2 / #8)
+### 7.6 Cross-module entry point: current status (started, not finished)
+
+The "community team → escrow job" entry point is implemented in the UI but has **not** been completed end to end with a real wallet. As of 2026-10-28 the on-chain state is:
+
+| Observation | Value |
+| --- | --- |
+| Acceptance task post | post 3, circle 3, author `0xD3Ce…62D5d`, title "Sepolia team-to-escrow acceptance 2026-10-28" |
+| Team created from it | team 3, host `0xD3Ce…62D5d`, guest `0xE8bC…8e20`, status **Pending (1)** |
+| Escrow jobs created from that team | **none** — `nextJobId` on JobEscrow is still 4, i.e. the same three jobs as §7.4 |
+
+So the post and the invitation exist on-chain, but the invitation has not been accepted and no job has been funded from the team. This report therefore does **not** claim the cross-module path as verified; it is listed as remaining work in §10.
+
+### 7.7 Frozen-candidate regression (D2 / #8)
 
 Four layers were executed against the frozen candidate `992584e`: a fresh clone with 61 tests and a build; read-only replay of community and escrow state; six failure-path probes at a fixed block; and one real write (`0xfff88c7c…d7bd`, block 12010583) flipping `member(1,A)` from false to true. See `docs/project/FROZEN_CANDIDATE_REGRESSION_2026-10-28.zh-CN.md`.
 
-### 7.7 Cross-platform clean clone
+### 7.8 Cross-platform clean clone
 
 | Platform | Commit | Result |
 | --- | --- | --- |
@@ -369,7 +381,7 @@ Two points deserve honesty:
 2. Decide whether leaving a circle should revoke team rights; if it should, `proposeWork` / `reviewWork` need a membership re-check.
 3. Submit the source for block-explorer verification to lower the reproduction cost of "recompile locally and compare".
 4. Move long text off-chain with an on-chain hash to reduce write cost.
-5. Complete on-site acceptance of the "community team → escrow job" cross-module entry point.
+5. Complete on-site acceptance of the "community team → escrow job" cross-module entry point. As of 2026-10-28 the acceptance task (post 3) and a pending invitation (team 3) exist on Sepolia, but no job has been funded from that team — see §7.6.
 
 ---
 
