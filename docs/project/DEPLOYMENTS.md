@@ -147,3 +147,24 @@
 `eth_call` 使用任意公开 from 模拟调用，不签名、不广播、不改变状态；成功对照之间也不共享模拟写入。它证明固定状态下的合约判断，不能替代 MetaMask 拒签、浏览器失败提示或真实失败交易回执。界面核对使用的是注入的只读 provider，同样不能替代真实钱包交互。#18 是本地合约测试，不提升为公链 UI 验收。#16 的 Chrome / 内置浏览器结果仅覆盖前节 post 1 / reply 1。
 
 本次未发送新交易，也不将 Codex 复算记作其他组员批准。JobEscrow / MockUSDC 的公链部署与托管验收已于 2026-10-28 完成（PR #22），见 [托管验收报告](ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28.zh-CN.md)；本节只覆盖社区侧。
+
+## 跨模块验收：社区小队 → 托管订单（2026-10-28）
+
+此前 post 3 / team 3 的邀请未被接受、也没有从该团队建过订单，因此跨模块路径一直记为未验证。本次用两个钱包（A `0x4469…1723`、B `0xfa2B…85239`）把整条链路跑完。
+
+| 步骤 | 方法 | 结果 |
+| --- | --- | --- |
+| A 铸测试币 | `MockUSDC.mint` | A 余额 100 mUSD |
+| A 发任务帖 | `createPost` | post 4（circle 2，kind 1） |
+| A 邀请 B | `inviteTeam` | team 4（host A / guest B，status Pending=1） |
+| B 接受 | `respondTeam` | team 4 → Active(2) |
+| A 授权 | `MockUSDC.approve` | 授权额度在下一步被消耗 |
+| A 从团队建单 | `JobEscrow.createJob` | job 4，托管 1 mUSD |
+| B 提交交付 | `JobEscrow.submit` | 进入提交态 |
+| A 验收放款 | `JobEscrow.release` | job 4 → **Completed(3)** |
+
+**放款后余额（区块 12012205 读取）**：A 99 mUSD / B 1 mUSD / JobEscrow 0 mUSD。
+
+**关联的边界**：`JobEscrow` 没有 team 字段，团队与订单的关联只存在于应用层——界面按「每个订单首条由客户发出的引用」显示关联，并在界面上明确说明该引用不构成结算依据、不能证明质量、不做分账、也不让评价与订单绑定。因此本节记录的是**真实跑通的业务流程**，不是链上强制的关联。
+
+**核验方式**：在应用的 Task escrow 页填入 Job ID 4 并 Load / refresh，界面读链结果为 `3 · Completed` 与上述余额；团队侧在 My teams 页读到 team 4 为 Active 且 host/guest 与实际一致。
