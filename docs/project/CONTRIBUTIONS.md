@@ -33,6 +33,10 @@ Zqqq-qq 发起并负责交付；Codex 辅助实现钱包会话快照与过期响
 Zqqq-qq 亲自完成 MetaMask 钱包创建、解锁和所有交易确认；Codex 辅助准备操作、读取公开回执、核验部署产物并执行 Chrome/内置浏览器检查。实际完成社区部署、A/B 加入圈子、A 发帖、B 回复、账户切回、跨浏览器只读共享及失败恢复检查；修复拒签草稿丢失和弹窗错误遮挡，并根据 QiuQiu-xuan 审阅改进被取代快照的后续处理。证据见 SEPOLIA_ACCEPTANCE_2026-10-27.zh-CN.md。PR #14、#16 已批准并合并；另一成员的独立现场复核仍以 Issue #5 的记录为准。
 
 
+## 2026-10-29 B2 内容边界复核（#4）
+
+Zqqq-qq 使用 Codex 协助新增三项 Ganache EVM 边界测试，覆盖九字段 UTF-8 精确上限、URI 仅长度验证与前端安全链接限制、错误/重复/终态原因与计数，记录编译参数及公开性/外链可变/串通边界。见 CONTENT_BOUNDARY_REVIEW_2026-10-29.zh-CN.md；专项 3/3 通过，不改源码/产物/部署；ffmitrg / QiuQiu-xuan 同伴复审待完成。
+
 ## 2026-10-28 托管 Sepolia 实测（#12）
 
 Zqqq-qq 亲自在 MetaMask 确认两份合约部署和所有验收交易；Codex 辅助部署入口、固定区块核验、截图与文档整理。14 笔成功交易，Job 1 正常付款、Job 2 未交付退款、Job 3 交付后超时领取；最终 A 98 / B 2 / 合约 0 mUSD。交付报告见 ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28.zh-CN.md，含实际源码快照和只读复现命令。Agent ID 0 与未发布小队引用的边界已明确，不冒充其他组员复审；已由 ffmitrg 与 QiuQiu-xuan 审阅批准。
