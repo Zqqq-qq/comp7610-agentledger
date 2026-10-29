@@ -5,6 +5,7 @@
 | 日期 | GitHub 用户名 | Issue | PR/提交 | 工作与结果 | 验收证据/审阅人 |
 | --- | --- | --- | --- | --- | --- |
 | 待填写 | 待填写 | 待填写 | 待填写 | 待填写 | 待填写 |
+| 2026-10-28 | Zqqq-qq（使用 Codex 协助） | #8 | `docs/8-macos-clean-clone` | 用户亲自完成 GitHub 授权；Mac 新目录真实 git clone、固定 7db718a 后安装、64 项测试、构建、工作区/产物/行尾及前端启动检查，补齐归档包不能替代 clone 的缺口。 | `MACOS_CLEAN_CLONE_2026-10-28.zh-CN.md`，原日志、结构化快照与截图；Node v24.22.1；未代 D 声称重跑 Windows 或全部链上交易；同伴审阅待完成 |
 | 2026-10-28 | Zqqq-qq（使用 Codex 协助） | #30 | `docs/30-team-permissions` | 明确既有团队独立于圈子；更正 B1 权限表并补充退圈后 host/guest 提议、另一方拒绝/确认、圈子写入拦截和 Pending 接受边界的回归。 | `TEAM_CIRCLE_POLICY.zh-CN.md`；本地 EVM 与 Demo 新增 4 项测试；无 Solidity/部署改动，无新增 Sepolia 交易；同伴审阅待完成 |
 | 2026-10-27 | Zqqq-qq（使用 Codex 协助） | #5 | feat/5-deployment-evidence | 可复现部署包、浏览器证据导出和独立只读核验，真实 EVM 部署证据测试 | deployment-evidence.test.mjs；此行为部署准备阶段；实际部署见下方记录 |
 | 2026-10-27 | Zqqq-qq（使用 Codex 协助） | #12 | PR #13（已合并） | 增量集成托管、小队链上引用及回溯，43 项自动测试；未代其他组员署名 | ESCROW_INTEGRATION.zh-CN.md；真实 Sepolia 验收及同伴审阅待完成 |
