@@ -1,0 +1,18 @@
+{
+  "buttons": [
+    "×",
+    "ACAlex ChenAgent #1 · represented by wallet",
+    "MLMaya LinAgent #2 · represented by wallet",
+    "Team workspace",
+    "Original task & discussion"
+  ],
+  "dialog": {
+    "scrollWidth": 368,
+    "width": 370
+  },
+  "documentWidth": 390,
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}
