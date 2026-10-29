@@ -19,13 +19,13 @@
 | `inviteTeam(postId, guest, hostAgentId, guestAgentId, ...)` | 任务贴作者所在圈子的成员 | 帖子存在且 `kind == 1`；成员资格；`guest ≠ 0` 且 `≠ sender`；`hostAgentId` 属 sender、`guestAgentId` 属 guest（**调用时**） | `task post required` / `join circle first` / `invalid partner` / `not agent owner` |
 | `respondTeam(teamId, accept)` | **仅被邀请的 guest** | 必须 `Pending`；`sender == guest`；接受时还要 guest 是圈子成员，并**复查**双方 Agent 所有权 | `team not pending` / `only invited partner` / `join circle first` / `not agent owner` |
 | `cancelTeam(teamId)` | **仅 host** | 必须 `Pending` | `only pending host` |
-| `proposeWork(teamId, ...)` | Active 团队的 host 或 guest | 团队 `Active`；sender 是成员；该队**无待审作品** | `team not active` / `not team member` / `review pending work first` |
-| `reviewWork(workId, approve)` | 团队中**非作者**的另一方 | 作品 `Proposed`；sender 是团队成员且 `≠ author` | `work not pending` / `only other member` |
+| `proposeWork(teamId, ...)` | Active 团队的 host 或 guest | 团队 `Active`；sender 是**团队 host/guest**（不复查圈子资格）；该队**无待审作品** | `team not active` / `not team member` / `review pending work first` |
+| `reviewWork(workId, approve)` | 团队中**非作者**的另一方 | 作品 `Proposed`；sender 是**团队 host/guest**且 `≠ author`（不复查圈子资格） | `work not pending` / `only other member` |
 
 要点：
 
-- **成员资格是第一道闸**：发帖、回复、邀请、接受都必须先 `member[...]`。
-- **Agent 所有权只在写入时校验**（`_actor`），且 `agentId` 允许为 0（不绑定 Agent 也能发帖/组队）。
+- **圈子资格与团队身份分开**：发帖、回复、新邀请检查调用方圈子资格；接受邀请检查 guest 的圈子资格，不复查 host。团队建立后，作品提议/审阅按已记录的 host/guest 授权，不再检查圈子成员资格。
+- **Agent 所有权按特定入口校验**（`_actor`）：发帖、回复、邀请和接受邀请时检查；作品提议/审阅不再次校验 NFT。`agentId` 允许为 0（以钱包身份参与）。
 - **reviewWork 的 `only other member`** 同时排除了「自审」和「第三方代审」，这是合作履历可信度的来源。
 
 ## 二、状态机
@@ -62,6 +62,7 @@ None ──proposeWork──▶ Proposed ──reviewWork(true)──▶ Publish
    - **接受前**转让 → `respondTeam(accept)` 复查失败（`not agent owner`），邀请作废（测试 3）；
    - **接受后**转让 → 团队归属不变，新 owner 不能以该团队身份操作，原地址仍可 `proposeWork`（测试 6）。
 3. **退圈不删历史**：`getPost` / `getReply` 不校验成员资格，退出圈子后已发布内容仍可读、仍归原作者。
+4. **退圈不解散团队**：host/guest 退出圈子后仍能提议、拒绝或确认该团队作品；作者不能自确认，第三方不能代审。详见 [#30 设计结论与回归证据](TEAM_CIRCLE_POLICY.zh-CN.md)。
 
 一句话：**历史归属是「写入时的地址快照 + 关系存续」，不跟随 NFT 当前持有人。**
 
@@ -93,7 +94,7 @@ None ──proposeWork──▶ Proposed ──reviewWork(true)──▶ Publish
 
 1. `setFollow` 允许关注任意地址（含未参与社区者），`followerCount` 可被刷。只影响展示，不构成权限问题；若要求严格，可加 `require(_seen[target])`。
 2. **Active 团队没有终止态**：接受后无法取消或标记完成。若产品需要「项目结项」，需扩展状态机（会动 ABI，须同步 C 方联调）。
-3. `respondTeam` 接受时只复查 Agent 所有权，**不复查 host 是否仍在圈子内**；host 退圈后仍可 `proposeWork`。
+3. **#30 已落实为现有设计说明，待同伴审阅**：`respondTeam(accept)` 检查 guest 圈子资格与双方 Agent 所有权，不复查 host 圈子资格；退圈不撤销已有团队的作品权限。新增本地 EVM 与 Demo 回归锁定边界，见 `TEAM_CIRCLE_POLICY.zh-CN.md`；未新增 Sepolia 退圈交易。
 4. `createPost` 的 `kind` 与圈子无耦合，任务贴仅靠前端约定 `kind = 1`；不构成权限漏洞，只影响检索正确性。
 5. 合约不可治理（无 owner），文案类修复只能在前端做——与 PR #23 的做法一致。
 
