@@ -35,7 +35,7 @@ node scripts/release-freeze.mjs <完整 SHA>
 
 - 解析完整 SHA 与 tree；
 - 用 `git cat-file blob` 取**原始内容**算 SHA-256（**不用工作副本**，避免 Windows CRLF 差异）；
-- 从 `web/config.js` 读取合约地址，写进清单；
+- 从指定提交的 `web/config.js` Git blob 读取静态配置及其哈希，不 import 工作副本；缺失、无效或动态表达式配置会非零退出，且不覆盖已有清单；
 - 报告该提交是否为 `main` 祖先（`origin` 与 `origin-ssh` 分别判断，任一为真即可）；
 - 列出「工作副本与 blob 不同」的文件（通常是 CRLF 检出），提醒不要混用。
 
