@@ -19,6 +19,10 @@
 | 2026-10-28 | QiuQiu-xuan | #5 | 评审（无 PR） | 完成 C1 第三项「另一成员独立只读复核」：在区块 12010787 复跑 `identity()` / `getPost(1)` / `getReply(1)`，并用 PR #14 的 `scripts/verify-community.mjs` 核对部署创建输入、构造参数与 runtime，逐项与 Codex 记录比对一致；结果贴回 #5 并关闭。 | 证据为 #5 的复核评论（含时间、RPC、区块哈希、可复制命令）；全程未连接钱包、未签名、未广播 |
 
 
+## 2026-10-29 A2 状态说明与回溯（#2）
+
+Zqqq-qq 使用 Codex 协助完善四类团队/三类作品状态、角色限制与双向回溯。实际在 1280px 与 390px Demo 浏览器检查邀请接受/拒绝/取消、作品提议/拒绝及种子发布态，保存截图和尺寸记录。见 A2_STATUS_ACCEPTANCE_2026-10-29.zh-CN.md；无新增 Sepolia 交易，PAisHere / QiuQiu-xuan 同伴复审待完成。
+
 ## #6 钱包切换与失败恢复（Codex 辅助）
 
 Zqqq-qq 发起并负责交付；Codex 辅助实现钱包会话快照与过期响应隔离、签名账户复核、社区签名网络检查，以及本机双 Provider/双账户和故障恢复回归测试。详见 `WALLET_RECOVERY_VERIFICATION.zh-CN.md`。此段记录首轮本机验证；后续真实 MetaMask / Sepolia 验收见下一节，未将本机测试记作公链验收。
