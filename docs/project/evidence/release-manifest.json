@@ -1,11 +1,11 @@
 {
   "schema": "agentledger-release-manifest-v1",
-  "generatedAt": "2026-10-29T12:55:14.475Z",
-  "commit": "be4f9d8d0a415618d4a052815a8aee973697e59e",
-  "shortCommit": "be4f9d8",
-  "tree": "0c17893c3cd3fb24e08ad33e5e02d5e81212a4f1",
-  "commitSubject": "Merge pull request #44 from Zqqq-qq/docs/report-verification-scope",
-  "commitDate": "2026-10-29T20:53:32+08:00",
+  "generatedAt": "2026-10-29T13:49:31.463Z",
+  "commit": "781f2c277006d9033a31de089ce92ace5e038782",
+  "shortCommit": "781f2c2",
+  "tree": "ab90fc9168b3a0e3a6bd55166f15aabf9cfcf2bd",
+  "commitSubject": "Merge pull request #49 from Zqqq-qq/docs/source-provenance-correction",
+  "commitDate": "2026-10-29T21:48:26+08:00",
   "isAncestorOfMain": true,
   "mainRef": "origin-ssh/main",
   "mainAncestry": {
