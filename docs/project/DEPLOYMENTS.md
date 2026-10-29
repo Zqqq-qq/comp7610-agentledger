@@ -168,3 +168,20 @@
 **关联的边界**：`JobEscrow` 没有 team 字段，团队与订单的关联只存在于应用层——界面按「每个订单首条由客户发出的引用」显示关联，并在界面上明确说明该引用不构成结算依据、不能证明质量、不做分账、也不让评价与订单绑定。因此本节记录的是**真实跑通的业务流程**，不是链上强制的关联。
 
 **核验方式**：在应用的 Task escrow 页填入 Job ID 4 并 Load / refresh，界面读链结果为 `3 · Completed` 与上述余额；团队侧在 My teams 页读到 team 4 为 Active 且 host/guest 与实际一致。
+
+## 2026-10-29 小队 #3 → 托管订单 #5（新增跨模块证据）
+
+沿用上方共享 AgentCommunity、JobEscrow 与 mUSD 地址，无新部署。社区需求帖 #3 与小队邀请 #3 已于前一天存在，本轮由同一用户控制的 Account 1 / Account 2 执行六笔交易；全部钱包确认由用户完成。
+
+| 步骤 | 交易 | 区块 |
+| --- | --- | --- |
+| B 接受小队 #3 | `0x75954ced4369fd82ecd9ce40d410c2d6e9005c9855f7af6ab194473daaf63d46` | 12018477 |
+| A 授权 1 mUSD | `0xafab4fba0c46c76bac0da00bfd37d08cdf97bd0df1f3f33509de7f293aa04e10` | 12018515 |
+| A 创建并托管订单 #5 | `0x591d029261a6aefbb1761eec080383e5f919e0dcef5e581c698aa03e93aa6f72` | 12018524 |
+| A 发布来源帖 #3 的关联回复 #3 | `0x86e974bfb368202532244598952557d9fb5abf23c27c848aa6c3ce655d7617b8` | 12018530 |
+| B 提交交付文件摘要 | `0xdfcf6ceb8677a6eea1783fc9d0dec96a1a4cdd8c801065c372730c1b1e72c00b` | 12018547 |
+| A 验收付款 | `0xd3579e0854b0f4e2b39ecd51e57a211ed5a8acec9b037effe9b7342e008e8b58` | 12018556 |
+
+固定区块 12018561：小队 Active、订单 Completed，A 97 / B 3 / escrow 0 mUSD，剩余授权 0；相较注资前 A 98 / B 2，实际支付一次 1 mUSD。关联、交付摘要与付款 Transfer 均已核对。
+
+[完整报告与复现命令](TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md)；[六笔回执与固定快照](evidence/team3-job5/acceptance.json)。此记录补充前文“旧托管验收未发布社区引用”的历史范围，不改写旧快照。双方 Agent ID 为 0，关联由应用校验，不属于合约强制绑定，也未验收共同作品或信誉评价。

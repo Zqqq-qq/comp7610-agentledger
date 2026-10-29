@@ -35,3 +35,12 @@ Zqqq-qq 亲自在 MetaMask 确认两份合约部署和所有验收交易；Codex
 ## 2026-10-28 PR #19 证据修订（Codex 辅助）
 
 Zqqq-qq 发起本次整理，Codex 辅助保留双方贡献与部署记录、补充固定区块的只读 RPC 取证与源码重编译复算脚本、区分旧快照和本次读取，并统一 #5 / #7 的未完成边界。QiuQiu-xuan 的原交易与测试贡献保留在表中；本次修订不冒充其再次操作或 ffmitrg 的复审批准。
+
+
+## 2026-10-29 小队 #3 → 订单 #5 跨模块 Sepolia 验收（#12 / #9 输入）
+
+Zqqq-qq 亲自在 MetaMask 确认 Account 2 接受邀请，以及 Account 1 授权、注资、发布关联、Account 2 提交交付摘要、Account 1 验收付款，共六笔成功交易。两个账户由同一用户控制，不记为两名组员独立操作。
+
+Codex 辅助恢复本地页面、准备请求、核对双向导航、生成真实交付说明、读取固定区块的回执/事件/余额，并整理只读复现脚本。结果为社区 post 3 → team 3 → reply 3 → escrow job 5，订单 Completed，1 mUSD 到达 B，A/B/托管余额为 97/3/0。原交付文件摘要与链上一致，重复付款只读调用被拒绝。
+
+分支：`docs/team3-job5-sepolia-acceptance`。证据见 [验收报告](TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md) 与 `evidence/team3-job5/`；脚本为 `scripts/verify-team3-acceptance.mjs`。本次证据整理没有新部署或广播交易，不补写其他成员批准；尚待同伴复审。Agent ID 0、应用层引用及未新增跨设备签名的边界见报告。
