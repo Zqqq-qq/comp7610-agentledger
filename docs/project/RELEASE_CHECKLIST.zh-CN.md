@@ -2,7 +2,7 @@
 
 - 关联任务：[#11 R1](https://github.com/Zqqq-qq/comp7610-agentledger/issues/11)
 - 归属角色：release；本清单与 `scripts/release-freeze.mjs` 由 D · @QiuQiu-xuan 准备，**不代替 release 决策**
-- 配套：`docs/project/RELEASE_FREEZE_DRAFT.zh-CN.md`（草案，已合入 main）
+- 配套：`docs/project/RELEASE_FREEZE_DRAFT.zh-CN.md`（冻结记录，2026-10-29 已按最终清单更新）
 
 本清单的目的：把所有**可机械执行**的步骤固定成命令，让冻结这一步只需要「跑一遍 + 核对 + 打标签 + 交上去」。
 
@@ -57,7 +57,7 @@ git push origin-ssh v1.0.0-submission     # 用可用的远端；origin 走 HTTP
 
 ## 四、更新文档与贡献记录
 
-- [ ] `RELEASE_FREEZE_DRAFT.zh-CN.md`：把 §一 的候选 SHA、§三 映射表、§四 校验和换成清单里的值；§二 阻断项按实际情况勾选或注明
+- [x] `RELEASE_FREEZE_DRAFT.zh-CN.md`：§一 候选 SHA、§三 映射表、§四 校验和已按 `be4f9d8` 的清单更新（2026-10-29）；§二 阻断项按实际情况勾选或注明
 - [ ] `CONTRIBUTIONS.md`：补 E（#9 报告、#10 演示）与 R（#11 冻结）的条目
 - [ ] `DEMO_RECORDING_SCENES.zh-CN.md`：视频一行填最终文件名与 SHA-256（若视频有改动）
 
