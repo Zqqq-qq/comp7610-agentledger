@@ -2,8 +2,8 @@
 
 **COMP7610 Final Project Report (draft)**
 
-- Version: v0.2.1 (2026-10-29; verification-scope correction)
-- Code baseline: `479e8db` (main). Contract sources, generated artefacts, lockfile and tests are byte-identical to the `a2b38c9` baseline; the delta is documentation, scripts and frontend presentation.
+- Version: v0.3 (2026-10-29; A1 and team-policy PRs merged, freeze tooling fixed)
+- Code baseline: `be4f9d8` (main). Since v0.2 this adds the A1 UI fixes (#32), the circle/team policy with four regressions (#34) and the freeze-config fix with three regressions (#43); the automated suite is now 14 files / 71 tests. No contract source, generated artefact or deployment address changed.
 - Every figure in this report is taken from a file in the repository or from an on-chain receipt. Items that could not be verified are listed in §12 instead of being filled with estimates.
 
 ---
@@ -22,7 +22,7 @@ Verification combines local automated tests, browser and cross-platform checks, 
 | --- | --- |
 | Contracts | 5 source files, 596 lines in total (AgentCommunity 135 / IdentityRegistry 117 / JobEscrow 180 / MockUSDC 42 / ReputationRegistry 122) |
 | Frontend | 13 own JavaScript modules (excluding the ethers dependency) |
-| Automated tests | 12 test files; `pnpm test` reports **64 passing tests** |
+| Automated tests | 14 test files; `pnpm test` reports **71 passing tests** |
 | Community flow | 9 real transactions forming the complete loop, each with a receipt |
 | Escrow flow | 3 jobs in the standalone escrow acceptance (normal payment, refund after non-delivery, claim after timeout); jobs 4 and 5 are the two cross-module runs in §7.6 |
 | Cross-platform | macOS and Windows both ran a clean-clone verification at the **same commit** `7db718a` |
@@ -60,8 +60,8 @@ The repository is organised around five roles plus release. Tasks and dependenci
 
 ### 3.2 Status at the baseline
 
-- **Closed (9)**: #3 (B1 permission review), #5 (C1 community deployment), #7 (D1 dual-wallet acceptance), #8 (D2 CI and cross-platform regression), #12 (C3 escrow integration), #20 / #21 / #25 (three defects), #39 (README banner and community visuals).
-- **Open (8)**: #1, #2 (frontend polish), #4 (B2 content boundaries), #6 (C2 awaiting peer confirmation), #9 / #10 / #11 (the deliverables themselves), #30 (permission semantics after leaving a circle — resolved as a deliberate design choice).
+- **Closed (11)**: #1 (A1 interface acceptance), #3 (B1 permission review), #5 (C1 community deployment), #7 (D1 dual-wallet acceptance), #8 (D2 CI and cross-platform regression), #12 (C3 escrow integration), #20 / #21 / #25 (three defects), #30 (circle/team permission semantics), #39 (README banner and community visuals).
+- **Open (6)**: #2 (frontend polish), #4 (B2 content boundaries), #6 (C2 awaiting peer confirmation), #9 / #10 / #11 (the deliverables themselves).
 
 ### 3.3 Scope boundaries
 
@@ -251,9 +251,9 @@ Remediation (Issue #20, closed):
 
 CI is defined in `.github/workflows/ci.yml`. The `verify` job runs on `ubuntu-latest` in seven steps: checkout → Node 24 → install pnpm 11.25.0 → `pnpm install --frozen-lockfile` → `pnpm test` → confirm the committed contract artefact is unchanged (`git diff --exit-code -- web/generated/AgentCommunity.json`) → `pnpm build`.
 
-At the stated code baseline, local scale is **12 test files, 64 passing tests**. Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, and UI message mapping.
+At the stated code baseline, local scale is **14 test files, 71 passing tests**. Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, UI message mapping, freeze-manifest generation, and circle/team permission regressions.
 
-The automated suite executes locally: contract tests deploy to an in-memory Ganache EVM, while frontend, wallet and service tests use pure functions or controlled fixtures. These results do not represent Sepolia transactions. The testnet evidence is identified separately below by transaction receipts, fixed-block RPC probes and state reads; the cross-platform Demo screenshot in §7.8 verifies local startup only. Counts refer to the code baseline above, not to later unmerged PRs.
+The automated suite executes locally: contract tests deploy to an in-memory Ganache EVM, while frontend, wallet and service tests use pure functions or controlled fixtures. These results do not represent Sepolia transactions. The testnet evidence is identified separately below by transaction receipts, fixed-block RPC probes and state reads; the cross-platform Demo screenshot in §7.8 verifies local startup only. Counts refer to the code baseline above.
 
 `tests/d1-failure-path.test.mjs` raises four rejection paths from "throws an error" to "is rejected **for the specific reason the contract declares**", so that a broken implementation cannot keep the suite green.
 
@@ -351,6 +351,10 @@ Four layers were executed against the frozen candidate `992584e`: a fresh clone 
 | macOS 26.6 / arm64 (Apple M5, Node v24.22.1) | `7db718a` | 64/64 tests, build succeeded, workspace clean, `.sol` and artefacts LF; frontend started from the new clone and screenshotted (the screenshot shows Demo sandbox and is explicitly not Sepolia evidence) |
 | Windows (Node v24.15.0) | `7db718a` (same commit, same tree `afc673de…`) | 64/64 tests, build succeeded, workspace clean, no artefact diff, `git ls-files --eol` byte-for-byte identical to the macOS record |
 
+### 7.9 A1 interface acceptance and team policy (merged 2026-10-29)
+
+PR #32 exercised the six community areas at 390×844 and 1440×1000 in the local Demo sandbox: 22 screenshots plus viewport measurements are in `docs/project/evidence/a1-ui/`. It fixed long-title and team-name overflow, raised the smallest mobile controls to 44 px, and gave dialogs an accessible name with focus return on close; these are UI checks, not Sepolia transactions. PR #34 adds `TEAM_CIRCLE_POLICY.zh-CN.md`: leaving a circle preserves existing team rights, while circle writes still require membership and a Pending invitation still requires the guest to be in the circle. Four contract-level regressions (`tests/team-circle-independence.test.mjs`) cover host/guest proposals, the other member's review, circle-write blocking and Pending acceptance.
+
 ---
 
 ## 8. Known Limitations and Risks
@@ -361,7 +365,7 @@ Each item below is **confirmed**, not speculative:
 | --- | --- | --- |
 | 1 | No owner, no pause, no upgrade: wording-level issues can only be fixed in the frontend | B1 review §1 |
 | 2 | An `Active` team has no terminal state; it cannot be cancelled or marked complete | B1 review §5 |
-| 3 | `proposeWork` / `reviewWork` check team membership only and **do not re-check circle membership**; leaving a circle does not revoke existing team rights (recorded as a design choice) | Issue #30 |
+| 3 | `proposeWork` / `reviewWork` check team membership only and **do not re-check circle membership**; leaving a circle does not revoke existing team rights (now documented as the intended design) | `TEAM_CIRCLE_POLICY.zh-CN.md` (Issue #30, closed) |
 | 4 | The contract source is **not verified on Etherscan**; consistency relies on local recompilation plus runtime code comparison | `DEPLOYMENTS.md` |
 | 5 | The escrow deployment's source files differ in bytes from the current LF sources; reproducing it requires `evidence/escrow-deployment-sources.json` | Freeze draft §6 |
 | 6 | Rejection feedback depends on a revert during `eth_estimateGas` rather than an explicit UI guard | Frozen regression §3 |
@@ -373,7 +377,7 @@ Each item below is **confirmed**, not speculative:
 
 ## 9. Contribution Distribution
 
-Commit authorship on `main`: QiuQiu-xuan 45, Zqqq-qq 22, PAisHere 1, ffmitrg 1.
+Commit authorship on `main`: QiuQiu-xuan 50, Zqqq-qq 34, PAisHere 1, ffmitrg 1.
 
 Per-member output is recorded in `docs/project/CONTRIBUTIONS.md`: entries for roles A, B, C and D are present, with the distinction between work "performed by the member" and work "assisted by tools (Codex)" stated explicitly. **Entries for E and R are still missing** (see §12).
 
@@ -394,7 +398,7 @@ Two points deserve honesty:
 2. Decide whether leaving a circle should revoke team rights; if it should, `proposeWork` / `reviewWork` need a membership re-check.
 3. Submit the source for block-explorer verification to lower the reproduction cost of "recompile locally and compare".
 4. Move long text off-chain with an on-chain hash to reduce write cost.
-5. ~~Complete on-site acceptance of the "community team → escrow job" cross-module entry point~~ **done**: post 4 / team 4 / job 4 completed, 1 mUSD released — see §7.6.
+5. **Done**: on-site acceptance of the "community team → escrow job" cross-module entry point — post 4 / team 4 / job 4 completed, 1 mUSD released — see §7.6.
 
 ---
 
@@ -408,10 +412,12 @@ Two points deserve honesty:
 | Escrow | `docs/project/ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28.zh-CN.md`, `evidence/escrow-*.json`, `evidence/escrow-screenshots/`, `evidence/job{1,2,3}-*` |
 | Cross-module (team 3 → job 5) | `docs/project/TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md`, `evidence/team3-job5/`, `scripts/verify-team3-acceptance.mjs` |
 | D1 acceptance | `docs/project/ACCEPTANCE_D1.zh-CN.md` (including §7, the closing review) |
+| A1 UI acceptance | `docs/project/A1_UI_ACCEPTANCE_2026-10-28.zh-CN.md`, `evidence/a1-ui/` (22 screenshots plus measurements) |
+| Circle/team policy | `docs/project/TEAM_CIRCLE_POLICY.zh-CN.md`, `tests/team-circle-independence.test.mjs` |
 | D2 acceptance | `docs/project/ACCEPTANCE_D2.zh-CN.md`, `docs/project/FROZEN_CANDIDATE_REGRESSION_2026-10-28.zh-CN.md`, `docs/project/MACOS_CLEAN_CLONE_2026-10-28.zh-CN.md` |
 | Permission review | `docs/project/REVIEW_B1_AGENTCOMMUNITY_2026-10-28.zh-CN.md` |
 | Community deployment acceptance | `docs/project/SEPOLIA_ACCEPTANCE_2026-10-27.zh-CN.md` |
-| Reproduction tools | `scripts/verify-community.mjs`, `scripts/verify-escrow-acceptance.mjs`, `scripts/release-freeze.mjs` (PR #36) |
+| Reproduction tools | `scripts/verify-community.mjs`, `scripts/verify-escrow-acceptance.mjs`, `scripts/verify-team3-acceptance.mjs`, `scripts/release-freeze.mjs` + `docs/project/evidence/release-manifest.json` |
 
 ### 11.2 Reproduction environment
 
@@ -421,7 +427,7 @@ Node 24.x, pnpm 11.25.0 (pinned by `packageManager`), solc 0.8.30.
 git clone https://github.com/Zqqq-qq/comp7610-agentledger.git
 cd comp7610-agentledger
 pnpm install --frozen-lockfile
-pnpm test        # expect 64 passing tests
+pnpm test        # expect 71 passing tests
 pnpm build
 ```
 
@@ -431,14 +437,12 @@ pnpm build
 
 | # | Missing | Impact | Owner |
 | --- | --- | --- | --- |
-| 1 | ~~Implementation architecture diagram~~ **done** | `docs/assets/architecture.svg` (English) and `architecture.zh-CN.svg`, embedded in §4.1 | — |
+| 1 | Implementation architecture diagram (done) | `docs/assets/architecture.svg` (English) and `architecture.zh-CN.svg`, embedded in §4.1 | — |
 | 2 | **Member names, student IDs, effort** | §9 currently has only GitHub handles and commit counts | Team members |
 | 3 | **E and R contribution entries** | `CONTRIBUTIONS.md` lacks these two rows, so §9 is incomplete | daizhiqi / whoever takes over |
 | 4 | **Peer assignment** (individual submission) | Required by the course; not tracked anywhere in this repository, format still unknown | Course information needed |
 | 5 | **Demo narration audio** | Script is complete (`docs/project/DEMO_SCRIPT.en.md`, timecoded, English); the video itself has visuals plus the real wallet segment but no audio track | Recorder |
-| 6 | **A1 interface acceptance data** | `A1_UI_ACCEPTANCE` and 22 screenshots are in PR #32, not yet merged | Zqqq-qq (sync the branch) |
-| 7 | **Leave-circle policy document** | `TEAM_CIRCLE_POLICY` is in PR #34, not yet merged | Zqqq-qq (sync the branch) |
-| 8 | **Deployment gas attribution** | §5.3 reports receipt values only; explaining the 17.18M figure needs the deployer's account of how it was sent | Zqqq-qq |
+| 6 | **Deployment gas attribution** | §5.3 reports receipt values only; explaining the 17.18M figure needs the deployer's account of how it was sent | Zqqq-qq |
 
 Two items that were open when this report was first drafted are now closed and are recorded here so the record is not silently edited:
 

@@ -1,17 +1,17 @@
 {
   "schema": "agentledger-release-manifest-v1",
-  "generatedAt": "2026-10-29T10:01:54.195Z",
-  "commit": "479e8db3764b99e996dd35893929d4dd00208bfb",
-  "shortCommit": "479e8db",
-  "tree": "ff8f260184ff41f7ae9fa6bdfb65365b5064d38e",
-  "commitSubject": "docs: record team 3 to escrow job 5 Sepolia acceptance (#41)",
-  "commitDate": "2026-10-29T17:53:12+08:00",
+  "generatedAt": "2026-10-29T12:55:14.475Z",
+  "commit": "be4f9d8d0a415618d4a052815a8aee973697e59e",
+  "shortCommit": "be4f9d8",
+  "tree": "0c17893c3cd3fb24e08ad33e5e02d5e81212a4f1",
+  "commitSubject": "Merge pull request #44 from Zqqq-qq/docs/report-verification-scope",
+  "commitDate": "2026-10-29T20:53:32+08:00",
   "isAncestorOfMain": true,
-  "mainRef": "origin/main",
+  "mainRef": "origin-ssh/main",
   "mainAncestry": {
-    "origin/main": true,
+    "origin/main": false,
     "origin-ssh/main": true,
-    "main": false
+    "main": true
   },
   "tag": null,
   "deployment": {
@@ -27,6 +27,11 @@
     "reputation": "0x213AEEd69B82DBaebB2800D3904CBb16f9443864"
   },
   "files": [
+    {
+      "path": "web/config.js",
+      "bytes": 776,
+      "sha256": "9399113d290a2dde5beb038710d849afcb407a2970774ec4d183556ecce2eb65"
+    },
     {
       "path": "package.json",
       "bytes": 415,
@@ -80,6 +85,11 @@
   ],
   "workingCopyDiffersFromBlob": [
     {
+      "path": "web/config.js",
+      "bytes": 791,
+      "sha256": "b8159c8feb55d40508d66e16292fb5525470581e19b1a195032cc265782f4dc4"
+    },
+    {
       "path": "package.json",
       "bytes": 432,
       "sha256": "2aa11140591c83b84d07076b5a465f1b87767ffe08a1a5fcd28a2196c5f413f2"
@@ -91,7 +101,8 @@
     }
   ],
   "notes": [
-    "校验和以 Git blob（LF）为基准；workingCopyDiffersFromBlob 里的条目只说明本机检出为 CRLF，不代表内容不同。",
+    "deployment 与 web/config.js 校验和均取自 commit 指定的 Git blob，不执行配置模块。",
+    "校验和以 Git blob（LF）为基准；workingCopyDiffersFromBlob 记录工作副本的字节差异，可能来自换行符或本地内容修改，不影响冻结值。",
     "本清单不判断是否可发布：阻断项与提交回执见 docs/project/RELEASE_FREEZE_DRAFT.zh-CN.md 与 Issue #11。"
   ]
 }
