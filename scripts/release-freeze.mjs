@@ -22,6 +22,7 @@ const SHA_INPUT = process.argv[2] || process.env.FREEZE_SHA || "HEAD";
 const OUT = process.env.FREEZE_OUT || "docs/project/evidence/release-manifest.json";
 
 const FILES = [
+  "web/config.js",
   "package.json",
   "pnpm-lock.yaml",
   "web/generated/AgentCommunity.json",
@@ -109,12 +110,35 @@ for (const entry of files) {
   }
 }
 
-let deployment = null;
+// Read data from the frozen revision, never import executable working-copy code.
+// The supported config format is the existing static Object.freeze({...}) export.
+function parseDeployment(source) {
+  const match = source.match(/^(?:\s|\/\/[^\n]*(?:\n|$))*export\s+const\s+DEPLOYMENT\s*=\s*Object\.freeze\s*\(\s*\{([\s\S]*?)\}\s*\)\s*;?\s*$/);
+  if (!match) throw new Error("expected a static DEPLOYMENT = Object.freeze({...}) export");
+  let rest = match[1].trim();
+  const result = {};
+  while (rest) {
+    const property = rest.match(/^([A-Za-z_$][\w$]*)\s*:\s*("(?:[^"\\]|\\.)*"|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null)\s*(,|$)/);
+    if (!property) throw new Error("deployment values must be static JSON scalars");
+    const [, key, value] = property;
+    if (Object.hasOwn(result, key)) throw new Error(`duplicate deployment key: ${key}`);
+    Object.defineProperty(result, key, { value: JSON.parse(value), enumerable: true });
+    rest = rest.slice(property[0].length).trim();
+  }
+  if (!Number.isSafeInteger(result.chainId) || result.chainId <= 0) throw new Error("missing or invalid deployment.chainId");
+  for (const key of ["identity", "community", "escrow", "token", "reputation"]) {
+    if (typeof result[key] !== "string" || (result[key] !== "" && !/^0x[0-9a-fA-F]{40}$/.test(result[key]))) {
+      throw new Error(`missing or invalid deployment.${key}`);
+    }
+  }
+  return result;
+}
+let deployment;
 try {
-  const mod = await import("../web/config.js");
-  deployment = mod.DEPLOYMENT ?? null;
+  deployment = parseDeployment(blob(sha, "web/config.js").toString("utf8"));
 } catch (error) {
-  console.error(`警告: 读取 web/config.js 失败（${error.message}），清单里 deployment 记为 null`);
+  console.error(`FAIL: cannot read deployment from ${sha}:web/config.js (${error.message})`);
+  process.exit(1); // Do not create or overwrite a manifest after a failed read.
 }
 
 let tag = null;
@@ -140,7 +164,8 @@ const manifest = {
   files,
   workingCopyDiffersFromBlob: workingCopyDiff,
   notes: [
-    "校验和以 Git blob（LF）为基准；workingCopyDiffersFromBlob 里的条目只说明本机检出为 CRLF，不代表内容不同。",
+    "deployment 与 web/config.js 校验和均取自 commit 指定的 Git blob，不执行配置模块。",
+    "校验和以 Git blob（LF）为基准；workingCopyDiffersFromBlob 记录工作副本的字节差异，可能来自换行符或本地内容修改，不影响冻结值。",
     "本清单不判断是否可发布：阻断项与提交回执见 docs/project/RELEASE_FREEZE_DRAFT.zh-CN.md 与 Issue #11。",
   ],
 };

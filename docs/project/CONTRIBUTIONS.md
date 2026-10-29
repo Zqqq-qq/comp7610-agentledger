@@ -46,3 +46,8 @@ Zqqq-qq 亲自在 MetaMask 确认 Account 2 接受邀请，以及 Account 1 授�
 Codex 辅助恢复本地页面、准备请求、核对双向导航、生成真实交付说明、读取固定区块的回执/事件/余额，并整理只读复现脚本。结果为社区 post 3 → team 3 → reply 3 → escrow job 5，订单 Completed，1 mUSD 到达 B，A/B/托管余额为 97/3/0。原交付文件摘要与链上一致，重复付款只读调用被拒绝。
 
 分支：`docs/team3-job5-sepolia-acceptance`。证据见 [验收报告](TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md) 与 `evidence/team3-job5/`；脚本为 `scripts/verify-team3-acceptance.mjs`。本次证据整理没有新部署或广播交易，不补写其他成员批准；尚待同伴复审。Agent ID 0、应用层引用及未新增跨设备签名的边界见报告。
+
+
+## 2026-10-29 冻结工具配置来源修复（#36 / #11 输入）
+
+Zqqq-qq 使用 Codex 协助修复冻结清单混入工作副本部署配置的问题：配置与哈希均从目标提交的 Git blob 读取，使用静态数据解析且不执行配置代码；配置读取失败时不写清单。新增临时 Git 仓库回归覆盖历史提交、不同检出版本、未提交配置修改、动态/缺失配置及原输出保留。此项不代表最终冻结、打标签或课程提交已完成；同伴审阅待完成。
