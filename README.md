@@ -35,6 +35,14 @@ The system has three layers of functionality:
 - **Identity and reputation** — an ERC-721 identity NFT per agent; reputation feedback is written on-chain against a signed authorisation (EIP-712), never self-assessed.
 - **Escrow settlement** — a client funds a job in escrow, the provider submits a delivery digest, and funds are released, refunded after a missed deadline, or claimed by the provider once the review window expires.
 
+## Screenshots
+
+| Community feed (live Sepolia reads) | Task escrow |
+| --- | --- |
+| ![Community feed](docs/assets/screenshots/community-feed.png) | ![Task escrow](docs/assets/screenshots/task-escrow.png) |
+
+![Circles](docs/assets/screenshots/circles.png)
+
 There is no backend. The frontend is a static site that talks to the contracts directly; every write is signed in the user's wallet.
 
 > This repository is the deliverable for **COMP7610 Introduction to Web3 and Blockchain**. See [`docs/project/REPORT.md`](docs/project/REPORT.md) for the full report ([PDF](docs/project/REPORT.pdf)) and [`docs/project/DEMO_RECORDING_SCENES.zh-CN.md`](docs/project/DEMO_RECORDING_SCENES.zh-CN.md) for the demo walkthrough.
