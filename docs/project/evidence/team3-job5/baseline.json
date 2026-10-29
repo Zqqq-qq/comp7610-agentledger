@@ -1,0 +1,62 @@
+{
+  "observedAt": "2026-10-29T09:00:36.460Z",
+  "block": {
+    "number": 12018468,
+    "hash": "0x05e288e24d230dbc85288dea6b9840fbc27145520195f8257f4be077f6babfef",
+    "timestamp": 1793264424
+  },
+  "deployment": {
+    "chainId": 11155111,
+    "chainName": "Ethereum Sepolia",
+    "explorer": "https://sepolia.etherscan.io",
+    "rpcUrl": "https://ethereum-sepolia.publicnode.com",
+    "backupRpcUrl": "https://sepolia.drpc.org",
+    "identity": "0x13eA93eCdDeed63259792A39d7a4738a28b3E91d",
+    "community": "0x8CDc9987D46D140a982713B359286bC451262406",
+    "escrow": "0x3C129b436247368dA71cC31512984c3DB17F1f63",
+    "token": "0x6a920b13d6396B7b58BfE562c274Ea76a6409C85",
+    "reputation": "0x213AEEd69B82DBaebB2800D3904CBb16f9443864"
+  },
+  "team": {
+    "postId": "3",
+    "host": "0xD3Ce5196125cd6e25212de4D04911093D3F62D5d",
+    "guest": "0xE8bCb71A15ea106aF0CD431C37C1002FeD938e20",
+    "hostAgentId": "0",
+    "guestAgentId": "0",
+    "createdAt": "1793179692",
+    "status": "1",
+    "title": "Cross-module acceptance A+B 2026-10-28",
+    "hostRole": "Fund 1 test mUSD and verify the linked order",
+    "guestRole": "Deliver a verification note digest for acceptance"
+  },
+  "post": {
+    "circleId": "3",
+    "author": "0xD3Ce5196125cd6e25212de4D04911093D3F62D5d",
+    "agentId": "0",
+    "kind": "1",
+    "createdAt": "1793179584",
+    "title": "Sepolia team-to-escrow acceptance 2026-10-28",
+    "body": "Course acceptance task: A funds 1 test mUSD for B to deliver a reproducible cross-module verification note. Create an accepted team, fund from its workspace, publish the order reference, then verify both navigation directions and settlement. Test data only; no commercial value."
+  },
+  "members": {
+    "host": true,
+    "guest": true
+  },
+  "nextJobId": "5",
+  "replyCount": "2",
+  "balances": {
+    "0xD3Ce5196125cd6e25212de4D04911093D3F62D5d": {
+      "mUSD": "98000000",
+      "wei": "1629190135887375"
+    },
+    "0xE8bCb71A15ea106aF0CD431C37C1002FeD938e20": {
+      "mUSD": "2000000",
+      "wei": "2180968972184059"
+    },
+    "0x3C129b436247368dA71cC31512984c3DB17F1f63": {
+      "mUSD": "0",
+      "wei": "0"
+    }
+  },
+  "hostAllowance": "0"
+}
