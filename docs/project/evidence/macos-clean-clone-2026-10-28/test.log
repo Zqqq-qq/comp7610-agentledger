@@ -1,0 +1,137 @@
+$ node scripts/compile.mjs && node --test tests/*.test.mjs
+AgentCommunity compiled; runtime bytes: 10973
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- /Users/sschy/Documents/Codex/2026-10-17/erc8004-agent-https-github-com-mnorbert87/work/task8-clean-clone-20261028/node_modules/.pnpm/@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- /Users/sschy/Documents/Codex/2026-10-17/erc8004-agent-https-github-com-mnorbert87/work/task8-clean-clone-20261028/node_modules/.pnpm/ganache@7.9.2/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ community checks membership, post kind, identity ownership and reply references (632.582375ms)
+✔ circle membership and wallet follow counts reject duplicate and self operations (262.47675ms)
+✔ only invited guest may accept; ownership changes invalidate acceptance (345.661834ms)
+✔ decline and cancellation are terminal for pending invitations (424.614958ms)
+✔ work requires accepted team, team membership, and a distinct confirming partner (458.012541ms)
+✔ rejecting a proposal allows revision; NFT transfers do not inherit accepted team rights (442.659708ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- /Users/sschy/Documents/Codex/2026-10-17/erc8004-agent-https-github-com-mnorbert87/work/task8-clean-clone-20261028/node_modules/.pnpm/@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- /Users/sschy/Documents/Codex/2026-10-17/erc8004-agent-https-github-com-mnorbert87/work/task8-clean-clone-20261028/node_modules/.pnpm/ganache@7.9.2/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ 主流程：需求→回复→邀请→接受→提议作品→另一成员确认→合作履历 (779.096208ms)
+✔ 拒绝路径：未加入圈子不能发帖，也不能回复 (193.94ms)
+✔ 拒绝路径：第三钱包不能接受别人的邀请 (347.189542ms)
+✔ 拒绝路径：提议人不能确认自己的作品 (360.063458ms)
+✔ 拒绝路径：同一作品不能重复确认，已终态作品的任何复审都被拒绝 (393.971292ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- /Users/sschy/Documents/Codex/2026-10-17/erc8004-agent-https-github-com-mnorbert87/work/task8-clean-clone-20261028/node_modules/.pnpm/@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- /Users/sschy/Documents/Codex/2026-10-17/erc8004-agent-https-github-com-mnorbert87/work/task8-clean-clone-20261028/node_modules/.pnpm/ganache@7.9.2/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+▶ deployment evidence verifies real EVM receipt, bytecode and constructor
+  ✔ browser deployment produces a portable verified record (0.655083ms)
+  ✔ independent verification rejects wrong address, constructor, artifact and missing receipt (43.754542ms)
+  ✔ wrong network fails before any wallet broadcast (0.182625ms)
+✔ deployment evidence verifies real EVM receipt, bytecode and constructor (605.648792ms)
+✔ contract revert reasons are translated to actionable messages (1.604875ms)
+✔ revert matching ignores case and works through shortMessage (0.236542ms)
+✔ wallet rejection keeps its own message and unknown errors pass through (0.255667ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- /Users/sschy/Documents/Codex/2026-10-17/erc8004-agent-https-github-com-mnorbert87/work/task8-clean-clone-20261028/node_modules/.pnpm/@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- /Users/sschy/Documents/Codex/2026-10-17/erc8004-agent-https-github-com-mnorbert87/work/task8-clean-clone-20261028/node_modules/.pnpm/ganache@7.9.2/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+▶ real EVM escrow lifecycle and cross-reader community references
+  ✔ approval, actual JobCreated ID, submission and payout execute on-chain (307.068417ms)
+  ✔ references require real jobs, source task, client, partner and matching Agent (73.7205ms)
+  ✔ forged and duplicate references ignored; a fresh reader recovers the canonical link (167.274167ms)
+  ✔ no-delivery refund and silent-client claim move balances exactly once (567.983875ms)
+✔ real EVM escrow lifecycle and cross-reader community references (5519.637417ms)
+✔ actual escrow UI handlers connect mint → approve → actual event ID → B submit → A release → B authorization (27.836875ms)
+✔ UI rejects creation without allowance and keeps the task panel empty (0.829167ms)
+✔ failed receipts do not display a success state or enter recent confirmed transactions (0.564708ms)
+✔ source-team validation can stop approval and creation before any funding transaction (0.499334ms)
+✔ payment uses 6 decimals and rejects zero, excess precision and uint256 overflow (1.599666ms)
+✔ delivery accepts only a non-zero bytes32 (0.43725ms)
+✔ submission allows the exact deadline; refund requires strictly later chain time (0.180833ms)
+✔ claim strictly exceeds review window, release needs client, terminal tasks cannot pay twice (0.701875ms)
+✔ approval grants exact amount to escrow, never to B; existing allowance sends no transaction (1.98275ms)
+✔ funding uses A signer, B identity and latest-chain relative deadline with no ETH value (1.034083ms)
+✔ funding stops before sending for insufficient balance/allowance, self task or mismatched owner (0.998083ms)
+✔ submit re-reads task and checks B, digest, state and chain time before sending (0.312833ms)
+✔ settlement calls correct methods and roles; submitted tasks cannot be refunded (0.731167ms)
+✔ Job ID is decoded from the matching emitter, ignoring a fake token event (3.757291ms)
+✔ jobs ABI decodes named Solidity fields and calldata remains compatible (1.294833ms)
+✔ escrow configuration is optional, but requires paired addresses, identity link and 6-decimal mUSD (0.26325ms)
+✔ feedback rejects a different network, contract, expiry or malformed authorization (2.156084ms)
+✔ original authorization JSON remains compatible; unsafe numeric IDs are rejected (0.68775ms)
+✔ score and tag boundaries match the unchanged contract and bytes32 encoding (0.62325ms)
+✔ metadata links cannot execute script or embed credentials (0.219167ms)
+✔ selecting B is preserved even when the wallet returns A first (0.139583ms)
+✔ choose-another-account requests wallet permission rather than silently reusing A (0.984084ms)
+✔ Ethers uses the explicitly chosen B signer, not the first authorized A (11.549ms)
+✔ EIP-712 is compatible with the original domain and binds both chain and contract (40.298417ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- /Users/sschy/Documents/Codex/2026-10-17/erc8004-agent-https-github-com-mnorbert87/work/task8-clean-clone-20261028/node_modules/.pnpm/@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- /Users/sschy/Documents/Codex/2026-10-17/erc8004-agent-https-github-com-mnorbert87/work/task8-clean-clone-20261028/node_modules/.pnpm/ganache@7.9.2/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ live adapter reads and writes real EVM social records through JSON-RPC, with shared provenance (2618.742583ms)
+✔ posting and replying require membership and correct represented Agent ownership (2.522375ms)
+✔ follow has no self-follow, duplicate or zero target; unfollow restores state (0.2745ms)
+✔ an invitation requires the recipient consent and current ownership on acceptance (0.200291ms)
+✔ pending invitations can be declined by the guest or cancelled by the host (0.09225ms)
+✔ shared portfolio requires an active team and the other member confirmation (0.262792ms)
+✔ a rejected work may be revised; pending duplicates and unsafe work links are rejected (0.148208ms)
+✔ demo samples derive social history from accepted teams and confirmed works (0.570375ms)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_darwin_arm64_137.node'
+Require stack:
+- /Users/sschy/Documents/Codex/2026-10-17/erc8004-agent-https-github-com-mnorbert87/work/task8-clean-clone-20261028/node_modules/.pnpm/@trufflesuite+uws-js-unofficial@20.30.0-unofficial.0/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- /Users/sschy/Documents/Codex/2026-10-17/erc8004-agent-https-github-com-mnorbert87/work/task8-clean-clone-20261028/node_modules/.pnpm/ganache@7.9.2/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+▶ independent JSON-RPC sessions share community data and recover from failures
+  ✔ switching the read account updates membership and following without leaking prior permissions (336.956458ms)
+  ✔ wrong RPC network, missing code and mismatched identity fail explicitly (73.380375ms)
+  ✔ RPC outage rejects the read and a subsequent good endpoint recovers real shared records (182.449791ms)
+  ✔ wallet denial sends no transaction; retry from the second signer updates both readers (729.286ms)
+✔ independent JSON-RPC sessions share community data and recover from failures (2696.684708ms)
+✔ latest account wins when old chain response arrives after a new selection (0.444ms)
+✔ disconnect invalidates an in-flight account load and removes stale write identity (0.45175ms)
+✔ RPC failure clears permissions, then a subsequent load recovers the selected account (0.11775ms)
+✔ network reload re-reads accounts; removed preferred account and malformed lists are safe (0.310917ms)
+ℹ tests 64
+ℹ suites 0
+ℹ pass 64
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7915.4515
