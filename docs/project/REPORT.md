@@ -2,8 +2,8 @@
 
 **COMP7610 Final Project Report (draft)**
 
-- Version: v0.3 (2026-10-29; A1 and team-policy PRs merged, freeze tooling fixed)
-- Code baseline: `be4f9d8` (main). Since v0.2 this adds the A1 UI fixes (#32), the circle/team policy with four regressions (#34) and the freeze-config fix with three regressions (#43); the automated suite is now 14 files / 71 tests. No contract source, generated artefact or deployment address changed.
+- Version: v0.4 (2026-10-29; A2, B2 and source-provenance review merged)
+- Code baseline: `781f2c2` (main). Since v0.3 this adds the A2 status guidance (#47), the B2 content-boundary review with three regressions (#48) and the source-provenance correction (#49); the automated suite is now 14 files / 74 tests. No contract source, ABI, generated artefact or deployment address changed.
 - Every figure in this report is taken from a file in the repository or from an on-chain receipt. Items that could not be verified are listed in §12 instead of being filled with estimates.
 
 ---
@@ -22,7 +22,7 @@ Verification combines local automated tests, browser and cross-platform checks, 
 | --- | --- |
 | Contracts | 5 source files, 596 lines in total (AgentCommunity 135 / IdentityRegistry 117 / JobEscrow 180 / MockUSDC 42 / ReputationRegistry 122) |
 | Frontend | 13 own JavaScript modules (excluding the ethers dependency) |
-| Automated tests | 14 test files; `pnpm test` reports **71 passing tests** |
+| Automated tests | 14 test files; `pnpm test` reports **74 passing tests** |
 | Community flow | 9 real transactions forming the complete loop, each with a receipt |
 | Escrow flow | 3 jobs in the standalone escrow acceptance (normal payment, refund after non-delivery, claim after timeout); jobs 4 and 5 are the two cross-module runs in §7.6 |
 | Cross-platform | macOS and Windows both ran a clean-clone verification at the **same commit** `7db718a` |
@@ -60,8 +60,8 @@ The repository is organised around five roles plus release. Tasks and dependenci
 
 ### 3.2 Status at the baseline
 
-- **Closed (11)**: #1 (A1 interface acceptance), #3 (B1 permission review), #5 (C1 community deployment), #7 (D1 dual-wallet acceptance), #8 (D2 CI and cross-platform regression), #12 (C3 escrow integration), #20 / #21 / #25 (three defects), #30 (circle/team permission semantics), #39 (README banner and community visuals).
-- **Open (6)**: #2 (frontend polish), #4 (B2 content boundaries), #6 (C2 awaiting peer confirmation), #9 / #10 / #11 (the deliverables themselves).
+- **Closed (14)**: #1 (A1 interface acceptance), #2 (A2 status guidance), #3 (B1 permission review), #4 (B2 content boundaries), #5 (C1 community deployment), #6 (C2 wallet switching and cross-device), #7 (D1 dual-wallet acceptance), #8 (D2 CI and cross-platform regression), #12 (C3 escrow integration), #20 / #21 / #25 (three defects), #30 (circle/team permission semantics), #39 (README banner and community visuals).
+- **Open (3)**: #9 / #10 / #11 (E1 report, E2 demo, R1 release).
 
 ### 3.3 Scope boundaries
 
@@ -251,7 +251,7 @@ Remediation (Issue #20, closed):
 
 CI is defined in `.github/workflows/ci.yml`. The `verify` job runs on `ubuntu-latest` in seven steps: checkout → Node 24 → install pnpm 11.25.0 → `pnpm install --frozen-lockfile` → `pnpm test` → confirm the committed contract artefact is unchanged (`git diff --exit-code -- web/generated/AgentCommunity.json`) → `pnpm build`.
 
-At the stated code baseline, local scale is **14 test files, 71 passing tests**. Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, UI message mapping, freeze-manifest generation, and circle/team permission regressions.
+At the stated code baseline, local scale is **14 test files, 74 passing tests**. Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, UI message mapping, status guidance, content-boundary and URI rules, freeze-manifest generation, and circle/team permission regressions.
 
 The automated suite executes locally: contract tests deploy to an in-memory Ganache EVM, while frontend, wallet and service tests use pure functions or controlled fixtures. These results do not represent Sepolia transactions. The testnet evidence is identified separately below by transaction receipts, fixed-block RPC probes and state reads; the cross-platform Demo screenshot in §7.8 verifies local startup only. Counts refer to the code baseline above.
 
@@ -355,6 +355,14 @@ Four layers were executed against the frozen candidate `992584e`: a fresh clone 
 
 PR #32 exercised the six community areas at 390×844 and 1440×1000 in the local Demo sandbox: 22 screenshots plus viewport measurements are in `docs/project/evidence/a1-ui/`. It fixed long-title and team-name overflow, raised the smallest mobile controls to 44 px, and gave dialogs an accessible name with focus return on close; these are UI checks, not Sepolia transactions. PR #34 adds `TEAM_CIRCLE_POLICY.zh-CN.md`: leaving a circle preserves existing team rights, while circle writes still require membership and a Pending invitation still requires the guest to be in the circle. Four contract-level regressions (`tests/team-circle-independence.test.mjs`) cover host/guest proposals, the other member's review, circle-write blocking and Pending acceptance.
 
+### 7.10 A2 status guidance, B2 content boundaries and provenance (merged 2026-10-29)
+
+PR #47 adds role-aware next-step guidance for the four team states and three work states: a host cannot accept on the guest's behalf, an author cannot confirm their own proposal, and declined or cancelled invitations must be re-created from the original task. A task thread now lists all loaded teams and a work can navigate back to its source task; the Active-team escrow entry remains in the workspace. Ten Demo-sandbox screenshots and mobile measurements (viewport/document 390 px, dialog 370 px) are in `docs/project/evidence/a2-guidance/`; no Sepolia transaction was added.
+
+PR #48 adds three Ganache-level regressions: exact UTF-8 byte limits on nine text fields (the limit succeeds; +1 byte and the empty string are rejected with `invalid text length`), the distinction between the contract accepting any non-empty URI and the frontend blocking `javascript:` / `data:` / credential-bearing URLs, and duplicate or terminal operations failing with the declared reason while counts stay unchanged. The written review is `docs/project/CONTENT_BOUNDARY_REVIEW_2026-10-29.zh-CN.md`.
+
+PR #49 corrects the backend provenance record: current LF Git-blob hashes and the original CRLF import hashes are stored separately, the three reused contracts are checked against upstream commit `3b7976a` with blob IDs, and MockUSDC is attributed to the course snapshot rather than an unverified upstream author. `scripts/verify-provenance.mjs` re-checks the four files offline.
+
 ---
 
 ## 8. Known Limitations and Risks
@@ -377,7 +385,7 @@ Each item below is **confirmed**, not speculative:
 
 ## 9. Contribution Distribution
 
-Commit authorship on `main`: QiuQiu-xuan 50, Zqqq-qq 34, PAisHere 1, ffmitrg 1.
+Commit authorship on `main`: QiuQiu-xuan 57, Zqqq-qq 37, PAisHere 1, ffmitrg 1.
 
 Per-member output is recorded in `docs/project/CONTRIBUTIONS.md`: entries for roles A, B, C and D are present, with the distinction between work "performed by the member" and work "assisted by tools (Codex)" stated explicitly. **Entries for E and R are still missing** (see §12).
 
@@ -414,10 +422,13 @@ Two points deserve honesty:
 | D1 acceptance | `docs/project/ACCEPTANCE_D1.zh-CN.md` (including §7, the closing review) |
 | A1 UI acceptance | `docs/project/A1_UI_ACCEPTANCE_2026-10-28.zh-CN.md`, `evidence/a1-ui/` (22 screenshots plus measurements) |
 | Circle/team policy | `docs/project/TEAM_CIRCLE_POLICY.zh-CN.md`, `tests/team-circle-independence.test.mjs` |
+| A2 status guidance | `docs/project/A2_STATUS_ACCEPTANCE_2026-10-29.zh-CN.md`, `evidence/a2-guidance/` (10 screenshots plus measurements) |
+| Content boundaries | `docs/project/CONTENT_BOUNDARY_REVIEW_2026-10-29.zh-CN.md`, `tests/community-content-boundaries.test.mjs` |
+| Source provenance | `docs/project/SOURCE_PROVENANCE.zh-CN.md`, `backend-provenance.json`, `scripts/verify-provenance.mjs` |
 | D2 acceptance | `docs/project/ACCEPTANCE_D2.zh-CN.md`, `docs/project/FROZEN_CANDIDATE_REGRESSION_2026-10-28.zh-CN.md`, `docs/project/MACOS_CLEAN_CLONE_2026-10-28.zh-CN.md` |
 | Permission review | `docs/project/REVIEW_B1_AGENTCOMMUNITY_2026-10-28.zh-CN.md` |
 | Community deployment acceptance | `docs/project/SEPOLIA_ACCEPTANCE_2026-10-27.zh-CN.md` |
-| Reproduction tools | `scripts/verify-community.mjs`, `scripts/verify-escrow-acceptance.mjs`, `scripts/verify-team3-acceptance.mjs`, `scripts/release-freeze.mjs` + `docs/project/evidence/release-manifest.json` |
+| Reproduction tools | `scripts/verify-community.mjs`, `scripts/verify-escrow-acceptance.mjs`, `scripts/verify-team3-acceptance.mjs`, `scripts/verify-provenance.mjs`, `scripts/release-freeze.mjs` + `docs/project/evidence/release-manifest.json` |
 
 ### 11.2 Reproduction environment
 
@@ -427,7 +438,7 @@ Node 24.x, pnpm 11.25.0 (pinned by `packageManager`), solc 0.8.30.
 git clone https://github.com/Zqqq-qq/comp7610-agentledger.git
 cd comp7610-agentledger
 pnpm install --frozen-lockfile
-pnpm test        # expect 71 passing tests
+pnpm test        # expect 74 passing tests
 pnpm build
 ```
 
