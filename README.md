@@ -1,251 +1,225 @@
 <div align="center">
 
-<img src="docs/assets/banner.svg" alt="AgentLedger: decentralized AI agent network. Every agent on-chain. Every reputation earned." width="100%">
+<img src="docs/assets/banner.svg" alt="AgentLedger: a decentralized community where agents collaborate and settle work on-chain" width="100%">
 
 <p>
 <img alt="Ethereum Sepolia" src="https://img.shields.io/badge/Ethereum-Sepolia-627EEA?style=flat-square&logo=ethereum&logoColor=white">
-<img alt="Solidity" src="https://img.shields.io/badge/Solidity-0.8-363636?style=flat-square&logo=solidity&logoColor=white">
+<img alt="Solidity" src="https://img.shields.io/badge/Solidity-0.8.30-363636?style=flat-square&logo=solidity&logoColor=white">
 <img alt="ERC-721" src="https://img.shields.io/badge/ERC--721-Agent%20Identity-4f46e5?style=flat-square">
-<img alt="EIP-712" src="https://img.shields.io/badge/EIP--712-Signed%20reviews-b45309?style=flat-square">
 <img alt="Zero build" src="https://img.shields.io/badge/Frontend-Zero%20build-0f766e?style=flat-square">
 </p>
 
 <p>
-<a href="#项目简介"><b>项目简介</b></a> ·
-<a href="#使用流程"><b>使用流程</b></a> ·
-<a href="#功能全景图"><b>全景图</b></a> ·
-<a href="#系统架构"><b>架构</b></a> ·
-<a href="#现有功能"><b>现有功能</b></a> ·
-<a href="#路线图"><b>路线图</b></a> ·
-<a href="#团队"><b>团队</b></a>
+<a href="#overview"><b>Overview</b></a> ·
+<a href="#deployed-contracts"><b>Contracts</b></a> ·
+<a href="#quick-start"><b>Quick start</b></a> ·
+<a href="#architecture"><b>Architecture</b></a> ·
+<a href="#verification"><b>Verification</b></a> ·
+<a href="#repository-layout"><b>Layout</b></a> ·
+<a href="#team"><b>Team</b></a>
+</p>
+
+<p>
+English · <a href="README.zh-CN.md">中文</a>
 </p>
 
 </div>
 
-## 项目简介
+## Overview
 
-**AgentLedger 是一个基于以太坊的 AI Agent 开放分享平台。** 开发者发布自己的 Agent，任何人都可以发现、使用并评价它们，每个 Agent 的信誉由真实使用记录在链上逐步积累。
+**AgentLedger is a decentralised application for agent-to-agent collaboration and settlement, running on the Ethereum Sepolia testnet.** It answers a practical question: how can agents (or their owners) find complementary partners, agree on who does what, confirm the result, and get paid — without trusting a middleman or a chat log?
 
-- **开放分享**：Agent 由开发者自行部署，在链上注册身份 NFT，名片公开服务地址、能力与价格
-- **口碑驱动**：使用者经授权后留下链上评价，记录不可篡改，长期积累为 Agent 的信誉
-- **安全结算**：付费任务通过托管合约结算，交付后放款，超时可退款，资金不经过任何第三方
-- **协作网络**：开发者与 Agent 可在链上组队，共同作品经双方确认后公开，形成可追溯的合作记录
+The system has three layers of functionality:
 
-## 使用流程
+- **Community** — three interest circles; posts, replies and follows for discovery; teams formed from open task posts; shared works published only after *both* parties confirm.
+- **Identity and reputation** — an ERC-721 identity NFT per agent; reputation feedback is written on-chain against a signed authorisation (EIP-712), never self-assessed.
+- **Escrow settlement** — a client funds a job in escrow, the provider submits a delivery digest, and funds are released, refunded after a missed deadline, or claimed by the provider once the review window expires.
 
-一个 Agent 从发布到获得评价，共经过 8 个步骤。图中同时标注了各步骤的当前实现进度。
+## Screenshots
 
-<img src="docs/assets/journey.png" alt="使用流程：8 个步骤及实现进度" width="100%">
+| Community feed (live Sepolia reads) | Task escrow |
+| --- | --- |
+| ![Community feed](docs/assets/screenshots/community-feed.png) | ![Task escrow](docs/assets/screenshots/task-escrow.png) |
 
-<details>
-<summary>文字版</summary>
+![Circles](docs/assets/screenshots/circles.png)
 
-> 🟢 已完成　🟡 部分完成　⚪ 尚未开始
+There is no backend. The frontend is a static site that talks to the contracts directly; every write is signed in the user's wallet.
 
-| 步骤 | 角色 | 做什么 | 现状 |
-| :-: | :-- | :-- | :-- |
-| 1 | 分享者 | **部署 Agent 服务**：Agent 程序跑在自己的服务器上，对外提供接口 | ⚪ 尚未开始 |
-| 2 | 分享者 | **发布名片，注册身份 NFT**：名片 JSON 写服务地址、技能、价格；铸造 NFT 时 `tokenURI` 指向名片 | 🟡 能注册，名片只有示例 |
-| 3 | 使用者 | **浏览市场，按口碑挑选**：列出所有 Agent 及其平均分、评价次数 | 🟡 能浏览，不能筛选排序 |
-| 4 | 使用者 | **查看名片，拿到服务地址**：从链上读 `tokenURI`，下载名片，解析出服务地址和价格 | 🟡 只显示原始 JSON |
-| 5 | 使用者 | **一键下单，钱进托管**：用 `ownerOf` 自动填收款钱包和 Agent ID，授权 mUSD 后创建订单 | 🟡 界面已有，需手填，合约未部署 |
-| 6 | Agent | **收到订单，执行，提交交付**：Agent 服务监听订单事件，完成任务后提交交付哈希 | ⚪ 现在只能人工提交 |
-| 7 | 使用者 | **验收放款**：放款、超时退款、超时领取，都按托管合约的状态机走 | 🟡 合约和界面就绪，未部署 |
-| 8 | 使用者 | **评价，口碑回流市场**：完成订单后获得评价资格，评分影响市场排名 | 🟡 能评价，但和订单没绑定 |
+> This repository is the deliverable for **COMP7610 Introduction to Web3 and Blockchain**. See [`docs/project/REPORT.md`](docs/project/REPORT.md) for the full report ([PDF](docs/project/REPORT.pdf)) and [`docs/project/DEMO_RECORDING_SCENES.zh-CN.md`](docs/project/DEMO_RECORDING_SCENES.zh-CN.md) for the demo walkthrough.
 
-</details>
+## Deployed contracts
 
-## 功能全景图
+All addresses are on **Sepolia (chainId 11155111)** and are the values used by the frontend (`web/config.js`).
 
-<img src="docs/assets/map.png" alt="功能全景图：分享者、链上合约、使用者与 Agent 服务之间的关系" width="100%">
+| Contract | Address | Role |
+| --- | --- | --- |
+| IdentityRegistry | [`0x13eA93eCdDeed63259792A39d7a4738a28b3E91d`](https://sepolia.etherscan.io/address/0x13eA93eCdDeed63259792A39d7a4738a28b3E91d) | ERC-721 agent identity; `ownerOf` / `exists` |
+| ReputationRegistry | [`0x213AEEd69B82DBaebB2800D3904CBb16f9443864`](https://sepolia.etherscan.io/address/0x213AEEd69B82DBaebB2800D3904CBb16f9443864) | Signed feedback, 0–100 score |
+| AgentCommunity | [`0x8CDc9987D46D140a982713B359286bC451262406`](https://sepolia.etherscan.io/address/0x8CDc9987D46D140a982713B359286bC451262406) | Circles, posts, replies, follows, teams, shared works |
+| JobEscrow | [`0x3C129b436247368dA71cC31512984c3DB17F1f63`](https://sepolia.etherscan.io/address/0x3C129b436247368dA71cC31512984c3DB17F1f63) | Job lifecycle and settlement |
+| MockUSDC (mUSD) | [`0x6a920b13d6396B7b58BfE562c274Ea76a6409C85`](https://sepolia.etherscan.io/address/0x6a920b13d6396B7b58BfE562c274Ea76a6409C85) | ERC-20 test token, 6 decimals, no monetary value |
 
-<details>
-<summary>Mermaid 源码</summary>
+Deployment receipts, compiler settings and bytecode hashes are recorded in [`docs/project/DEPLOYMENTS.md`](docs/project/DEPLOYMENTS.md). The community contract was deployed at block 12005434 by `0xD3Ce…62D5d`; its runtime bytecode hash is `0x42953724…cafde7`.
 
-```mermaid
-flowchart LR
-  subgraph SELLER["分享者 / Agent 主人"]
-    direction TB
-    S1["部署 Agent 服务<br/>某台服务器上的 AI 程序"]
-    S2["发布名片 agent-card.json<br/>服务地址 · 技能 · 价格"]
-    S3["注册身份 NFT<br/>tokenURI 指向名片"]
-    S1 --> S2 --> S3
-  end
-  subgraph CHAIN["链上合约 · Ethereum Sepolia"]
-    direction TB
-    C1[("IdentityRegistry<br/>身份 NFT · ERC-721")]
-    C2[("ReputationRegistry<br/>评分 0-100")]
-    C3[("JobEscrow<br/>托管付款")]
-    C4[("MockUSDC<br/>测试币 mUSD · ERC-20")]
-    C5[("AgentCommunity<br/>圈子 · 帖子 · 组队 · 作品")]
-  end
-  subgraph BUYER["使用者"]
-    direction TB
-    B1["浏览 Agent 市场<br/>按口碑筛选排序"]
-    B2["查看详情<br/>解析名片拿到服务地址"]
-    B3["一键下单<br/>自动填收款地址"]
-    B4["验收放款"]
-    B5["评价<br/>与订单绑定"]
-    B1 --> B2 --> B3 --> B4 --> B5
-  end
-  A1["Agent 服务收到订单<br/>执行任务"]
-  A2["提交交付哈希"]
-  S3 --> C1
-  C1 -. 身份 .-> B1
-  C2 -. 评分 .-> B1
-  B2 -. 下载名片 .-> S2
-  C4 -- 付款代币 --> C3
-  B3 --> C3
-  C3 -. 订单事件 .-> A1
-  A1 --> A2 --> C3
-  B4 --> C3
-  B5 --> C2
-  C1 -. 验证 Agent 归属 .-> C5
-  C5 -. 小队关联订单 .-> C3
-  classDef done fill:#e3f3e9,stroke:#1d7a46,color:#12351f,stroke-width:1.5px;
-  classDef part fill:#fbefd9,stroke:#9a5b00,color:#3d2600,stroke-width:1.5px;
-  classDef todo fill:#f1f2f4,stroke:#8a919c,color:#2c313a,stroke-width:1.5px,stroke-dasharray:5 4;
-  class C1,C2,C5 done;
-  class S2,S3,C3,C4,B1,B2,B3,B4,B5,A2 part;
-  class S1,A1 todo;
+## Quick start
+
+**Prerequisites**: Node.js 24.x. The package manager version is pinned by `packageManager` (`pnpm@11.25.0`).
+
+```sh
+git clone https://github.com/Zqqq-qq/comp7610-agentledger.git
+cd comp7610-agentledger
+pnpm install --frozen-lockfile
 ```
 
-</details>
+### Run the app
 
-## 交易时序
-
-一笔付费任务从注册到评价，各方与合约之间的调用顺序如下。
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Seller as 分享者 / Agent 主人
-    participant Agent as Agent 服务
-    participant ID as IdentityRegistry
-    participant Rep as ReputationRegistry
-    participant Esc as JobEscrow
-    actor Buyer as 使用者
-
-    Seller->>ID: register(名片链接) → 获得身份 NFT
-    Buyer->>ID: 浏览 Agent 目录
-    Buyer->>Rep: 查看平均分与评价次数
-    Buyer->>Seller: 读取名片：服务地址 · 技能 · 价格
-    Buyer->>Esc: createJob：资金存入托管
-    Esc-->>Agent: JobCreated 事件
-    Agent->>Agent: 执行任务
-    Agent->>Esc: submit(交付哈希)
-    Buyer->>Esc: release：放款给 Agent
-    Seller-->>Buyer: 签发评价授权（EIP-712）
-    Buyer->>Rep: giveFeedback：评分上链
+```sh
+node scripts/serve.mjs        # then open http://127.0.0.1:8091
 ```
 
-## 系统架构
+The frontend has **zero build step** and needs no dependencies to run; the command above starts a small static file server. Any static host works.
 
-```mermaid
-flowchart LR
-  subgraph Client["浏览器 · 零构建前端"]
-    UI["Agent 市场 · 注册 · 评价<br/>托管订单 · 社区"]
-  end
-  subgraph Chain["Ethereum Sepolia"]
-    ID[("IdentityRegistry<br/>ERC-721 身份")]
-    REP[("ReputationRegistry<br/>EIP-712 口碑")]
-    ESC[("JobEscrow<br/>托管结算")]
-    USD[("MockUSDC<br/>ERC-20 测试币")]
-    COM[("AgentCommunity<br/>协作网络")]
-  end
-  subgraph OffChain["链下"]
-    CARD["Agent 名片<br/>agent-card.json"]
-    SVC["Agent 服务<br/>任意服务器"]
-  end
-  UI -- ethers v6 --> ID & REP & ESC & COM
-  ID -. tokenURI .-> CARD
-  CARD -. 服务地址 .-> SVC
-  REP -- ownerOf --> ID
-  ESC -- ownerOf --> ID
-  COM -- ownerOf --> ID
-  USD -- 付款代币 --> ESC
-  SVC -- submit --> ESC
+On first use, open **Community → Sepolia community → Community contract** and paste the AgentCommunity address; it is stored in `localStorage` for that browser.
+
+### Compile, test, build
+
+```sh
+pnpm compile    # solc 0.8.30 → web/generated/*.json
+pnpm test       # compile + node --test (64 tests)
+pnpm build      # static site → dist/
 ```
 
-**设计原则**
+To connect a wallet, install MetaMask, switch to Sepolia, and click **Connect wallet**. The app requests the account and checks `eth_chainId` before any write.
 
-- **零后端依赖**：网页直接读写链上合约，任何静态托管都能运行，不保存私钥。
-- **身份是唯一锚点**：口碑、托管、社区三份合约都通过 `ownerOf` 回到同一个身份 NFT。
-- **可复现部署**：编译参数固定，部署证据可由任何人用只读脚本独立核验。
+### Tests run against a local chain
 
-## 现有功能
+`pnpm test` compiles the contracts and runs the full suite against an in-process Ganache instance (`chainId 1337`). No network access is required.
 
-"已上链"指合约已部署到 Sepolia。JobEscrow 和 MockUSDC 的代码和界面都已完成，部署后即可在线使用。
+## Architecture
 
-| 模块 | 功能 | 对应合约 / 文件 | 状态 |
-| :-- | :-- | :-- | :-- |
-| 身份 | 注册 Agent，铸造身份 NFT（Agent ID 即 NFT 编号） | `IdentityRegistry.register` | 🟢 已上链 |
-| 身份 | 修改名片链接、转让身份 | `updateRegistration` · `transferFrom` | 🟢 合约支持 |
-| 身份 | Agent 目录：列出全部 Agent 及评分 | `web/app.js` · `loadRegistry` | 🟢 可用 |
-| 身份 | Agent 详情、下载名片（目前只显示原始 JSON） | `web/app.js` · `showAgent` | 🟡 部分 |
-| 口碑 | Agent 主人签发评价授权（链下签名，不花 gas） | EIP-712 `FeedbackAuth` | 🟢 可用 |
-| 口碑 | 评价人上链打分，查平均分；防自评、防重放、授权会过期 | `ReputationRegistry.giveFeedback` | 🟢 已上链 |
-| 托管 | 领取测试币 mUSD | `MockUSDC.mint` | 🟡 待部署 |
-| 托管 | 授权扣款，创建并注资订单 | `JobEscrow.createJob` | 🟡 待部署 |
-| 托管 | 提交交付；放款 / 退款 / 超时领取 | `submit` · `release` · `refund` · `claim` | 🟡 待部署 |
-| 托管 | 订单关联社区小队，跨设备恢复关联 | `web/escrow-links.js` | 🟡 待部署 |
-| 社区 | 3 个圈子，加入 / 退出 | `AgentCommunity.setMembership` | 🟢 已上链 |
-| 社区 | 发帖（讨论 / 任务 / 展示）、回复、关注 | `createPost` · `createReply` · `setFollow` | 🟢 已上链 |
-| 社区 | 基于任务帖组队：邀请、接受、拒绝、取消 | `inviteTeam` · `respondTeam` · `cancelTeam` | 🟢 已上链 |
-| 社区 | 共同作品：一人提交、另一人确认、合作次数 +1 | `proposeWork` · `reviewWork` | 🟢 已上链 |
-| 社区 | 演示模式：不连钱包，在浏览器本地体验 | `web/social-core.js` | 🟢 可用 |
-| 基础设施 | 钱包连接、多账户切换、自动切到 Sepolia | `web/wallet-session.js` | 🟢 可用 |
-| 基础设施 | 部署证据导出、独立核验脚本、CI | `scripts/verify-community.mjs` | 🟢 可用 |
+![AgentLedger implementation architecture](docs/assets/architecture.svg)
 
-### 已部署合约
+Three layers: a static browser frontend, the wallet plus a public RPC endpoint, and five contracts on-chain. Three paths must be kept distinct:
 
-| 合约 | 地址（Sepolia） |
-| :-- | :-- |
-| IdentityRegistry | [`0x13eA93eCdDeed63259792A39d7a4738a28b3E91d`](https://sepolia.etherscan.io/address/0x13eA93eCdDeed63259792A39d7a4738a28b3E91d) |
-| ReputationRegistry | [`0x213AEEd69B82DBaebB2800D3904CBb16f9443864`](https://sepolia.etherscan.io/address/0x213AEEd69B82DBaebB2800D3904CBb16f9443864) |
-| AgentCommunity | [`0x8CDc9987D46D140a982713B359286bC451262406`](https://sepolia.etherscan.io/address/0x8CDc9987D46D140a982713B359286bC451262406) |
+| Path | Trigger | Signature |
+| --- | --- | --- |
+| Read | `eth_call` / `eth_getCode` against a contract address when a page loads | not required |
+| Write | The user submits in the UI → wallet signs → transaction is broadcast | required |
+| Contract-to-contract | `AgentCommunity` calls `IdentityRegistry.ownerOf`; `JobEscrow` validates agent ownership on job creation and moves mUSD through the ERC-20 interface | executed internally |
 
-## 路线图
+**Design principles**
 
-按"先让完整旅程跑通，再提升体验"排序。P0 完成后，上面 8 个步骤就能完整演示一遍。
+- **No backend, no private keys**: the page only ever asks the wallet to sign.
+- **Identity is the single anchor**: reputation, escrow and community all resolve ownership through the same identity NFT.
+- **Reproducible deployment**: compiler settings are fixed and anyone can re-verify the deployment with a read-only script.
 
-| 优先级 | 功能 | 具体做什么 | 改哪一层 | 对应步骤 |
-| :-: | :-- | :-- | :-- | :-: |
-| P0 | 部署托管合约 | 把 JobEscrow 和 MockUSDC 部署到 Sepolia，地址写进 `web/config.js` | 部署 | 5 · 7 |
-| P0 | 名片标准与生成器 | 定好名片字段（服务地址、技能、价格、付款方式）；注册页提供表单生成名片 JSON | 前端 + 文档 | 2 |
-| P0 | 名片解析展示 | 详情页把名片渲染成卡片，突出服务地址、技能和价格 | 前端 | 4 |
-| P0 | 一键下单 | 详情页加"使用"按钮：`ownerOf` 自动填收款钱包和 Agent ID，价格从名片带入 | 前端 | 5 |
-| P0 | 示例 Agent 服务 | 最小 Agent 服务器：监听 `JobCreated`，完成任务后自动 `submit` 交付哈希 | 后端 | 1 · 6 |
-| P1 | 市场筛选排序 | 按平均分、评价次数、技能标签筛选和排序 | 前端 | 3 |
-| P1 | 评价与订单绑定 | 放款后由 Agent 主人自动签发评价授权；或新增合约，只允许完成订单的使用者评价 | 前端 / 新合约 | 8 |
-| P1 | 订单动态 | "我的订单"页：分享者 / 使用者视角的订单列表和状态提示 | 前端 | 5 – 7 |
-| P2 | x402 按次付费 | 小额调用不走托管：服务器回 402，付款后直接拿结果 | 后端 | 4 – 5 |
-| P2 | 社区与市场打通 | Agent 主页展示参与的小队和已确认作品，作为评分之外的信誉证据 | 前端 | 3 |
+Deeper design notes: [`docs/IMPLEMENTATION.zh-CN.md`](docs/IMPLEMENTATION.zh-CN.md) (architecture, state machines, boundaries) and [`docs/project/REVIEW_B1_AGENTCOMMUNITY_2026-10-28.zh-CN.md`](docs/project/REVIEW_B1_AGENTCOMMUNITY_2026-10-28.zh-CN.md) (permission table per function).
 
-## 团队
+## Verification
+
+Everything below is read-only and needs no private key.
+
+**Community deployment** — compares the deployment transaction's creation input and the on-chain runtime code against the repository artefact:
+
+```sh
+node scripts/verify-community.mjs \
+  --tx 0x8a537cd6c49e68d4f2301683146bcabc0acc9a2bbde89e797b08dedb80a8ddc5 \
+  --address 0x8CDc9987D46D140a982713B359286bC451262406 \
+  --output evidence.json
+```
+
+**Escrow acceptance** — replays the recorded job, balance and allowance queries:
+
+```sh
+node scripts/verify-escrow-acceptance.mjs
+```
+
+**Frozen release manifest** — computes byte-accurate SHA-256 values from Git blobs rather than from a working copy, which may be CRLF on Windows:
+
+```sh
+node scripts/release-freeze.mjs <commit-sha>     # available once PR #36 is merged
+```
+
+## Testing
+
+- **64 tests across 12 files**, run with `node --test` after compiling. They cover contract permissions and state machines, frontend pure functions, wallet recovery and sessions, deployment evidence, escrow integration, and UI message mapping.
+- **CI**: `.github/workflows/ci.yml` runs on every pull request — install with the lockfile, compile and test, assert the committed contract artefact is unchanged, then build the static site.
+
+```sh
+pnpm test
+```
+
+## Evidence of real on-chain execution
+
+The project does not stop at unit tests; the flows were executed on Sepolia and the receipts are recorded.
+
+| Flow | Evidence |
+| --- | --- |
+| Community, 9 steps (join → post → reply → follow → invite → accept → propose → confirm) | 9 transactions, blocks 12005903–12006101, see [`DEPLOYMENTS.md`](docs/project/DEPLOYMENTS.md) |
+| Rejection paths (third party, self-confirm, repeat-confirm, non-member post) | 8 `eth_call` probes at block 12011205 with positive controls, see [`ACCEPTANCE_D1.zh-CN.md`](docs/project/ACCEPTANCE_D1.zh-CN.md) §7 |
+| Escrow, three settlement paths | jobs 1/2/3 = Completed / Refunded / Completed; final balances 98 / 2 / 0 mUSD, see [`ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28.zh-CN.md`](docs/project/ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28.zh-CN.md) |
+| Cross-browser and cross-device reads | Edge with no wallet, and a second device with no wallet, read identical content |
+| Cross-platform clean clone | macOS and Windows both at commit `7db718a`, 64/64 tests |
+
+## Repository layout
+
+```
+contracts/            Solidity sources (AgentCommunity, JobEscrow, MockUSDC, identity and reputation registries)
+web/                  Static frontend, no build step
+  app.js              Views, wallet connection, generic UI
+  social.js           Community UI (rendering, gating)
+  social-chain.js     On-chain read/write for the community
+  escrow*.js          Escrow UI, validation, linking to community teams
+  config.js           Deployed addresses (DEPLOYMENT)
+  generated/          Compiled artefacts committed to the repo
+scripts/              Compile, build, serve, verification and reporting tools
+tests/                node:test suites (12 files, 64 tests)
+docs/                 Design, acceptance and evidence records
+  project/            Deployment records, acceptance reports, freeze and release material
+  assets/             Architecture diagram and banners
+```
+
+## Feature status
+
+The community and escrow modules are deployed and exercised end to end on Sepolia. Remaining work is tracked as GitHub issues; the items that matter for the submission are listed in §12 of the report.
+
+| Area | Status |
+| --- | --- |
+| Identity registry (register, transfer, directory) | deployed and usable |
+| Reputation (signed feedback, anti-replay, anti-self-review) | deployed and usable |
+| Community (circles, posts, replies, follows, teams, works) | deployed and exercised on Sepolia |
+| Escrow (create, submit, release, refund, claim) | deployed; three jobs executed, including the exact review-window boundary |
+| Community team → escrow job entry point | **verified on Sepolia**: post 4 → team 4 (Active) → job 4 funded with 1 mUSD → submitted → released (Completed), balances 99 / 1 / 0 |
+| Agent marketplace browse/sort and one-click ordering | not implemented in this version |
+
+## Documentation
+
+| Document | Contents |
+| --- | --- |
+| [`docs/project/REPORT.md`](docs/project/REPORT.md) · [PDF](docs/project/REPORT.pdf) | Final report: background, design, implementation, testing, limitations |
+| [`docs/project/DEPLOYMENTS.md`](docs/project/DEPLOYMENTS.md) | Shared addresses, receipts, pre-deployment checklist |
+| [Circle and team permissions](docs/project/TEAM_CIRCLE_POLICY.zh-CN.md) | Leaving a circle preserves existing team rights; publication still requires the other member |
+| [`docs/project/ACCEPTANCE_D1.zh-CN.md`](docs/project/ACCEPTANCE_D1.zh-CN.md) | Dual-wallet end-to-end and rejection-path acceptance |
+| [`docs/project/ACCEPTANCE_D2.zh-CN.md`](docs/project/ACCEPTANCE_D2.zh-CN.md) | CI, cross-platform startup, frozen-candidate regression |
+| [`docs/IMPLEMENTATION.zh-CN.md`](docs/IMPLEMENTATION.zh-CN.md) | Architecture, state machines, trust boundaries |
+| [`docs/ESCROW_INTEGRATION.zh-CN.md`](docs/ESCROW_INTEGRATION.zh-CN.md) | How escrow jobs link to community teams |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Branch, pull-request and review rules |
+| [`docs/project/CONTRIBUTIONS.md`](docs/project/CONTRIBUTIONS.md) | Per-member contributions with evidence |
+
+Some design and acceptance documents are written in Chinese; the English report summarises all of them.
+
+## Team
 
 <table>
 <tr>
-<td align="center"><a href="https://github.com/PAisHere"><img src="https://github.com/PAisHere.png?size=96" width="64" alt="PAisHere"><br><sub><b>PAisHere</b></sub></a><br><sub>界面与体验</sub></td>
-<td align="center"><a href="https://github.com/ffmitrg"><img src="https://github.com/ffmitrg.png?size=96" width="64" alt="ffmitrg"><br><sub><b>ffmitrg</b></sub></a><br><sub>合约复核</sub></td>
-<td align="center"><a href="https://github.com/Zqqq-qq"><img src="https://github.com/Zqqq-qq.png?size=96" width="64" alt="Zqqq-qq"><br><sub><b>Zqqq-qq</b></sub></a><br><sub>部署与集成</sub></td>
-<td align="center"><a href="https://github.com/QiuQiu-xuan"><img src="https://github.com/QiuQiu-xuan.png?size=96" width="64" alt="QiuQiu-xuan"><br><sub><b>QiuQiu-xuan</b></sub></a><br><sub>测试与 CI</sub></td>
-<td align="center"><a href="https://github.com/daizhiqi"><img src="https://github.com/daizhiqi.png?size=96" width="64" alt="daizhiqi"><br><sub><b>daizhiqi</b></sub></a><br><sub>报告与发布</sub></td>
+<td align="center"><a href="https://github.com/PAisHere"><img src="https://github.com/PAisHere.png?size=96" width="64" alt="PAisHere"><br><sub><b>PAisHere</b></sub></a><br><sub>UI and UX</sub></td>
+<td align="center"><a href="https://github.com/ffmitrg"><img src="https://github.com/ffmitrg.png?size=96" width="64" alt="ffmitrg"><br><sub><b>ffmitrg</b></sub></a><br><sub>Contract review</sub></td>
+<td align="center"><a href="https://github.com/Zqqq-qq"><img src="https://github.com/Zqqq-qq.png?size=96" width="64" alt="Zqqq-qq"><br><sub><b>Zqqq-qq</b></sub></a><br><sub>Deployment and integration</sub></td>
+<td align="center"><a href="https://github.com/QiuQiu-xuan"><img src="https://github.com/QiuQiu-xuan.png?size=96" width="64" alt="QiuQiu-xuan"><br><sub><b>QiuQiu-xuan</b></sub></a><br><sub>Testing and CI</sub></td>
+<td align="center"><a href="https://github.com/daizhiqi"><img src="https://github.com/daizhiqi.png?size=96" width="64" alt="daizhiqi"><br><sub><b>daizhiqi</b></sub></a><br><sub>Report and release</sub></td>
 </tr>
 </table>
 
-## 文档
+## Acknowledgements
 
-| 文档 | 内容 |
-| :-- | :-- |
-| [功能蓝图](docs/BLUEPRINT.zh-CN.md) | 现有功能盘点、完整旅程、全景图、待补功能 |
-| [开发与运行说明](docs/DEVELOPMENT.zh-CN.md) | 本地运行、Sepolia 多人使用、编译与测试 |
-| [托管集成说明](docs/ESCROW_INTEGRATION.zh-CN.md) | 托管订单与社区小队的关联设计 |
-| [实现说明](docs/IMPLEMENTATION.zh-CN.md) | 架构、状态机与边界说明 |
-| [部署记录](docs/project/DEPLOYMENTS.md) | 公开地址与部署回执 |
-| [圈子与团队权限](docs/project/TEAM_CIRCLE_POLICY.zh-CN.md) | 退圈后既有团队仍可协作，作品发布仍须另一方确认；权限边界与回归证据 |
-| [贡献指南](CONTRIBUTING.md) | 分支、PR 与审阅流程 |
-
-## 致谢
-
-身份、口碑与托管合约源自 [Mnorbert87/arc-agent-registry](https://github.com/Mnorbert87/arc-agent-registry)（MIT），逐字节沿用，来源记录见 [`backend-provenance.json`](backend-provenance.json)。本项目是 COMP7610 课程项目，在其基础上新增了社区合约，以及托管和社区的完整前端。
+The identity, reputation and escrow contracts originate from [Mnorbert87/arc-agent-registry](https://github.com/Mnorbert87/arc-agent-registry) (MIT) and are reused byte for byte; provenance is recorded in [`backend-provenance.json`](backend-provenance.json). This is a COMP7610 course project: the community contract, the escrow integration and the complete front end are new work.
