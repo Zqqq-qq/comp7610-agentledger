@@ -2,7 +2,7 @@
 
 **COMP7610 Final Project Report (draft)**
 
-- Version: v0.2 (2026-10-29)
+- Version: v0.2.1 (2026-10-29; verification-scope correction)
 - Code baseline: `479e8db` (main). Contract sources, generated artefacts, lockfile and tests are byte-identical to the `a2b38c9` baseline; the delta is documentation, scripts and frontend presentation.
 - Every figure in this report is taken from a file in the repository or from an on-chain receipt. Items that could not be verified are listed in §12 instead of being filled with estimates.
 
@@ -16,7 +16,7 @@ The system uses **circles** to organise interests, **posts and replies** to enab
 
 There is no backend. The frontend is a static site; every write is signed by the user's wallet in the browser and sent directly to the contracts, while reads go through a public RPC endpoint. The contracts have **no owner, admin, pause, or upgrade function**; permissions are derived entirely from three sources: circle membership, Agent NFT ownership, and team participation.
 
-All verification was executed on Sepolia. Scale of the work:
+Verification combines local automated tests, browser and cross-platform checks, and Sepolia acceptance. Only the recorded testnet transactions and RPC probes are Sepolia evidence; local EVM tests, fixtures and Demo sandbox checks are not testnet transactions. Scale of the work at the stated code baseline:
 
 | Dimension | Value |
 | --- | --- |
@@ -179,7 +179,7 @@ Titles, bodies, and delivery summaries are stored directly in the contracts. Thi
 
 The ten transactions total `24,457,402` gas. The **deployment accounts for 70.3%**, at a cost of `0.02577 ETH` (`effectiveGasPrice` 1.5 gwei, the wallet default); the other nine executed at 16 / 18 / 25 wei and cost about `0.00000000012 ETH` together, i.e. negligible.
 
-**Effect of text length on cost (measured, not estimated)**: using `eth_estimateGas` on the same `createPost(circle 2, agentId 0, kind 0)` while varying only the body length:
+**Effect of text length on cost (RPC gas estimates)**: using `eth_estimateGas` on the same `createPost(circle 2, agentId 0, kind 0)` while varying only the body length:
 
 | Body length (characters) | Estimated gas |
 | --- | --- |
@@ -251,7 +251,9 @@ Remediation (Issue #20, closed):
 
 CI is defined in `.github/workflows/ci.yml`. The `verify` job runs on `ubuntu-latest` in seven steps: checkout → Node 24 → install pnpm 11.25.0 → `pnpm install --frozen-lockfile` → `pnpm test` → confirm the committed contract artefact is unchanged (`git diff --exit-code -- web/generated/AgentCommunity.json`) → `pnpm build`.
 
-Local scale: **12 test files, 64 passing tests**. Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, and UI message mapping.
+At the stated code baseline, local scale is **12 test files, 64 passing tests**. Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, and UI message mapping.
+
+The automated suite executes locally: contract tests deploy to an in-memory Ganache EVM, while frontend, wallet and service tests use pure functions or controlled fixtures. These results do not represent Sepolia transactions. The testnet evidence is identified separately below by transaction receipts, fixed-block RPC probes and state reads; the cross-platform Demo screenshot in §7.8 verifies local startup only. Counts refer to the code baseline above, not to later unmerged PRs.
 
 `tests/d1-failure-path.test.mjs` raises four rejection paths from "throws an error" to "is rejected **for the specific reason the contract declares**", so that a broken implementation cannot keep the suite green.
 
