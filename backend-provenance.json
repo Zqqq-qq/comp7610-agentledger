@@ -1,13 +1,13 @@
 {
   "upstream": "https://github.com/Mnorbert87/arc-agent-registry",
   "upstreamCommit": "3b7976a5bbcfe8fac063adfe07fd1244b2bf69de",
-  "backendSource": "../sepolia-remix/contracts",
-  "backendChanges": "None. Files copied byte-for-byte.",
+  "backendSource": "Imported COMP7610-AgentLedger.zip snapshot (historical source label: ../sepolia-remix/contracts)",
+  "backendChanges": "No Solidity logic edits in the social extension. PR #15 normalized three imported CRLF sources to LF; current Git blobs and original imported snapshot have separate hashes.",
   "sha256": {
-    "IdentityRegistry.sol": "023f840bec71b73ff2ba66e1cc74f6b062d2f82541e946c6a2a207222735488d",
-    "JobEscrow.sol": "63f449f719e82043272ece2e2e78727162b0d21b09a24ea6721de8397ee6ce1e",
+    "IdentityRegistry.sol": "44033281eef840c8e7117cf38caf62b43acdb104e5eff8cd29a7ab5f9824cc72",
+    "JobEscrow.sol": "ce7d4c46fbd76caafca8d31c78d58c428ddb560fd7a46b6a8fd50a888710f907",
     "MockUSDC.sol": "48783f227eadc77ff8fd36cfef7e35e65d20f8a2d2e421f7323a123db9878b2a",
-    "ReputationRegistry.sol": "17cd6d76fbecb7c206000e9d51f1fd69e42ffd2882d524290687550054e156f4"
+    "ReputationRegistry.sol": "cc5dc6bbb85dfd5b012dc9524d649f5efaea1cd8d8d68e36b92e86d6629570ff"
   },
   "frontend": "New Agent Ledger frontend; same identity registration and reputation operations.",
   "socialExtension": {
@@ -19,6 +19,42 @@
       "additional navigation and routing",
       "wallet/config change events",
       "public registry defaults"
-    ]
+    ],
+    "existingContractsModifiedMeaning": "No Solidity logic changes; line-ending normalization is documented above."
+  },
+  "schema": "agentledger-backend-provenance-v2",
+  "importedSnapshotSHA256": {
+    "IdentityRegistry.sol": "023f840bec71b73ff2ba66e1cc74f6b062d2f82541e946c6a2a207222735488d",
+    "JobEscrow.sol": "63f449f719e82043272ece2e2e78727162b0d21b09a24ea6721de8397ee6ce1e",
+    "MockUSDC.sol": "48783f227eadc77ff8fd36cfef7e35e65d20f8a2d2e421f7323a123db9878b2a",
+    "ReputationRegistry.sol": "17cd6d76fbecb7c206000e9d51f1fd69e42ffd2882d524290687550054e156f4"
+  },
+  "hashBasis": "sha256: current contracts/*.sol Git blobs (LF). importedSnapshotSHA256: original import; reconstruct CRLF for IdentityRegistry, JobEscrow and ReputationRegistry, retain LF for MockUSDC.",
+  "upstreamVerification": {
+    "commit": "3b7976a5bbcfe8fac063adfe07fd1244b2bf69de",
+    "checkedOn": "2026-10-29",
+    "files": {
+      "IdentityRegistry.sol": {
+        "path": "contracts/src/IdentityRegistry.sol",
+        "sha256": "44033281eef840c8e7117cf38caf62b43acdb104e5eff8cd29a7ab5f9824cc72",
+        "matchesCurrentGitBlob": true,
+        "gitBlob": "d121e6fc72da41d955e324c9fda496dd07702459"
+      },
+      "JobEscrow.sol": {
+        "path": "contracts/src/JobEscrow.sol",
+        "sha256": "ce7d4c46fbd76caafca8d31c78d58c428ddb560fd7a46b6a8fd50a888710f907",
+        "matchesCurrentGitBlob": true,
+        "gitBlob": "d9eaecdf0382f02ea377baefad42629b8eed2f18"
+      },
+      "ReputationRegistry.sol": {
+        "path": "contracts/src/ReputationRegistry.sol",
+        "sha256": "cc5dc6bbb85dfd5b012dc9524d649f5efaea1cd8d8d68e36b92e86d6629570ff",
+        "matchesCurrentGitBlob": true,
+        "gitBlob": "ef6b89d470695c46aed5e4977818c862fea9e56b"
+      }
+    },
+    "mockUSDC": "No MockUSDC file found in the referenced upstream commit tree. This file is attributed to the imported course snapshot; its earlier authorship is not independently verified.",
+    "license": "LICENSE.backend retains the upstream MIT notice; local CRLF versus upstream LF.",
+    "licenseGitBlob": "3fcfa37f736316ec1808949a5312712c3fa95aa7"
   }
 }

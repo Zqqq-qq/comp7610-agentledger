@@ -24,8 +24,11 @@ SOFTWARE.
 
 Third-party notice
 
-The identity, reputation and escrow contracts originate from
-https://github.com/Mnorbert87/arc-agent-registry (MIT) and are reused byte for
-byte. Per-file provenance is recorded in backend-provenance.json. The community
-contract, the escrow integration and the complete front end are original work
-for COMP7610.
+IdentityRegistry, ReputationRegistry and JobEscrow derive from
+https://github.com/Mnorbert87/arc-agent-registry under its MIT license.
+The upstream copyright and permission notice is retained in LICENSE.backend.
+Three imported CRLF sources were normalized to LF; current and imported
+snapshot hashes are recorded separately in backend-provenance.json. MockUSDC
+comes from the supplied course snapshot and is absent from the referenced
+upstream commit. Community, UI and integration changes are course-project
+contributions; inherited components retain their own notices.

@@ -231,4 +231,4 @@ Some design and acceptance documents are written in Chinese; the English report 
 
 ## Acknowledgements
 
-The identity, reputation and escrow contracts originate from [Mnorbert87/arc-agent-registry](https://github.com/Mnorbert87/arc-agent-registry) (MIT) and are reused byte for byte; provenance is recorded in [`backend-provenance.json`](backend-provenance.json). This is a COMP7610 course project: the community contract, the escrow integration and the complete front end are new work.
+IdentityRegistry, ReputationRegistry and JobEscrow derive from [Mnorbert87/arc-agent-registry](https://github.com/Mnorbert87/arc-agent-registry) (MIT). Their current LF sources match the referenced upstream commit; the imported CRLF snapshot has different byte hashes. MockUSDC comes from the supplied course snapshot and is absent from that upstream commit. See [`backend-provenance.json`](backend-provenance.json) and the [source verification record](docs/project/SOURCE_PROVENANCE.zh-CN.md). Community, UI and escrow-integration changes are recorded separately from inherited components.
