@@ -39,6 +39,11 @@ Zqqq-qq 亲自在 MetaMask 确认两份合约部署和所有验收交易；Codex
 Zqqq-qq 发起本次整理，Codex 辅助保留双方贡献与部署记录、补充固定区块的只读 RPC 取证与源码重编译复算脚本、区分旧快照和本次读取，并统一 #5 / #7 的未完成边界。QiuQiu-xuan 的原交易与测试贡献保留在表中；本次修订不冒充其再次操作或 ffmitrg 的复审批准。
 
 
+## 2026-10-29 报告验证范围修正（#9 / #37 复审）
+
+Zqqq-qq 使用 Codex 协助修正报告将全部验证归于 Sepolia 的表述，区分本地 EVM/fixtures、浏览器与跨平台检查、测试网回执及 RPC；气费长度实验明确为 RPC 估算，保留原代码基线与测试计数。分支为 `docs/report-verification-scope`；证据为 REPORT.md 与重生成的 REPORT.pdf，已完成 PDF 文本和页面检查。无新增钱包交易，同伴复审待完成。
+
+
 ## 2026-10-29 小队 #3 → 订单 #5 跨模块 Sepolia 验收（#12 / #9 输入）
 
 Zqqq-qq 亲自在 MetaMask 确认 Account 2 接受邀请，以及 Account 1 授权、注资、发布关联、Account 2 提交交付摘要、Account 1 验收付款，共六笔成功交易。两个账户由同一用户控制，不记为两名组员独立操作。
