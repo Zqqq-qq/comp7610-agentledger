@@ -1,0 +1,97 @@
+{
+  "schema": "agentledger-release-manifest-v1",
+  "generatedAt": "2026-10-29T10:01:54.195Z",
+  "commit": "479e8db3764b99e996dd35893929d4dd00208bfb",
+  "shortCommit": "479e8db",
+  "tree": "ff8f260184ff41f7ae9fa6bdfb65365b5064d38e",
+  "commitSubject": "docs: record team 3 to escrow job 5 Sepolia acceptance (#41)",
+  "commitDate": "2026-10-29T17:53:12+08:00",
+  "isAncestorOfMain": true,
+  "mainRef": "origin/main",
+  "mainAncestry": {
+    "origin/main": true,
+    "origin-ssh/main": true,
+    "main": false
+  },
+  "tag": null,
+  "deployment": {
+    "chainId": 11155111,
+    "chainName": "Ethereum Sepolia",
+    "explorer": "https://sepolia.etherscan.io",
+    "rpcUrl": "https://ethereum-sepolia.publicnode.com",
+    "backupRpcUrl": "https://sepolia.drpc.org",
+    "identity": "0x13eA93eCdDeed63259792A39d7a4738a28b3E91d",
+    "community": "0x8CDc9987D46D140a982713B359286bC451262406",
+    "escrow": "0x3C129b436247368dA71cC31512984c3DB17F1f63",
+    "token": "0x6a920b13d6396B7b58BfE562c274Ea76a6409C85",
+    "reputation": "0x213AEEd69B82DBaebB2800D3904CBb16f9443864"
+  },
+  "files": [
+    {
+      "path": "package.json",
+      "bytes": 415,
+      "sha256": "f04f7458bce56b0c24e49d431f3a1f059b8c71d1b6773c0e222bfc3e62d638d5"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "bytes": 10198,
+      "sha256": "feab9156a6f6265f8abb5fb5a630c33bb494f5f9b342bdf95493a0493be12f86"
+    },
+    {
+      "path": "web/generated/AgentCommunity.json",
+      "bytes": 42739,
+      "sha256": "026410e7c2c8b38867c8db6147adeb2d3c6d04b28ad2b50bc80988998f081a85"
+    },
+    {
+      "path": "web/generated/JobEscrow.json",
+      "bytes": 25327,
+      "sha256": "5efaac95259e94c094e03d714f01127ea09e2b890837538b7f8bc61c65fbd8d2"
+    },
+    {
+      "path": "web/generated/MockUSDC.json",
+      "bytes": 11400,
+      "sha256": "caa8db3fb8543dd22af8394f3abde75011a0777e9aeb4599e6468940908e9fe2"
+    },
+    {
+      "path": "contracts/AgentCommunity.sol",
+      "bytes": 9212,
+      "sha256": "ccbdcee86e97a46380ce83afb914d12067ed59192f843d559e13f6086fd8a8c3"
+    },
+    {
+      "path": "contracts/IdentityRegistry.sol",
+      "bytes": 5774,
+      "sha256": "44033281eef840c8e7117cf38caf62b43acdb104e5eff8cd29a7ab5f9824cc72"
+    },
+    {
+      "path": "contracts/JobEscrow.sol",
+      "bytes": 9207,
+      "sha256": "ce7d4c46fbd76caafca8d31c78d58c428ddb560fd7a46b6a8fd50a888710f907"
+    },
+    {
+      "path": "contracts/MockUSDC.sol",
+      "bytes": 1793,
+      "sha256": "48783f227eadc77ff8fd36cfef7e35e65d20f8a2d2e421f7323a123db9878b2a"
+    },
+    {
+      "path": "contracts/ReputationRegistry.sol",
+      "bytes": 5872,
+      "sha256": "cc5dc6bbb85dfd5b012dc9524d649f5efaea1cd8d8d68e36b92e86d6629570ff"
+    }
+  ],
+  "workingCopyDiffersFromBlob": [
+    {
+      "path": "package.json",
+      "bytes": 432,
+      "sha256": "2aa11140591c83b84d07076b5a465f1b87767ffe08a1a5fcd28a2196c5f413f2"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "bytes": 10534,
+      "sha256": "432381fa4b5845f3f7bb48ebd67832201fc0a642e8b7fdddbaf7beb7bc3e2501"
+    }
+  ],
+  "notes": [
+    "校验和以 Git blob（LF）为基准；workingCopyDiffersFromBlob 里的条目只说明本机检出为 CRLF，不代表内容不同。",
+    "本清单不判断是否可发布：阻断项与提交回执见 docs/project/RELEASE_FREEZE_DRAFT.zh-CN.md 与 Issue #11。"
+  ]
+}
