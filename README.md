@@ -134,6 +134,14 @@ node scripts/verify-community.mjs \
 node scripts/verify-escrow-acceptance.mjs
 ```
 
+**Team 3 → job 5 acceptance addendum (2026-10-29)** — six successful transactions, a client-authored community reference, the exact delivery-file digest, and payment of 1 test mUSD. The verifier reads the archived block and does not overwrite evidence:
+
+```sh
+node scripts/verify-team3-acceptance.mjs
+```
+
+Historical balances require an archive-capable RPC via `SEPOLIA_RPC_URL`. The [dated acceptance report](docs/project/TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md) records the original successful collection and the later public-RPC pruning limitation separately.
+
 **Frozen release manifest** — computes byte-accurate SHA-256 values from Git blobs rather than from a working copy, which may be CRLF on Windows:
 
 ```sh
@@ -199,6 +207,7 @@ The community and escrow modules are deployed and exercised end to end on Sepoli
 | [`docs/project/REPORT.md`](docs/project/REPORT.md) · [PDF](docs/project/REPORT.pdf) | Final report: background, design, implementation, testing, limitations |
 | [`docs/project/DEPLOYMENTS.md`](docs/project/DEPLOYMENTS.md) | Shared addresses, receipts, pre-deployment checklist |
 | [Circle and team permissions](docs/project/TEAM_CIRCLE_POLICY.zh-CN.md) | Leaving a circle preserves existing team rights; publication still requires the other member |
+| [Team 3 → job 5 acceptance addendum](docs/project/TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md) | 2026-10-29 receipts, linked escrow payment, delivery-file digest and reproduction boundaries |
 | [`docs/project/ACCEPTANCE_D1.zh-CN.md`](docs/project/ACCEPTANCE_D1.zh-CN.md) | Dual-wallet end-to-end and rejection-path acceptance |
 | [`docs/project/ACCEPTANCE_D2.zh-CN.md`](docs/project/ACCEPTANCE_D2.zh-CN.md) | CI, cross-platform startup, frozen-candidate regression |
 | [`docs/IMPLEMENTATION.zh-CN.md`](docs/IMPLEMENTATION.zh-CN.md) | Architecture, state machines, trust boundaries |

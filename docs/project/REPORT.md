@@ -2,8 +2,8 @@
 
 **COMP7610 Final Project Report (draft)**
 
-- Version: v0.1 (2026-10-28)
-- Code baseline: `a2b38c9` (main)
+- Version: v0.2 (2026-10-29)
+- Code baseline: `479e8db` (main). Contract sources, generated artefacts, lockfile and tests are byte-identical to the `a2b38c9` baseline; the delta is documentation, scripts and frontend presentation.
 - Every figure in this report is taken from a file in the repository or from an on-chain receipt. Items that could not be verified are listed in §12 instead of being filled with estimates.
 
 ---
@@ -24,7 +24,7 @@ All verification was executed on Sepolia. Scale of the work:
 | Frontend | 13 own JavaScript modules (excluding the ethers dependency) |
 | Automated tests | 12 test files; `pnpm test` reports **64 passing tests** |
 | Community flow | 9 real transactions forming the complete loop, each with a receipt |
-| Escrow flow | 3 jobs: normal payment, refund after non-delivery, claim after timeout |
+| Escrow flow | 3 jobs in the standalone escrow acceptance (normal payment, refund after non-delivery, claim after timeout); jobs 4 and 5 are the two cross-module runs in §7.6 |
 | Cross-platform | macOS and Windows both ran a clean-clone verification at the **same commit** `7db718a` |
 
 ---
@@ -60,7 +60,7 @@ The repository is organised around five roles plus release. Tasks and dependenci
 
 ### 3.2 Status at the baseline
 
-- **Closed (8)**: #3 (B1 permission review), #5 (C1 community deployment), #7 (D1 dual-wallet acceptance), #8 (D2 CI and cross-platform regression), #12 (C3 escrow integration), #20 / #21 / #25 (three defects).
+- **Closed (9)**: #3 (B1 permission review), #5 (C1 community deployment), #7 (D1 dual-wallet acceptance), #8 (D2 CI and cross-platform regression), #12 (C3 escrow integration), #20 / #21 / #25 (three defects), #39 (README banner and community visuals).
 - **Open (8)**: #1, #2 (frontend polish), #4 (B2 content boundaries), #6 (C2 awaiting peer confirmation), #9 / #10 / #11 (the deliverables themselves), #30 (permission semantics after leaving a circle — resolved as a deliberate design choice).
 
 ### 3.3 Scope boundaries
@@ -334,7 +334,10 @@ Final balances after release, read at block 12012205: **client 99 mUSD, provider
 
 The team is linked to the job in the application layer only: the UI associates a team with an escrow job and can publish a client-authored reference as a community reply so the link is publicly checkable. JobEscrow itself has no team field. As the UI states, references "do not enforce settlement, prove quality, split payments or make feedback order-verified." This is a deliberate boundary, not an oversight.
 
-> Earlier state (kept for accuracy): before this run, a task post (post 3) and a team invitation (team 3) existed on-chain between two accounts of the same operator, but the invitation was never accepted and no job was ever funded from that team. That is why an earlier version of this report listed the cross-module path as unverified.
+> Earlier state (kept for accuracy): before this run, a task post (post 3) and a team invitation (team 3) existed on-chain between two accounts of the same operator, but the invitation was never accepted and no job was ever funded from that team. That is why an earlier version of this report listed the cross-module path as unverified. **That gap was closed on 2026-10-29** by the second run below.
+
+**Second cross-module run (2026-10-29, team 3 → job 5).** A separate run used the same team 3 with a different job and different balances: community post 3 → team 3 → reply 3 → escrow **job 5**. Six successful transactions (`status=1`, blocks 12018477–12018556) cover the guest accepting the invitation, the 1 mUSD approval, funding, the link reply, the delivery digest, and the client's release. Job 5 is `Completed`; balances were **98 / 2 / 0** mUSD (client / provider / escrow) before the run and **97 / 3 / 0** after it, so the 1 mUSD left the client once and reached the provider once. The delivered file's Keccak-256 matches the on-chain digest (`0xd878a566…29ad`), and a read-only duplicate `release(5)` returned `not submitted`. The accounts, team, job and balances differ from §7.6's post 4 / team 4 / job 4 run and must not be combined; the record is `docs/project/TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md`.
+
 ### 7.7 Frozen-candidate regression (D2 / #8)
 
 Four layers were executed against the frozen candidate `992584e`: a fresh clone with 61 tests and a build; read-only replay of community and escrow state; six failure-path probes at a fixed block; and one real write (`0xfff88c7c…d7bd`, block 12010583) flipping `member(1,A)` from false to true. See `docs/project/FROZEN_CANDIDATE_REGRESSION_2026-10-28.zh-CN.md`.
@@ -368,7 +371,7 @@ Each item below is **confirmed**, not speculative:
 
 ## 9. Contribution Distribution
 
-Commit authorship on `main`: QiuQiu-xuan 41, Zqqq-qq 21, ffmitrg 1.
+Commit authorship on `main`: QiuQiu-xuan 45, Zqqq-qq 22, PAisHere 1, ffmitrg 1.
 
 Per-member output is recorded in `docs/project/CONTRIBUTIONS.md`: entries for roles A, B, C and D are present, with the distinction between work "performed by the member" and work "assisted by tools (Codex)" stated explicitly. **Entries for E and R are still missing** (see §12).
 
@@ -401,6 +404,7 @@ Two points deserve honesty:
 | --- | --- |
 | Deployment and receipts | `docs/project/DEPLOYMENTS.md`, `docs/project/evidence/community-sepolia-*.json` |
 | Escrow | `docs/project/ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28.zh-CN.md`, `evidence/escrow-*.json`, `evidence/escrow-screenshots/`, `evidence/job{1,2,3}-*` |
+| Cross-module (team 3 → job 5) | `docs/project/TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md`, `evidence/team3-job5/`, `scripts/verify-team3-acceptance.mjs` |
 | D1 acceptance | `docs/project/ACCEPTANCE_D1.zh-CN.md` (including §7, the closing review) |
 | D2 acceptance | `docs/project/ACCEPTANCE_D2.zh-CN.md`, `docs/project/FROZEN_CANDIDATE_REGRESSION_2026-10-28.zh-CN.md`, `docs/project/MACOS_CLEAN_CLONE_2026-10-28.zh-CN.md` |
 | Permission review | `docs/project/REVIEW_B1_AGENTCOMMUNITY_2026-10-28.zh-CN.md` |

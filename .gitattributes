@@ -8,3 +8,6 @@
 # 编译产物由 scripts/compile.mjs 以 LF 写出，同样需要固定行尾，
 # 否则 Windows 检出后与重新生成的内容不一致。
 web/generated/*.json text eol=lf
+
+# This exact file is hashed in Sepolia job 5; preserve its LF bytes on every platform.
+docs/project/evidence/team3-job5/job5-deliverable.md text eol=lf

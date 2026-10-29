@@ -3,6 +3,7 @@
 - [五人任务与排期](TEAM_TASKS.zh-CN.md)
 - [共享部署地址与回执](DEPLOYMENTS.md)
 - [实际贡献记录](CONTRIBUTIONS.md)
+- [小队 #3 → 订单 #5：跨模块 Sepolia 验收](TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md)
 - [D2 验收记录：CI、跨平台启动与回归](ACCEPTANCE_D2.zh-CN.md)
 - [PR 与分支规则](../../CONTRIBUTING.md)
 
