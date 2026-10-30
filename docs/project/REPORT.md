@@ -2,8 +2,8 @@
 
 **COMP7610 Final Project Report (draft)**
 
-- Version: v0.4 (2026-10-29; A2, B2 and source-provenance review merged)
-- Code baseline: `781f2c2` (main). Since v0.3 this adds the A2 status guidance (#47), the B2 content-boundary review with three regressions (#48) and the source-provenance correction (#49); the automated suite is now 14 files / 74 tests. No contract source, ABI, generated artefact or deployment address changed.
+- Version: v0.5 (2026-10-30; A2 visual/workflow, report-PDF and freeze tooling)
+- Code baseline: `189943b` (main). Since v0.4 this adds the A2 visual/workflow polish (#51, merged through #54), the cross-platform report-PDF generator (#52) and the required/optional freeze-manifest policy (#53); the automated suite is now 14 files / 82 tests. No contract source, ABI, generated artefact or deployment address changed.
 - Every figure in this report is taken from a file in the repository or from an on-chain receipt. Items that could not be verified are listed in §12 instead of being filled with estimates.
 
 ---
@@ -22,7 +22,7 @@ Verification combines local automated tests, browser and cross-platform checks, 
 | --- | --- |
 | Contracts | 5 source files, 596 lines in total (AgentCommunity 135 / IdentityRegistry 117 / JobEscrow 180 / MockUSDC 42 / ReputationRegistry 122) |
 | Frontend | 13 own JavaScript modules (excluding the ethers dependency) |
-| Automated tests | 14 test files; `pnpm test` reports **74 passing tests** |
+| Automated tests | 14 test files; `pnpm test` reports **82 passing tests** |
 | Community flow | 9 real transactions forming the complete loop, each with a receipt |
 | Escrow flow | 3 jobs in the standalone escrow acceptance (normal payment, refund after non-delivery, claim after timeout); jobs 4 and 5 are the two cross-module runs in §7.6 |
 | Cross-platform | macOS and Windows both ran a clean-clone verification at the **same commit** `7db718a` |
@@ -251,7 +251,7 @@ Remediation (Issue #20, closed):
 
 CI is defined in `.github/workflows/ci.yml`. The `verify` job runs on `ubuntu-latest` in seven steps: checkout → Node 24 → install pnpm 11.25.0 → `pnpm install --frozen-lockfile` → `pnpm test` → confirm the committed contract artefact is unchanged (`git diff --exit-code -- web/generated/AgentCommunity.json`) → `pnpm build`.
 
-At the stated code baseline, local scale is **14 test files, 74 passing tests**. Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, UI message mapping, status guidance, content-boundary and URI rules, freeze-manifest generation, and circle/team permission regressions.
+At the stated code baseline, local scale is **14 test files, 82 passing tests**. Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, UI message mapping, status guidance, content-boundary and URI rules, report-PDF generation, freeze-manifest validation, and circle/team permission regressions.
 
 The automated suite executes locally: contract tests deploy to an in-memory Ganache EVM, while frontend, wallet and service tests use pure functions or controlled fixtures. These results do not represent Sepolia transactions. The testnet evidence is identified separately below by transaction receipts, fixed-block RPC probes and state reads; the cross-platform Demo screenshot in §7.8 verifies local startup only. Counts refer to the code baseline above.
 
@@ -363,6 +363,14 @@ PR #48 adds three Ganache-level regressions: exact UTF-8 byte limits on nine tex
 
 PR #49 corrects the backend provenance record: current LF Git-blob hashes and the original CRLF import hashes are stored separately, the three reused contracts are checked against upstream commit `3b7976a` with blob IDs, and MockUSDC is attributed to the course snapshot rather than an unverified upstream author. `scripts/verify-provenance.mjs` re-checks the four files offline.
 
+### 7.11 Visual/workflow polish and release tooling (merged 2026-10-30)
+
+PR #51 (rebased onto the latest main through #54) polishes the community hero and shared-work artwork, centres the workspace metrics, and expands "How it works" to eight steps covering circles, discussion, Agent identity, invitations, shared works, bilateral confirmation, optional escrow and authorised reputation. It also clarifies Demo-sandbox versus Sepolia behaviour in English. The conflict with the post-#38/#47 sources was resolved by keeping #51's new `collaboration.svg` and `shared-work.svg`, merging four CSS rule changes into the current stylesheet, and keeping the A2 guidance from #47; the resolved tree was checked at 1280×800 with real browser screenshots. No Sepolia transaction was added.
+
+PR #52 makes the report generator cross-platform: `CHROME_BIN` takes precedence, macOS/Windows/Linux Chrome and Chromium locations are detected, local file URLs are encoded, source-relative images use a `<base>` element, each run uses a temporary profile, and an old PDF is preserved when rendering fails. Five regressions cover detection, CLI encoding and failure retention (the CLI fixture is skipped on Windows because it uses a shell script).
+
+PR #53 makes the freeze manifest strict about inputs: the 11 code inputs are required and must be regular Git blobs, while `backend-provenance.json`, `REPORT.md` and `REPORT.pdf` are optional supplements recorded in `filePolicy` and `missingOptionalFiles`. Missing required inputs fail before any output directory is created or an old manifest overwritten.
+
 ---
 
 ## 8. Known Limitations and Risks
@@ -385,7 +393,7 @@ Each item below is **confirmed**, not speculative:
 
 ## 9. Contribution Distribution
 
-Commit authorship on `main`: QiuQiu-xuan 57, Zqqq-qq 37, PAisHere 1, ffmitrg 1.
+Commit authorship on `main`: QiuQiu-xuan 63, Zqqq-qq 39, PAisHere 4, ffmitrg 1.
 
 Per-member output is recorded in `docs/project/CONTRIBUTIONS.md`: entries for roles A, B, C and D are present, with the distinction between work "performed by the member" and work "assisted by tools (Codex)" stated explicitly. **Entries for E and R are still missing** (see §12).
 
@@ -429,6 +437,8 @@ Two points deserve honesty:
 | Permission review | `docs/project/REVIEW_B1_AGENTCOMMUNITY_2026-10-28.zh-CN.md` |
 | Community deployment acceptance | `docs/project/SEPOLIA_ACCEPTANCE_2026-10-27.zh-CN.md` |
 | Reproduction tools | `scripts/verify-community.mjs`, `scripts/verify-escrow-acceptance.mjs`, `scripts/verify-team3-acceptance.mjs`, `scripts/verify-provenance.mjs`, `scripts/release-freeze.mjs` + `docs/project/evidence/release-manifest.json` |
+| Report PDF generation | `scripts/report-pdf.mjs`, `scripts/lib/chrome-path.mjs`, `docs/project/REPORT_PDF_GENERATION.zh-CN.md`, `tests/report-pdf.test.mjs` |
+| Freeze policy | `scripts/release-freeze.mjs`, `tests/release-freeze.test.mjs`, `docs/project/RELEASE_CHECKLIST.zh-CN.md` |
 
 ### 11.2 Reproduction environment
 
@@ -438,7 +448,7 @@ Node 24.x, pnpm 11.25.0 (pinned by `packageManager`), solc 0.8.30.
 git clone https://github.com/Zqqq-qq/comp7610-agentledger.git
 cd comp7610-agentledger
 pnpm install --frozen-lockfile
-pnpm test        # expect 74 passing tests
+pnpm test        # expect 82 passing tests
 pnpm build
 ```
 
