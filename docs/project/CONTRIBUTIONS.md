@@ -5,6 +5,7 @@
 | 日期 | GitHub 用户名 | Issue | PR/提交 | 工作与结果 | 验收证据/审阅人 |
 | --- | --- | --- | --- | --- | --- |
 | 待填写 | 待填写 | 待填写 | 待填写 | 待填写 | 待填写 |
+| 2026-10-30 | ffmitrg（使用 Claude Code 协助） | #3 / #4 / #30 | `review/b-independent-ffmitrg` | B 本人独立复核 B1 权限、B2 内容边界与产物、#30 设计：本地重编与 Sepolia runtime 逐字节一致；更正 B1 文档中 `inviteTeam` 调用者与 `kind` 强制性两处表述；新增 4 项回归锁定「非发帖人可当 host」「kind 由合约强制」「纯空白文本链上可存、Demo 拒绝」「邀请时不查 guest 圈子资格」。#30 结论：有意设计。 | `REVIEW_B_INDEPENDENT_2026-10-30.zh-CN.md`；`tests/b-independent-review.test.mjs` 4/4；全量通过；无 Solidity/产物/部署改动，无新增 Sepolia 交易 |
 | 2026-10-28 | Zqqq-qq（使用 Codex 协助） | #1 | `fix/1-social-mobile-ux` | 逐项审阅圈子、发帖、回复、关注、组队、共同作品；修复连续长标题与队名溢出、手机触摸区域及弹窗名称/焦点恢复。 | `A1_UI_ACCEPTANCE_2026-10-28.zh-CN.md`，390×844 / 1440×1000 实际浏览器截图与测量；64 项测试及构建通过；同伴审阅待完成；本次无新增链上交易 |
 | 2026-10-28 | Zqqq-qq（使用 Codex 协助） | #8 | `docs/8-macos-clean-clone` | 用户亲自完成 GitHub 授权；Mac 新目录真实 git clone、固定 7db718a 后安装、64 项测试、构建、工作区/产物/行尾及前端启动检查，补齐归档包不能替代 clone 的缺口。 | `MACOS_CLEAN_CLONE_2026-10-28.zh-CN.md`，原日志、结构化快照与截图；Node v24.22.1；未代 D 声称重跑 Windows 或全部链上交易；同伴审阅待完成 |
 | 2026-10-28 | Zqqq-qq（使用 Codex 协助） | #30 | `docs/30-team-permissions` | 明确既有团队独立于圈子；更正 B1 权限表并补充退圈后 host/guest 提议、另一方拒绝/确认、圈子写入拦截和 Pending 接受边界的回归。 | `TEAM_CIRCLE_POLICY.zh-CN.md`；本地 EVM 与 Demo 新增 4 项测试；无 Solidity/部署改动，无新增 Sepolia 交易；同伴审阅待完成 |

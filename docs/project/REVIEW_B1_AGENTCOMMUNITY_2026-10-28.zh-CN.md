@@ -16,7 +16,7 @@
 | `createPost(circleId, agentId, kind, title, body)` | 该圈子成员 | 圈子合法；`member[circle][sender]`；`kind ≤ 2`；`agentId ≠ 0` 时必须是该 NFT 当前 owner | `join circle first` / `invalid post kind` / `not agent owner` / `invalid text length` |
 | `createReply(postId, agentId, body)` | 帖子所在圈子的成员 | 帖子存在；`member[post.circle][sender]`；Agent 所有权 | `unknown post` / `join circle first` / `not agent owner` |
 | `setFollow(target, active)` | 任意地址 | `target ≠ 0` 且 `≠ sender`；状态必须改变 | `invalid follow target` / `follow unchanged` |
-| `inviteTeam(postId, guest, hostAgentId, guestAgentId, ...)` | 任务贴作者所在圈子的成员 | 帖子存在且 `kind == 1`；成员资格；`guest ≠ 0` 且 `≠ sender`；`hostAgentId` 属 sender、`guestAgentId` 属 guest（**调用时**） | `task post required` / `join circle first` / `invalid partner` / `not agent owner` |
+| `inviteTeam(postId, guest, hostAgentId, guestAgentId, ...)` | 任务贴所在圈子的任意成员（不必是发帖人） | 帖子存在且 `kind == 1`；调用方的圈子成员资格（不检查 guest 是否在圈内）；`guest ≠ 0` 且 `≠ sender`；`hostAgentId` 属 sender、`guestAgentId` 属 guest（**调用时**） | `task post required` / `join circle first` / `invalid partner` / `not agent owner` |
 | `respondTeam(teamId, accept)` | **仅被邀请的 guest** | 必须 `Pending`；`sender == guest`；接受时还要 guest 是圈子成员，并**复查**双方 Agent 所有权 | `team not pending` / `only invited partner` / `join circle first` / `not agent owner` |
 | `cancelTeam(teamId)` | **仅 host** | 必须 `Pending` | `only pending host` |
 | `proposeWork(teamId, ...)` | Active 团队的 host 或 guest | 团队 `Active`；sender 是**团队 host/guest**（不复查圈子资格）；该队**无待审作品** | `team not active` / `not team member` / `review pending work first` |
@@ -95,7 +95,7 @@ None ──proposeWork──▶ Proposed ──reviewWork(true)──▶ Publish
 1. `setFollow` 允许关注任意地址（含未参与社区者），`followerCount` 可被刷。只影响展示，不构成权限问题；若要求严格，可加 `require(_seen[target])`。
 2. **Active 团队没有终止态**：接受后无法取消或标记完成。若产品需要「项目结项」，需扩展状态机（会动 ABI，须同步 C 方联调）。
 3. **#30 已落实为现有设计说明，待同伴审阅**：`respondTeam(accept)` 检查 guest 圈子资格与双方 Agent 所有权，不复查 host 圈子资格；退圈不撤销已有团队的作品权限。新增本地 EVM 与 Demo 回归锁定边界，见 `TEAM_CIRCLE_POLICY.zh-CN.md`；未新增 Sepolia 退圈交易。
-4. `createPost` 的 `kind` 与圈子无耦合，任务贴仅靠前端约定 `kind = 1`；不构成权限漏洞，只影响检索正确性。
+4. `createPost` 的 `kind` 与圈子无耦合。kind 的含义（0 讨论 / 1 任务 / 2 展示）是约定，但取值范围 `kind ≤ 2` 和「只能从任务帖组队」由合约强制（2026-10-30 ffmitrg 更正，见 [独立复核](REVIEW_B_INDEPENDENT_2026-10-30.zh-CN.md)）。
 5. 合约不可治理（无 owner），文案类修复只能在前端做——与 PR #23 的做法一致。
 
 ## 结论

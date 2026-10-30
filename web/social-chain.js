@@ -1,5 +1,6 @@
 import { DEPLOYMENT } from './config.js';
 import {verifyDeployment} from './deployment-evidence.js';
+import {normalizeText} from './social-core.js';
 const sdk=()=>globalThis.ethers;
 let artifact;
 export async function communityArtifact(){if(!artifact){const r=await fetch('./generated/AgentCommunity.json');if(!r.ok)throw new Error('Community build artifact is missing. Run the compiler first.');artifact=await r.json();}return artifact;}
@@ -46,7 +47,7 @@ export async function sendCommunity(address,registry,rpc,signer,action,onPending
  if(!signer.provider||BigInt(await signer.provider.send('eth_chainId',[]))!==11155111n)throw new Error('Switch the signing wallet to Ethereum Sepolia before sending a community transaction.');
  const e=sdk(),{c,p}=await reader(address,registry,rpc);
  try{
- const write=c.connect(signer);let tx;const a=action;
+ const write=c.connect(signer);let tx;const a=normalizeText(action);
  const uriCheck=u=>{const v=new URL(u);if(!['http:','https:','ipfs:'].includes(v.protocol)||v.username||v.password)throw new Error('Use a public HTTP(S) or IPFS work URL.');};
  switch(a.type){
  case 'membership':tx=await write.setMembership(a.circleId,a.joined);break;

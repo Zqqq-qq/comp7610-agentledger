@@ -4,6 +4,9 @@ export const eq=(a,b)=>String(a).toLowerCase()===String(b).toLowerCase();
 export function emptyState(){return {posts:[],replies:[],teams:[],works:[],memberships:{1:[],2:[],3:[]},follows:[],owners:Object.fromEntries(PERSONAS.filter(x=>x.agentId).map(x=>[x.agentId,x.address]))};}
 const check=(ok,message)=>{if(!ok)throw new Error(message);};
 const text=(v,max)=>{check(typeof v==='string'&&v.trim().length>0&&new TextEncoder().encode(v).length<=max,'Content is empty or exceeds the byte limit.');return v.trim();};
+// Text fields per action and their contract byte limits. Live writes trim like the demo so both modes agree.
+const TEXT_FIELDS={post:{title:160,body:6000},reply:{body:3000},invite:{title:160,hostRole:300,guestRole:300},work:{title:160,summary:6000,uri:1024}};
+export function normalizeText(action){const limits=TEXT_FIELDS[action?.type];if(!limits)return action;const out={...action};for(const [k,max] of Object.entries(limits))out[k]=text(out[k],max);return out;}
 export function applyAction(input,actor,action,now=Math.floor(Date.now()/1000)){
  const s=structuredClone(input),{type,...p}=action; check(/^0x[0-9a-fA-F]{40}$/.test(actor),'Select an account.');
  const owns=(id,who)=>check(!Number(id)||eq(s.owners[id],who),'This wallet does not own that Agent.');
