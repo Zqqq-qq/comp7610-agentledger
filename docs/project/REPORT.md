@@ -2,8 +2,8 @@
 
 **COMP7610 Final Project Report (draft)**
 
-- Version: v0.5 (2026-10-30; A2 visual/workflow, report-PDF and freeze tooling)
-- Code baseline: `189943b` (main). Since v0.4 this adds the A2 visual/workflow polish (#51, merged through #54), the cross-platform report-PDF generator (#52) and the required/optional freeze-manifest policy (#53); the automated suite is now 14 files / 82 tests. No contract source, ABI, generated artefact or deployment address changed.
+- Version: v0.6 (2026-10-30; blueprint features, x402 security and demo tooling)
+- Code baseline: `aab1440` (main). Since v0.5 this adds the B independent review and live-write trim (#58), the blueprint features — agent card, market, hire, My orders, sample agent service and x402 (#59, merged through #60) — the x402 payer-signature / token-price / persistence fixes (#60) and the demo-caption compatibility fix (#61); the automated suite is now 14 files / 108 tests. No contract source, ABI, generated artefact or deployment address changed.
 - Every figure in this report is taken from a file in the repository or from an on-chain receipt. Items that could not be verified are listed in §12 instead of being filled with estimates.
 
 ---
@@ -22,7 +22,7 @@ Verification combines local automated tests, browser and cross-platform checks, 
 | --- | --- |
 | Contracts | 5 source files, 596 lines in total (AgentCommunity 135 / IdentityRegistry 117 / JobEscrow 180 / MockUSDC 42 / ReputationRegistry 122) |
 | Frontend | 13 own JavaScript modules (excluding the ethers dependency) |
-| Automated tests | 14 test files; `pnpm test` reports **82 passing tests** |
+| Automated tests | 14 test files; `pnpm test` reports **108 passing tests** |
 | Community flow | 9 real transactions forming the complete loop, each with a receipt |
 | Escrow flow | 3 jobs in the standalone escrow acceptance (normal payment, refund after non-delivery, claim after timeout); jobs 4 and 5 are the two cross-module runs in §7.6 |
 | Cross-platform | macOS and Windows both ran a clean-clone verification at the **same commit** `7db718a` |
@@ -251,7 +251,7 @@ Remediation (Issue #20, closed):
 
 CI is defined in `.github/workflows/ci.yml`. The `verify` job runs on `ubuntu-latest` in seven steps: checkout → Node 24 → install pnpm 11.25.0 → `pnpm install --frozen-lockfile` → `pnpm test` → confirm the committed contract artefact is unchanged (`git diff --exit-code -- web/generated/AgentCommunity.json`) → `pnpm build`.
 
-At the stated code baseline, local scale is **14 test files, 82 passing tests**. Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, UI message mapping, status guidance, content-boundary and URI rules, report-PDF generation, freeze-manifest validation, and circle/team permission regressions.
+At the stated code baseline, local scale is **14 test files, 108 passing tests** (107 pass plus one CLI fixture that Windows skips). Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, UI message mapping, status guidance, content-boundary and URI rules, report-PDF generation, freeze-manifest validation, circle/team permission regressions, marketplace filters, agent cards, the sample agent service and x402 payments.
 
 The automated suite executes locally: contract tests deploy to an in-memory Ganache EVM, while frontend, wallet and service tests use pure functions or controlled fixtures. These results do not represent Sepolia transactions. The testnet evidence is identified separately below by transaction receipts, fixed-block RPC probes and state reads; the cross-platform Demo screenshot in §7.8 verifies local startup only. Counts refer to the code baseline above.
 
@@ -371,6 +371,16 @@ PR #52 makes the report generator cross-platform: `CHROME_BIN` takes precedence,
 
 PR #53 makes the freeze manifest strict about inputs: the 11 code inputs are required and must be regular Git blobs, while `backend-provenance.json`, `REPORT.md` and `REPORT.pdf` are optional supplements recorded in `filePolicy` and `missingOptionalFiles`. Missing required inputs fail before any output directory is created or an old manifest overwritten.
 
+### 7.12 Blueprint features, x402 security and demo tooling (merged 2026-10-30)
+
+PR #59 implements the remaining blueprint journey in the frontend and off-chain: an `agentledger-card-v1` card generator and parser, a marketplace with score/review/price/skill filters, a hire flow whose provider and prefill come from `ownerOf`, a "My orders" view for both roles, a sample agent service that polls `JobEscrow` and submits the Keccak-256 digest of its result document, a simplified x402 pay-per-call endpoint, and community evidence bound to an Agent ID. No contract, ABI or deployment address changed.
+
+PR #60 reviews and hardens that work: x402 now issues a one-time challenge bound to chain, resource/input, amount, pay-to and expiry; the payer must sign it, and the server only serves after verifying the signer equals the on-chain payer (a public transaction hash alone is not authority). The agent service only accepts jobs in the configured mUSD at or above the quoted price, and persists the delivery bytes before `submit` so `/results/:id` survives a restart and still matches the on-chain digest. Regression tests cover a hash stolen by a non-payer, other-token / under-priced jobs and restart recovery.
+
+PR #61 fixes the demo capture after #51 removed the old "jointly confirmed" seal: scene 3 now waits for the current `work-cover-illustration`, with a unit test proving that a card carrying only the old seal is rejected.
+
+PR #58 is B's independent review of B1/B2: it corrects the host/`kind` description, adds a `normalizeText` trim so live writes match the demo sandbox, and records the cross-member consistency list (`CROSS_MEMBER_CONSISTENCY_2026-10-30.zh-CN.md`).
+
 ---
 
 ## 8. Known Limitations and Risks
@@ -388,12 +398,15 @@ Each item below is **confirmed**, not speculative:
 | 7 | The second device performed read-only verification only; no cross-device signed write | D1 acceptance §5 |
 | 8 | Storing long text on-chain makes writes expensive (`createPost` measured at 1.58M gas) | §5.3 of this report |
 | 9 | On macOS, the ganache uWS native module has an ABI mismatch under Node 24 and falls back to pure JS (no impact on results) | macOS clone record |
+| 10 | The sample agent's "work" is a deterministic placeholder; it demonstrates delivery and data flow, not a real model call | `defaultWork` / #59 |
+| 11 | x402 is a direct mUSD transfer with no escrow or refund; used payment hashes are kept in memory, so a restart within the 1-hour window can re-enable a hash for the same payer | `agent-service/README.zh-CN.md` |
+| 12 | Marketplace filters only the currently loaded registry page; community evidence is an application-level association, not a contract-enforced link | #59 |
 
 ---
 
 ## 9. Contribution Distribution
 
-Commit authorship on `main`: QiuQiu-xuan 63, Zqqq-qq 39, PAisHere 4, ffmitrg 1.
+Commit authorship on `main`: QiuQiu-xuan 73, Zqqq-qq 40, ffmitrg 7, PAisHere 4.
 
 Per-member output is recorded in `docs/project/CONTRIBUTIONS.md`: entries for roles A, B, C and D are present, with the distinction between work "performed by the member" and work "assisted by tools (Codex)" stated explicitly. **Entries for E and R are still missing** (see §12).
 
@@ -433,6 +446,8 @@ Two points deserve honesty:
 | A2 status guidance | `docs/project/A2_STATUS_ACCEPTANCE_2026-10-29.zh-CN.md`, `evidence/a2-guidance/` (10 screenshots plus measurements) |
 | Content boundaries | `docs/project/CONTENT_BOUNDARY_REVIEW_2026-10-29.zh-CN.md`, `tests/community-content-boundaries.test.mjs` |
 | Source provenance | `docs/project/SOURCE_PROVENANCE.zh-CN.md`, `backend-provenance.json`, `scripts/verify-provenance.mjs` |
+| Agent service / x402 | `agent-service/`, `web/agent-card.js`, `web/market.js`, `web/x402.js`, `tests/agent-service.test.mjs`, `tests/marketplace.test.mjs` |
+| Demo blueprint flow | `docs/project/DEMO_BLUEPRINT_FLOW.zh-CN.md`, `scripts/rehearse-demo.mjs` |
 | D2 acceptance | `docs/project/ACCEPTANCE_D2.zh-CN.md`, `docs/project/FROZEN_CANDIDATE_REGRESSION_2026-10-28.zh-CN.md`, `docs/project/MACOS_CLEAN_CLONE_2026-10-28.zh-CN.md` |
 | Permission review | `docs/project/REVIEW_B1_AGENTCOMMUNITY_2026-10-28.zh-CN.md` |
 | Community deployment acceptance | `docs/project/SEPOLIA_ACCEPTANCE_2026-10-27.zh-CN.md` |
@@ -448,7 +463,7 @@ Node 24.x, pnpm 11.25.0 (pinned by `packageManager`), solc 0.8.30.
 git clone https://github.com/Zqqq-qq/comp7610-agentledger.git
 cd comp7610-agentledger
 pnpm install --frozen-lockfile
-pnpm test        # expect 82 passing tests
+pnpm test        # expect 108 passing tests
 pnpm build
 ```
 
