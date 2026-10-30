@@ -3,7 +3,7 @@
 - 复核人：ffmitrg（B 角色负责人），2026-10-30，使用 Claude Code 协助核对与撰写
 - 基线：main `2f27c7e`（含 PR #34、#48 合并后的状态）
 - 对象：`contracts/AgentCommunity.sol`、`web/social-core.js`、`web/social-chain.js`、`REVIEW_B1_AGENTCOMMUNITY_2026-10-28`、`CONTENT_BOUNDARY_REVIEW_2026-10-29`、`TEAM_CIRCLE_POLICY`
-- 新增证据：`tests/b-independent-review.test.mjs`（4 项，本地 Ganache 真实 EVM）
+- 新增证据：`tests/b-independent-review.test.mjs`（5 项，本地 Ganache 真实 EVM）
 
 B1、B2 此前由 Zqqq-qq 代为完成，QiuQiu-xuan 已审阅。本文件是 B 本人按 #3 / #4 验收清单做的独立复核，不重复已有内容，只记录核对结论和新发现。
 
@@ -34,7 +34,7 @@ B1、B2 此前由 Zqqq-qq 代为完成，QiuQiu-xuan 已审阅。本文件是 B 
 
 #48 的九字段 UTF-8 字节上限、URI 合约/前端分层、重复操作断言**经核对成立**。补充一条 Demo 与链上的语义差异：
 
-- **只含空白的文本**：合约只检查 `bytes(value).length > 0`，`"   "` 能上链并原样存储；Demo `applyAction` 会 `trim()`，空白文本被拒，且存储的是去掉首尾空格后的值（测试 3）。界面表单有 `required`，但浏览器的 required 不拦截纯空格。影响：同一输入在 Demo 和 Sepolia 下结果不同。建议在前端写入适配器发送前也统一 `trim` 并拒绝空串（不动合约）。
+- **只含空白的文本**：合约只检查 `bytes(value).length > 0`，`"   "` 能上链并原样存储；Demo `applyAction` 会 `trim()`，空白文本被拒，且存储的是去掉首尾空格后的值（测试 3）。界面表单有 `required`，但浏览器的 required 不拦截纯空格。影响：同一输入在 Demo 和 Sepolia 下结果不同。**已修复（仅前端）**：新增 `social-core.js` 的 `normalizeText`，`social-chain.js` 的 `sendCommunity` 在发送前按同一规则 trim 并检查字节上限，Demo 与 Sepolia 写入行为一致（测试 5）。直接调用合约仍可写入纯空白，这是合约层的既有边界。
 
 公开性、外链可变、确认不证明质量 / 不防串通的说明与 #48 文档一致，同意。
 
@@ -56,7 +56,7 @@ B1、B2 此前由 Zqqq-qq 代为完成，QiuQiu-xuan 已审阅。本文件是 B 
 
 1. B1 复核文档第一节 `inviteTeam` 一行和第五节第 4 条按上面第二节更正；
 2. README 的验证命令注明需要可查历史回执的 RPC；
-3. 前端写入适配器统一 trim，消除 Demo 与链上对纯空白文本的差异。
+3. ~~前端写入适配器统一 trim~~ 已在本分支修复。
 
 ## 运行
 

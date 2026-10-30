@@ -62,3 +62,11 @@ test('a guest can be invited before joining; the circle check happens only at ac
   await(await x.connect(b).respondTeam(1,false)).wait();
   assert.equal((await x.getTeam(1)).status,3n);
 });
+
+test('live write adapter trims text the same way the demo does',async()=>{
+  const {normalizeText}=await import('../web/social-core.js');
+  assert.deepEqual(normalizeText({type:'post',circleId:1,title:'  Hi ',body:'\nBody '}),{type:'post',circleId:1,title:'Hi',body:'Body'});
+  assert.throws(()=>normalizeText({type:'reply',postId:1,body:'   '}),/empty/);
+  assert.throws(()=>normalizeText({type:'invite',title:'T',hostRole:'h',guestRole:'界'.repeat(101)}),/byte limit/);
+  const passthrough={type:'membership',circleId:1,joined:true};assert.equal(normalizeText(passthrough),passthrough);
+});
