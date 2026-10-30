@@ -71,21 +71,32 @@ ffmpeg -y -framerate 2 -i demo-frames/f%05d.png \
 | `DEMO_APP` | `http://127.0.0.1:8091` | 应用地址 |
 | `DEMO_COMMUNITY` / `DEMO_ESCROW` / `DEMO_TOKEN` / `DEMO_IDENTITY` / `DEMO_REPUTATION` / `DEMO_RPC` | 本仓库 Sepolia 部署值 | 换部署时改这里 |
 | `DEMO_POST_ID` / `DEMO_WORK_ID` | `2` / `1` | 要展示的帖子与作品 |
-| `DEMO_JOB_STATES` | `1=3 · Completed;2=4 · Refunded;3=3 · Completed` | 每个订单的**期望状态**，用于断言 |
+| `DEMO_JOB_STATES` | `1=3 · Completed;2=4 · Refunded;3=3 · Completed` | 恰好三个不同的正整数订单 ID，按配置顺序展示；状态码 1–4，可省略标准英文标签，如 `7=2;8=1;9=4` |
 | `DEMO_OUT` / `DEMO_HOLD` | `demo-frames` / `6` | 输出目录与每场景帧数 |
 
 **脚本的安全与正确性约定**（2026-10-28 按审阅意见加入）：
 
 1. **不删除任何已有目录**：若 `DEMO_OUT` 已存在且非空，改用带时间戳的唯一子目录并打印提示；`DEMO_HOLD` 必须是 1–60 的整数，否则在加载浏览器前直接失败。
 2. **不靠等待代替成功判定**：每个场景都断言真实数据已加载——
-   - 页面处于 live 模式、横幅地址与 `DEMO_COMMUNITY` 前 6 位一致、**不是** Demo sandbox；
+   - 页面 live 按钮已选中、保存的完整社区地址与 `DEMO_COMMUNITY` 一致、存在确认区块，且没有 Demo 横幅；不依赖英文/中文横幅措辞或地址是否在横幅显示；
    - 目标帖子/作品的入口按钮实际存在；详情弹窗已打开且标题非空；
-   - 订单查询后 `#loadedJob` **自身**可见（不再强行把 `hidden` 置 false），且 `#loadedJobState` 与 `DEMO_JOB_STATES` 期望值**完全相等**；
+   - 订单查询后 `#loadedJob` **自身**可见，`#loadedJobTitle` 的编号与当前查询一致、`#loadedJobState` 与标准化后的期望值完全相等，且完整托管配置地址匹配；同状态的旧卡片不能通过；
    - 圈子卡片数 ≥ 3。
    任一断言失败即以非零码退出、不写 `meta.json`，不会出现「空卡片配 Completed 字幕」。
 3. 固定延迟只用于画面停留，不承担成功判定。
 
-实测：正确配置下 58 帧、退出码 0；故意把 `DEMO_COMMUNITY` 换成不存在的地址时，在「场景 1/7」断言失败并退出 1，且不生成 `meta.json`。
+原版本 2026-10-28 实测：正确配置下 58 帧、退出码 0；故意把 `DEMO_COMMUNITY` 换成不存在的地址时，在「场景 1/7」断言失败并退出 1，且不生成 `meta.json`。
+
+### 2026-10-30 动态字幕修正（#10 工具输入）
+
+- 社区和圈子字幕使用本次 `DEMO_COMMUNITY` 的短地址；订单字幕使用 `DEMO_ESCROW` 短地址、当前已核验的订单 ID 和卡片状态；帖子/作品字幕使用本次配置 ID，不把所有帖子都称为需求。
+- 场景 5 展示第一个配置订单；场景 6 依次展示后两个，每次查询成功后分别写字幕。保持 7 场景、默认 58 帧的原布局。
+- 配置必须恰好三个不同、安全整数范围内的正整数 ID，状态码为 1 Funded / 2 Submitted / 3 Completed / 4 Refunded。可写 `7=2;8=1;9=4`，或写完整标准标签；重复 ID、未知状态、码与标签矛盾、无效帖子/作品 ID 均在创建输出目录和启动浏览器前失败。
+- `Completed` 只报告状态，不从状态码推断是 release 还是超时 claim；退款/领取原因需要单独交易或事件证据，字幕不再把它们写成已证实的过程。
+- `meta.json` 新增 `postId`、`workId`、`jobIds`、`scenes`。每项场景记录开始帧、实际字幕，订单场景另附读到的 title/state 及完整托管地址；配置中的期望不替代实际读到的状态。
+- 修正 PW_CORE 的本地文件 URL 编码，支持含空格/`#` 的驱动路径。
+
+验证：`node --test tests/demo-capture.test.mjs` 五项回归包括标准状态解析、动态字幕、英文页面就绪条件、完整采集 CLI 的自定义订单字幕与元数据、同状态旧卡片中止。CLI 使用明确标注的合成 DOM/Playwright fixture，不连接 RPC、不启动真实浏览器，临时帧不是实际截图。全量 87 项测试与构建通过，合约源码及生成产物无变化。本修订不重新生成或重命名已有视频，不将这些测试记作新的 Sepolia 录制；原素材的日期和数据仍按前文保存。
 
 ### 后半段（真实钱包）
 
