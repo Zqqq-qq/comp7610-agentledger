@@ -48,3 +48,6 @@ export function seedState(){
  return s;
 }
 export function partners(s,account){const map=new Map();for(const w of s.works.filter(w=>w.status===2)){const t=s.teams.find(t=>t.id===w.teamId);if(t&&(eq(t.host,account)||eq(t.guest,account))){const other=eq(t.host,account)?t.guest:t.host;const key=other.toLowerCase();const entry=map.get(key)||{address:other,count:0,works:[]};entry.count++;entry.works.push(w);map.set(key,entry);}}return [...map.values()];}
+// Community evidence for one Agent ID: teams it was bound to and works the other member confirmed.
+// The binding is the Agent ID recorded at invitation; a later NFT transfer does not move this history.
+export function agentCollaboration(s,agentId){const id=Number(agentId);if(!id)return {teams:[],works:[],partners:0};const teams=s.teams.filter(t=>t.hostAgentId===id||t.guestAgentId===id);const ids=new Set(teams.map(t=>t.id));const works=s.works.filter(w=>w.status===2&&ids.has(w.teamId));const partners=new Set(teams.filter(t=>t.status===2).map(t=>(t.hostAgentId===id?t.guest:t.host).toLowerCase())).size;return {teams,works,partners};}

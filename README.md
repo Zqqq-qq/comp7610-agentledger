@@ -79,13 +79,13 @@ node scripts/serve.mjs        # then open http://127.0.0.1:8091
 
 The frontend has **zero build step** and needs no dependencies to run; the command above starts a small static file server. Any static host works.
 
-On first use, open **Community → Sepolia community → Community contract** and paste the AgentCommunity address; it is stored in `localStorage` for that browser.
+The shared Sepolia addresses are built into `web/config.js`, so no setup is needed. To point one browser at a different deployment, use **Contracts** (registry and escrow) or **Community → Sepolia community → Community contract**; the choice is stored in that browser's `localStorage`.
 
 ### Compile, test, build
 
 ```sh
 pnpm compile    # solc 0.8.30 → web/generated/*.json
-pnpm test       # compile + node --test (64 tests)
+pnpm test       # compile + node --test (94 tests)
 pnpm build      # static site → dist/
 ```
 
@@ -94,6 +94,14 @@ To connect a wallet, install MetaMask, switch to Sepolia, and click **Connect wa
 ### Tests run against a local chain
 
 `pnpm test` compiles the contracts and runs the full suite against an in-process Ganache instance (`chainId 1337`). No network access is required.
+
+### Run the sample agent (optional)
+
+```sh
+AGENT_PRIVATE_KEY=0x… AGENT_ID=<your agent id> PUBLIC_URL=https://your-host.example/ pnpm agent
+```
+
+It serves `/.well-known/agent-card.json`, watches JobEscrow for funded jobs addressed to its Agent ID, submits the digest of a result document it serves at `/results/<jobId>`, and sells single calls at `/x402/run`. Use a dedicated test wallet; the key is read from the environment only. Details: [`agent-service/README.zh-CN.md`](agent-service/README.zh-CN.md).
 
 ## Architecture
 
@@ -128,6 +136,8 @@ node scripts/verify-community.mjs \
   --output evidence.json
 ```
 
+Historical receipts: public RPC nodes prune old blocks, so `verify-community.mjs` may report *no confirmed receipt* on the default endpoint. Pass `--rpc` with an archive-capable endpoint, or compare `eth_getCode` of the address against a local recompilation (see [`REVIEW_B_INDEPENDENT_2026-10-30`](docs/project/REVIEW_B_INDEPENDENT_2026-10-30.zh-CN.md)).
+
 **Escrow acceptance** — replays the recorded job, balance and allowance queries:
 
 ```sh
@@ -145,12 +155,12 @@ Historical balances require an archive-capable RPC via `SEPOLIA_RPC_URL`. The [d
 **Frozen release manifest** — computes byte-accurate SHA-256 values from Git blobs rather than from a working copy, which may be CRLF on Windows:
 
 ```sh
-node scripts/release-freeze.mjs <commit-sha>     # available once PR #36 is merged
+node scripts/release-freeze.mjs <commit-sha>
 ```
 
 ## Testing
 
-- **64 tests across 12 files**, run with `node --test` after compiling. They cover contract permissions and state machines, frontend pure functions, wallet recovery and sessions, deployment evidence, escrow integration, and UI message mapping.
+- **94 tests across 18 files**, run with `node --test` after compiling. They cover contract permissions and state machines, frontend pure functions, wallet recovery and sessions, deployment evidence, escrow integration, and UI message mapping.
 - **CI**: `.github/workflows/ci.yml` runs on every pull request — install with the lockfile, compile and test, assert the committed contract artefact is unchanged, then build the static site.
 
 ```sh
@@ -178,10 +188,14 @@ web/                  Static frontend, no build step
   social.js           Community UI (rendering, gating)
   social-chain.js     On-chain read/write for the community
   escrow*.js          Escrow UI, validation, linking to community teams
+  agent-card.js       Agent card format (agentledger-card-v1): generator, parser, hire prefill
+  market.js           Marketplace filtering and sorting
+  x402.js             Pay-per-call client (HTTP 402 → mUSD transfer → retry)
   config.js           Deployed addresses (DEPLOYMENT)
   generated/          Compiled artefacts committed to the repo
 scripts/              Compile, build, serve, verification and reporting tools
-tests/                node:test suites (12 files, 64 tests)
+tests/                node:test suites (18 files, 94 tests)
+agent-service/        Sample agent: serves its card, auto-delivers escrow jobs, sells calls over HTTP 402
 docs/                 Design, acceptance and evidence records
   project/            Deployment records, acceptance reports, freeze and release material
   assets/             Architecture diagram and banners
@@ -198,7 +212,14 @@ The community and escrow modules are deployed and exercised end to end on Sepoli
 | Community (circles, posts, replies, follows, teams, works) | deployed and exercised on Sepolia |
 | Escrow (create, submit, release, refund, claim) | deployed; three jobs executed, including the exact review-window boundary |
 | Community team → escrow job entry point | **verified on Sepolia**: post 4 → team 4 (Active) → job 4 funded with 1 mUSD → submitted → released (Completed), balances 99 / 1 / 0 |
-| Agent marketplace browse/sort and one-click ordering | not implemented in this version |
+| Agent cards (`agentledger-card-v1`) — generator on the register page, rendered on the detail page | implemented (frontend; cards are off-chain claims) |
+| Marketplace sort (score, reviews, price, newest) and filters (minimum score, skill, text) | implemented for the loaded registry page |
+| One-click hire: provider wallet from `ownerOf`, price and terms from the card | implemented |
+| My orders (client and provider views, next step, review hand-off for paid linked jobs) | implemented; scans the latest 100 jobs |
+| Sample agent service: auto-delivers funded jobs and serves the result document | implemented in `agent-service/`; task logic is a placeholder |
+| Pay-per-call over HTTP 402 (simplified x402 with a plain mUSD transfer) | implemented in `web/x402.js` and `agent-service/` |
+| Community evidence on the agent page (teams and confirmed works bound to the Agent ID) | implemented; reads the latest 50 community records |
+| Feedback that the contract restricts to paid clients | not implemented — needs a new reputation contract |
 
 ## Documentation
 

@@ -116,3 +116,36 @@ export function escrowService({ sdk, escrow, token, identity, provider, escrowAd
     },
   };
 }
+
+// "My orders": every job where the account is client or provider, newest first, with the next step for that role.
+export function orderSummary(job, account, chainTime) {
+  const role = sameAddress(account, job.client) ? "client" : sameAddress(account, job.provider) ? "provider" : "";
+  const status = Number(job.status), can = permittedActions(job, account, chainTime), linked = BigInt(job.providerAgentId) !== 0n;
+  const next = {
+    client: [null,
+      can.refund ? "Deadline passed without delivery — refund available." : "Waiting for the provider to deliver.",
+      "Delivery submitted — check it, then release payment.",
+      linked ? "Paid. Ask the provider for a review authorization." : "Paid. Unlinked task, so no identity review.",
+      "Refunded to you."],
+    provider: [null,
+      can.submit ? "Funded — deliver and submit the digest before the deadline." : "Submission deadline passed; the client may refund.",
+      can.claim ? "Review window over — you can claim payment." : "Waiting for the client to release payment.",
+      linked ? "Paid. Authorize the client to review your Agent ID." : "Paid.",
+      "Refunded to the client."],
+  };
+  return { role, status: JOB_STATUS[status] || "Unknown", next: role ? next[role][status] || "" : "", can, reviewHandoff: status === 3 && linked && role === "provider" };
+}
+export async function listOrders({ escrow, account, limit = 100, batch = 5 }) {
+  if (!/^0x[0-9a-fA-F]{40}$/.test(account || "")) return [];
+  const last = BigInt(await escrow.nextJobId()) - 1n, first = last - BigInt(limit) + 1n > 1n ? last - BigInt(limit) + 1n : 1n, out = [];
+  // Small batches keep public RPC endpoints from rate limiting the scan.
+  for (let id = last; id >= first; id -= BigInt(batch)) {
+    const ids = []; for (let j = id; j > id - BigInt(batch) && j >= first; j--) ids.push(j);
+    const rows = await Promise.all(ids.map(async jobId => ({ jobId, raw: await escrow.jobs(jobId) })));
+    for (const { jobId, raw } of rows) if (sameAddress(raw.client, account) || sameAddress(raw.provider, account)) {
+      const job = { id: jobId }; for (const key of ["client", "provider", "providerAgentId", "token", "amount", "submitDeadline", "reviewWindow", "submittedAt", "deliverable", "status"]) job[key] = raw[key];
+      out.push(job);
+    }
+  }
+  return out;
+}

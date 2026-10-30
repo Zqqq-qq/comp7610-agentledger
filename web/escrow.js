@@ -1,12 +1,12 @@
-import { ESCROW_ABI, TOKEN_ABI, JOB_STATUS, escrowService, permittedActions, sameAddress, jobFromReceipt } from "./escrow-core.js";
+import { ESCROW_ABI, TOKEN_ABI, JOB_STATUS, escrowService, permittedActions, sameAddress, jobFromReceipt, orderSummary, listOrders } from "./escrow-core.js";
 
 export function createEscrowUI(api) {
   const { sdk, $, state, node, explorerLink, status, clearStatus, runAction, selectedSigner, contracts, confirmTransaction, configKey, openSettings, toast, store, readStored, setFeedbackStep } = api;
-  let loaded = null, balanceGeneration = 0;
+  let loaded = null, balanceGeneration = 0, ordersGeneration = 0;
   const ready = () => !!state.config.escrow && !!state.config.token;
   const format = value => `${sdk.formatUnits(value, 6)} mUSD`;
   const date = value => new Date(Number(value) * 1000).toLocaleString();
-  const controls = ["mintTestTokens", "approveJob", "createJob", "lookupJob", "refreshToken", "submitJob", "releaseJob", "refundJob", "claimJob", "jobToFeedback"];
+  const controls = ["mintTestTokens", "approveJob", "createJob", "lookupJob", "refreshToken", "submitJob", "releaseJob", "refundJob", "claimJob", "jobToFeedback", "refreshOrders"];
   const lastJobKey = () => `agent-ledger.last-job.11155111.${state.config.escrow.toLowerCase()}`;
   const input = () => ({ provider: $("jobProvider").value, providerAgentId: $("jobAgentId").value, amount: $("jobAmount").value, minutes: $("jobMinutes").value, reviewWindow: $("jobReview").value });
   async function environment() {
@@ -55,7 +55,8 @@ export function createEscrowUI(api) {
     $("jobBalance").textContent = format(balance); $("jobAllowance").textContent = format(allowance);
   }
   function accountChanged() {
-    render();
+    render(); ordersGeneration++; $("ordersList").replaceChildren(); clearStatus("ordersStatus");
+    $("ordersHint").textContent = state.account ? "Refresh to list tasks where the active wallet is client or provider." : "Connect a wallet to see its tasks.";
     refreshBalances().catch(error => toast(`Balance refresh failed: ${api.errorMessage(error)}`, true));
   }
   function addDetail(label, text, address = false) {
@@ -165,6 +166,37 @@ export function createEscrowUI(api) {
       toast(`Task #${job.id}: select provider B (${job.provider}) to sign for client A. Feedback is a separate contract record.`);
     });
   }
+  async function refreshOrders() {
+    const generation = ++ordersGeneration, account = state.account;
+    if (!account) throw new Error("Connect the wallet whose tasks you want to list.");
+    const env = await environment(), key = configKey(env.config);
+    status("ordersStatus", "Reading recent tasks…", { message: "Scanning the latest 100 Job IDs on Sepolia.", pending: true });
+    const [jobs, block] = await Promise.all([listOrders({ escrow: env.escrow, account }), env.provider.getBlock("latest")]);
+    if (generation !== ordersGeneration || key !== configKey(state.config) || !sameAddress(account, state.account)) return;
+    clearStatus("ordersStatus");
+    $("ordersHint").textContent = jobs.length ? `${jobs.length} task(s) for ${account} · chain time ${date(block.timestamp)}` : "No tasks for this wallet in the latest 100 Job IDs.";
+    $("ordersList").replaceChildren(...jobs.map(job => {
+      const info = orderSummary(job, account, block.timestamp);
+      const open = node("button", { class: "button button-outline button-small", type: "button", text: "Open" });
+      open.addEventListener("click", () => runAction("jobLookupStatus", async () => { await loadJob(job.id); $("loadedJob").scrollIntoView({ behavior: "smooth", block: "nearest" }); }));
+      const actions = node("div", { class: "order-actions" }, [open]);
+      if (info.reviewHandoff) {
+        const review = node("button", { class: "button button-primary button-small", type: "button", text: "Authorize client review" });
+        review.addEventListener("click", async () => { await runAction("jobLookupStatus", () => loadJob(job.id)); await handoff(); });
+        actions.append(review);
+      }
+      return node("div", { class: `order-row status-${info.status.toLowerCase()}` }, [
+        node("div", {}, [node("strong", { text: `Task #${job.id} · ${info.role === "client" ? "You pay" : "You deliver"}` }), node("small", { text: `${format(job.amount)} · Agent ${job.providerAgentId === 0n ? "unlinked" : "#" + job.providerAgentId} · ${info.role === "client" ? "provider " + job.provider.slice(0, 8) + "…" : "client " + job.client.slice(0, 8) + "…"}` })]),
+        node("span", { class: "job-state-badge", text: info.status }), node("p", { class: "field-help", text: info.next }), actions]);
+    }));
+  }
+  // Called by the registry "Hire" button. Values come from ownerOf and the agent card; the client still approves and signs.
+  function prefill(values) {
+    $("jobProvider").value = values.provider; $("jobAgentId").value = values.providerAgentId; $("jobAmount").value = values.amount;
+    $("jobMinutes").value = values.minutes; $("jobReview").value = values.reviewWindow;
+    for (const id of ["mintStatus", "createJobStatus"]) clearStatus(id);
+    render();
+  }
   function bind() {
     $("mintTestTokens").addEventListener("click", mint);
     $("approveJob").addEventListener("click", approve);
@@ -174,6 +206,7 @@ export function createEscrowUI(api) {
     $("submitJobForm").addEventListener("submit", event => perform("submit", event));
     for (const action of ["release", "refund", "claim"]) $(`${action}Job`).addEventListener("click", () => perform(action));
     $("jobToFeedback").addEventListener("click", handoff);
+    $("refreshOrders").addEventListener("click", () => runAction("ordersStatus", refreshOrders));
     $("useDemoDigest").addEventListener("click", () => { $("deliveryDigest").value = `0x${"11".repeat(32)}`; $("digestHelp").textContent = "Demo placeholder only. It is not a hash of an actual deliverable and does not prove quality."; });
     $("deliveryFile").addEventListener("change", async event => {
       const file = event.target.files?.[0]; if (!file) return;
@@ -189,5 +222,5 @@ export function createEscrowUI(api) {
     });
     invalidate();
   }
-  return { bind, render, invalidate, accountChanged };
+  return { bind, render, invalidate, accountChanged, prefill, refreshOrders };
 }

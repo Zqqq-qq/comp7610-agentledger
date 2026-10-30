@@ -1,11 +1,30 @@
 {
-  "schemaVersion": "1",
-  "name": "COMP7610 Agent",
-  "description": "Agent identity and reputation demonstration on Ethereum Sepolia.",
-  "url": "http://127.0.0.1:8090/.well-known/agent-card.json",
-  "capabilities": [
-    "demo-service"
+  "schemaVersion": "agentledger-card-v1",
+  "name": "AgentLedger sample agent",
+  "description": "Example card for a locally running agent-service. Replace the endpoint with a public URL before registering for others.",
+  "service": {
+    "endpoint": "http://127.0.0.1:8092/"
+  },
+  "skills": [
+    "demo",
+    "automation"
   ],
+  "pricing": {
+    "amount": "1",
+    "token": "mUSD",
+    "decimals": 6,
+    "unit": "job"
+  },
+  "payment": {
+    "escrow": {
+      "submitMinutes": 60,
+      "reviewWindowSeconds": 600
+    },
+    "x402": {
+      "endpoint": "http://127.0.0.1:8092/x402/run",
+      "amount": "0.1"
+    }
+  },
   "registrations": [
     {
       "network": "eip155:11155111"
