@@ -14,7 +14,7 @@
 // 环境变量（全部可选，默认即 Sepolia 共享部署）：
 //   DEMO_APP DEMO_OUT DEMO_HOLD
 //   DEMO_COMMUNITY DEMO_ESCROW DEMO_TOKEN DEMO_IDENTITY DEMO_REPUTATION DEMO_RPC
-//   DEMO_POST_ID DEMO_WORK_ID DEMO_JOB_STATES（形如 "1=3 · Completed;2=4 · Refunded"）
+//   DEMO_POST_ID DEMO_WORK_ID DEMO_JOB_STATES（恰好三个订单，形如 "1=3;2=4;3=3"）
 //
 // 安全约定：
 //   - 不删除任何已有目录。若 DEMO_OUT 已存在且非空，改用带时间戳的唯一子目录。
@@ -28,6 +28,8 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import {pathToFileURL} from "node:url";
+import {parseJobStates,shortContract,jobCaption,liveReady,jobReady} from "./lib/demo-captions.mjs";
 
 // ---------- 参数与路径（先校验，后做任何写入） ----------
 
@@ -59,17 +61,14 @@ for (const [name, value] of Object.entries({ COMMUNITY, ESCROW, TOKEN, IDENTITY,
   if (!/^0x[0-9a-fA-F]{40}$/.test(value)) fatal(`${name} 不是合法地址：${value}`);
 }
 
-// 期望的订单状态，可在场景中覆盖；默认对应本仓库已完成的验收数据
-function parseJobStates(raw) {
-  const out = new Map();
-  for (const part of raw.split(";")) {
-    const [id, ...rest] = part.split("=");
-    if (!id || rest.length === 0) continue;
-    out.set(Number(id.trim()), rest.join("=").trim());
-  }
-  return out;
+// Exactly three job observations, in the order configured by the caller.
+let JOB_STATES;
+try { JOB_STATES=parseJobStates(env("DEMO_JOB_STATES","1=3 · Completed;2=4 · Refunded;3=3 · Completed")); }
+catch(error) { fatal(error.message); }
+const JOB_IDS=[...JOB_STATES.keys()];
+for(const [name,value] of Object.entries({DEMO_POST_ID:POST_ID,DEMO_WORK_ID:WORK_ID})) {
+  if(!/^[1-9]\d*$/.test(value)||!Number.isSafeInteger(Number(value)))fatal(`${name} must be a positive safe integer`);
 }
-const JOB_STATES = parseJobStates(env("DEMO_JOB_STATES", "1=3 · Completed;2=4 · Refunded;3=3 · Completed"));
 
 // 不删除任何已有目录：目标非空则改用唯一子目录
 const baseOut = path.resolve(env("DEMO_OUT", "demo-frames"));
@@ -93,7 +92,7 @@ fs.mkdirSync(OUT, { recursive: true });
 async function loadPlaywright() {
   if (process.env.PW_CORE) {
     const entry = path.join(process.env.PW_CORE, "index.mjs");
-    return (await import("file:///" + entry.replace(/\\/g, "/"))).chromium;
+    return (await import(pathToFileURL(entry).href)).chromium;
   }
   return (await import("playwright-core")).chromium;
 }
@@ -105,8 +104,10 @@ const page = await context.newPage();
 
 let frames = 0;
 let currentStep = "启动";
+const capturedScenes=[];
 
-async function caption(text) {
+async function caption(text,observation={}) {
+  capturedScenes.push({startFrame:frames,caption:text,...observation});
   await page.evaluate((t) => {
     let el = document.getElementById("demo-caption");
     if (!el) {
@@ -159,40 +160,26 @@ async function loadJob(id) {
     document.getElementById("lookupJobForm")?.requestSubmit();
   }, id);
 
-  // 等待真实查询成功：卡片可见且状态文案与期望完全一致
-  await mustWait(
-    ({ want }) => {
-      const card = document.getElementById("loadedJob");
-      const state = document.getElementById("loadedJobState");
-      if (!card || card.hidden || !state) return false;
-      return state.textContent.trim() === want;
-    },
-    { want: expect },
-    `job ${id} 查询未成功或状态不是「${expect}」（可能 RPC 失败、订单不存在或状态已变）`,
-    40000,
-  );
+  // The old card can have the same status: both ID and state must match.
+  await mustWait(jobReady,{id,want:expect,escrow:ESCROW},
+    `job ${id} 查询未成功或编号/状态不是「${id} / ${expect}」`,40000);
+  const observed=await page.evaluate(()=>({
+    title:document.getElementById("loadedJobTitle").textContent.trim(),
+    state:document.getElementById("loadedJobState").textContent.trim(),
+  }));
 
   // 只做滚动，不再强行把 hidden 置为 false
   await page.evaluate(() => {
     document.getElementById("loadedJob")?.scrollIntoView({ block: "start" });
   });
   await page.waitForTimeout(600);
+  return observed;
 }
 
-// 断言当前是 live 模式且指向预期合约
+// Use mode, full configured address and confirmed data; banner wording is cosmetic.
 async function assertLive() {
-  await mustWait(
-    ({ short }) => {
-      const t = document.body.innerText;
-      if (!t.includes("Sepolia 链上社区")) return false;
-      if (!t.includes(short)) return false;
-      if (t.includes("演示模式：样例与操作仅保存在此浏览器")) return false; // 不能是 Demo sandbox
-      return true;
-    },
-    { short: COMMUNITY.slice(0, 6) },
-    `页面未进入 live 模式或社区地址不是 ${COMMUNITY.slice(0, 6)}…（可能仍是 Demo sandbox 或配置未生效）`,
-    30000,
-  );
+  await mustWait(liveReady,{community:COMMUNITY},
+    `页面未以 ${COMMUNITY} 进入 live 模式并加载确认区块`,30000);
 }
 
 try {
@@ -213,7 +200,7 @@ try {
     const b = [...document.querySelectorAll('button[data-social="thread"]')].find((x) => x.dataset.id === id);
     return !!b;
   }, POST_ID, `找不到帖子 #${POST_ID} 的入口——可能链上没有该帖子或读取失败`);
-  await caption("1/7  Community feed · live Sepolia data · 0x8CDc…2406");
+  await caption(`1/7  Community feed · live Sepolia data · ${shortContract(COMMUNITY)}`,{community:COMMUNITY});
   await hold();
 
   // 2) 帖子详情
@@ -227,7 +214,7 @@ try {
     const h2 = d.querySelector("h2");
     return !!h2 && h2.textContent.trim().length > 0;
   }, POST_ID, "帖子详情弹窗未打开或标题为空");
-  await caption("2/7  Post detail · requirement and replies · the circle button reflects membership");
+  await caption(`2/7  Post #${POST_ID} · text and replies from live Sepolia records`,{postId:POST_ID});
   await hold();
   await page.evaluate(() => document.querySelector('#socialDialog button[data-social="close"]')?.click());
 
@@ -235,11 +222,11 @@ try {
   currentStep = "场景 3/7 Shared works";
   await scene("works", 1500);
   await assertLive();
-  await mustWait(() => document.body.innerText.includes("JOINTLY CONFIRMED"), "没有读到 JOINTLY CONFIRMED 作品——链上无已确认作品或读取失败");
   await mustWait((id) => {
-    return !![...document.querySelectorAll('button[data-social="work"]')].find((x) => x.dataset.id === id);
+    const button=[...document.querySelectorAll('button[data-social="work"]')].find((x)=>x.dataset.id===id);
+    return button?.closest(".work-card")?.querySelector(".work-seal")?.textContent.includes("JOINTLY CONFIRMED");
   }, WORK_ID, `找不到作品 #${WORK_ID} 的入口`);
-  await caption("3/7  Shared works · published only after both parties confirm");
+  await caption(`3/7  Shared works · Work #${WORK_ID} · jointly confirmed`,{workId:WORK_ID});
   await hold();
 
   // 4) 作品详情
@@ -253,35 +240,35 @@ try {
     const h2 = d.querySelector("h2");
     return !!h2 && h2.textContent.trim().length > 0;
   }, null, "作品详情弹窗未打开或标题为空");
-  await caption("4/7  Work detail · roles, proposer and confirmation state");
+  await caption(`4/7  Work #${WORK_ID} · contributor roles and confirmation state`,{workId:WORK_ID});
   await hold();
   await page.evaluate(() => document.querySelector('#socialDialog button[data-social="close"]')?.click());
 
-  // 5) 托管 Job 1
-  currentStep = "场景 5/7 托管 Job 1";
+  // 5) First configured escrow job
+  currentStep = `场景 5/7 托管 Job ${JOB_IDS[0]}`;
   await scene("jobs", 1500);
   await mustWait(() => {
     const f = document.getElementById("lookupJobId");
     return !!f && !!document.getElementById("lookupJobForm");
   }, null, "托管页没有订单查询表单——可能托管配置未生效");
-  await loadJob(1);
-  await caption("5/7  Task escrow · Job #1 completed (on-chain status 3)");
+  const first=await loadJob(JOB_IDS[0]);
+  await caption(jobCaption(5,ESCROW,JOB_IDS[0],JOB_STATES.get(JOB_IDS[0]),first),{escrow:ESCROW,jobId:JOB_IDS[0],observed:first});
   await hold();
 
-  // 6) 托管 Job 2 / Job 3
-  currentStep = "场景 6/7 托管 Job 2 / Job 3";
-  await loadJob(2);
-  await caption("6/7  Job #2 refunded (4) · Job #3 claimed after the review window");
-  await hold();
-  await loadJob(3);
-  await hold();
+  // 6) Each remaining job gets its own freshly verified caption.
+  for(const id of JOB_IDS.slice(1)) {
+    currentStep=`场景 6/7 托管 Job ${id}`;
+    const observed=await loadJob(id);
+    await caption(jobCaption(6,ESCROW,id,JOB_STATES.get(id),observed),{escrow:ESCROW,jobId:id,observed});
+    await hold();
+  }
 
   // 7) 圈子
   currentStep = "场景 7/7 圈子";
   await scene("circles", 1200);
   await assertLive();
   await mustWait(() => document.querySelectorAll(".circle-card").length >= 3, null, "圈子卡片少于 3 个——读取失败");
-  await caption("7/7  Explore circles · without a wallet every circle shows Join circle");
+  await caption(`7/7  Interest circles · public Sepolia read · ${shortContract(COMMUNITY)}`,{community:COMMUNITY});
   await hold(8);
 
   // 收尾卡
@@ -291,7 +278,7 @@ try {
   await hold(8);
 
   await browser.close();
-  fs.writeFileSync(path.join(OUT, "meta.json"), JSON.stringify({ frames, holdsPerScene: HOLD, community: COMMUNITY, escrow: ESCROW, jobStates: Object.fromEntries(JOB_STATES) }, null, 2));
+  fs.writeFileSync(path.join(OUT, "meta.json"), JSON.stringify({ frames, holdsPerScene: HOLD, community: COMMUNITY, escrow: ESCROW, postId:POST_ID, workId:WORK_ID, jobIds:JOB_IDS, jobStates: Object.fromEntries(JOB_STATES), scenes:capturedScenes }, null, 2));
   console.log(`captured ${frames} frames -> ${OUT}`);
 } catch (error) {
   try { await browser.close(); } catch {}
