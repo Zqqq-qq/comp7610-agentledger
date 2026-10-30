@@ -85,7 +85,7 @@ The shared Sepolia addresses are built into `web/config.js`, so no setup is need
 
 ```sh
 pnpm compile    # solc 0.8.30 → web/generated/*.json
-pnpm test       # compile + node --test (99 tests)
+pnpm test       # compile + node --test (100 tests)
 pnpm build      # static site → dist/
 ```
 
@@ -160,7 +160,7 @@ node scripts/release-freeze.mjs <commit-sha>
 
 ## Testing
 
-- **99 tests across 19 files**, run with `node --test` after compiling. They cover contract permissions and state machines, frontend pure functions, wallet recovery and sessions, deployment evidence, escrow integration, and UI message mapping.
+- **100 tests across 19 files**, run with `node --test` after compiling. They cover contract permissions and state machines, frontend pure functions, wallet recovery and sessions, deployment evidence, escrow integration, and UI message mapping.
 - **CI**: `.github/workflows/ci.yml` runs on every pull request — install with the lockfile, compile and test, assert the committed contract artefact is unchanged, then build the static site.
 
 ```sh
@@ -194,7 +194,7 @@ web/                  Static frontend, no build step
   config.js           Deployed addresses (DEPLOYMENT)
   generated/          Compiled artefacts committed to the repo
 scripts/              Compile, build, serve, verification and reporting tools
-tests/                node:test suites (19 files, 99 tests)
+tests/                node:test suites (19 files, 100 tests)
 agent-service/        Sample agent: serves its card, auto-delivers escrow jobs, sells calls over HTTP 402
 docs/                 Design, acceptance and evidence records
   project/            Deployment records, acceptance reports, freeze and release material
@@ -226,6 +226,7 @@ The community and escrow modules are deployed and exercised end to end on Sepoli
 | Document | Contents |
 | --- | --- |
 | [`docs/project/REPORT.md`](docs/project/REPORT.md) · [PDF](docs/project/REPORT.pdf) | Final report: background, design, implementation, testing, limitations |
+| [Blueprint demo script](docs/project/DEMO_BLUEPRINT_FLOW.zh-CN.md) | Shot list for recording the 8-step journey on Sepolia; `pnpm rehearse` dry-runs it on a local fork |
 | [`docs/project/DEPLOYMENTS.md`](docs/project/DEPLOYMENTS.md) | Shared addresses, receipts, pre-deployment checklist |
 | [Circle and team permissions](docs/project/TEAM_CIRCLE_POLICY.zh-CN.md) | Leaving a circle preserves existing team rights; publication still requires the other member |
 | [Team 3 → job 5 acceptance addendum](docs/project/TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md) | 2026-10-29 receipts, linked escrow payment, delivery-file digest and reproduction boundaries |

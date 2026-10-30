@@ -545,6 +545,8 @@ function renderRecent() {
 
 function bindEvents() {
   window.addEventListener("hashchange", route);
+  // A detail dialog left open would cover the page the user just navigated to.
+  window.addEventListener("hashchange", () => { if ($("agentDialog").open) $("agentDialog").close(); });
   document.querySelectorAll("[data-open-settings]").forEach(e => e.addEventListener("click", openSettings));
   document.querySelectorAll("[data-close-dialog]").forEach(e => e.addEventListener("click", () => $(e.dataset.closeDialog).close()));
   document.querySelectorAll("[data-feedback]").forEach(e => e.addEventListener("click", () => setFeedbackStep(e.dataset.feedback)));

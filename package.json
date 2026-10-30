@@ -9,7 +9,8 @@
     "compile": "node scripts/compile.mjs",
     "build": "node scripts/build.mjs",
     "test": "node scripts/compile.mjs && node --test tests/*.test.mjs",
-    "agent": "node agent-service/server.mjs"
+    "agent": "node agent-service/server.mjs",
+    "rehearse": "node scripts/rehearse-demo.mjs"
   },
   "devDependencies": {
     "solc": "0.8.30",

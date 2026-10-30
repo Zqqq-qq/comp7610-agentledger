@@ -32,3 +32,13 @@ test("wallet rejection keeps its own message and unknown errors pass through", (
   const unknown = "some unexpected node failure";
   assert.equal(errorMessage(new Error(unknown)), unknown);
 });
+
+test("demo-path reverts for teams and escrow tasks are also readable", () => {
+  for (const reason of ["team not active", "not team member", "only pending host", "invalid text length", "follow unchanged", "agent/provider mismatch", "self job", "not provider", "not client", "not submitted", "not refundable", "deadline not passed"]) {
+    const message = errorMessage(new Error(`execution reverted: ${reason}`));
+    assert.ok(!message.includes("execution reverted"), `"${reason}" passed through raw: ${message}`);
+  }
+  // Longer escrow reasons that contain a shorter needle keep their own, more specific message.
+  assert.match(errorMessage(new Error("execution reverted: submit deadline passed")), /submission deadline has passed/);
+  assert.match(errorMessage(new Error("execution reverted: no funds received")), /no funds received/);
+});
