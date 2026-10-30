@@ -188,7 +188,9 @@ Work:  None ──proposeWork──▶ Proposed ──reviewWork(true)──▶ 
 | `proposeWork`（含摘要与链接） | 12006079 | 1,903,577 |
 | `reviewWork` | 12006101 | 258,347 |
 
-十笔合计 `24,457,402` gas。其中**部署交易占 70.3%**，单笔费用 `0.02577 ETH`（`effectiveGasPrice` 1.5 gwei，为钱包默认值）；其余九笔的单价为 16 / 18 / 25 wei 三档，九笔合计约 `0.00000000012 ETH`，可忽略。
+十笔合计 `24,457,402` gas。其中**部署交易占 70.3%**，单笔费用 `0.02577 ETH`（`effectiveGasPrice` 1,500,000,014 wei，约 1.5 gwei；是否使用钱包默认设置未确认）；其余九笔的单价为 16 / 18 / 25 wei 三档，九笔合计约 `0.00000000012 ETH`，可忽略。
+
+部署操作背景及未知项见 [部署操作记录](DEPLOYMENT_OPERATIONS_2026-10-27.zh-CN.md)。历史网页代码未显式传入 gas/费用覆盖参数；用户于 2026-10-30 表示记不清是否在 MetaMask 手调，因此不能写成“钱包默认值”，也未查明 17.18M gas 的执行层成因。
 
 **文本长度对成本的影响（实测，非推测）**：用 `eth_estimateGas` 对同一 `createPost(circle 2, agentId 0, kind 0)` 只改变正文长度做对比：
 
