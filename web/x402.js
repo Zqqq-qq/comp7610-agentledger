@@ -1,6 +1,8 @@
 // Minimal HTTP 402 pay-per-call flow, modelled on x402 but simplified for MockUSDC (which has no EIP-3009
 // transferWithAuthorization): the payer sends a normal ERC-20 transfer, then retries the request with its hash.
 // The server must check the receipt, recipient, amount, payer and freshness, and accept each hash only once.
+// A public hash alone does not prove who is calling, so the payer also signs the server's one-time challenge
+// binding this request, amount and payment address; the server verifies that signature before serving.
 export const X402_VERSION = 1;
 export const X402_SCHEME = "agentledger-erc20-transfer";
 const TRANSFER_ABI = ["function transfer(address to,uint256 value) returns (bool)", "function balanceOf(address) view returns (uint256)"];
@@ -40,15 +42,25 @@ export async function payPerCall({ url, signer, sdk, token, chainId, expectedPay
     if (!first.ok) throw new Error(`The service returned HTTP ${first.status}.`);
     return { paid: false, body: await readJson(first) };
   }
-  const requirement = chooseRequirement(await readJson(first), { chainId, token, expectedPayTo });
+  const offer = await readJson(first);
+  const requirement = chooseRequirement(offer, { chainId, token, expectedPayTo });
+  const challenge = offer?.challenge;
+  if (!challenge || !/^[0-9a-f]{32}$/.test(challenge.id || "") || typeof challenge.message !== "string" || !challenge.message.includes(`resource: ${requirement.resource}`)) {
+    throw new Error("The service did not provide a valid payment challenge.");
+  }
   if (!await confirm(requirement)) throw Object.assign(new Error("Payment cancelled. Nothing was sent."), { code: "ACTION_REJECTED" });
+  // Sign before sending the transfer: if the payer rejects the challenge, no money moves.
+  const signature = await signer.signMessage(challenge.message);
   const erc20 = new sdk.Contract(token, TRANSFER_ABI, signer);
   if (await erc20.balanceOf(await signer.getAddress()) < requirement.amount) throw new Error("Not enough mUSD for this call. Mint test tokens first.");
   const tx = await erc20.transfer(requirement.payTo, requirement.amount);
   onPayment?.(tx.hash);
   const receipt = await tx.wait(1);
   if (receipt?.status !== 1) throw new Error("The mUSD transfer did not succeed.");
-  const second = await fetchImpl(url, { ...options, headers: { "X-PAYMENT": encodePayment(receipt.hash || tx.hash, requirement) } });
+  const second = await fetchImpl(url, { ...options, headers: {
+    "X-PAYMENT": encodePayment(receipt.hash || tx.hash, requirement),
+    "X-PAYMENT-SIGNATURE": btoa(JSON.stringify({ id: challenge.id, signature })),
+  } });
   const body = await readJson(second);
   if (!second.ok) throw new Error(`Paid (${receipt.hash || tx.hash}) but the service returned HTTP ${second.status}: ${String(body.error || body.text || "").slice(0, 160)}`);
   return { paid: true, paymentHash: receipt.hash || tx.hash, body, settlement: second.headers.get("X-PAYMENT-RESPONSE") };

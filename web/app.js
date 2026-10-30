@@ -408,7 +408,7 @@ function renderCard(root, agent, card) {
     call.addEventListener("submit", event => { event.preventDefault(); runAction("x402Status", async () => {
       const signer = await selectedSigner(); const url = new URL(card.x402); url.searchParams.set("input", call.elements.input.value.slice(0, 500));
       const outcome = await payPerCall({ url: url.href, signer, sdk, token: state.config.token, chainId: DEPLOYMENT.chainId, expectedPayTo: agent.owner,
-        confirm: req => window.confirm(`Pay ${sdk.formatUnits(req.amount, 6)} mUSD to ${req.payTo} for one call?\nThis is a direct token transfer, not escrow: there is no refund path.`),
+        confirm: req => window.confirm(`Pay ${sdk.formatUnits(req.amount, 6)} mUSD to ${req.payTo} for one call?\nYou will sign a one-time payment challenge, then the mUSD transfer.\nThis is a direct token transfer, not escrow: there is no refund path.`),
         onPayment: hash => status("x402Status", "Payment sent", { message: "Waiting for confirmation, then retrying the call with the receipt.", pending: true, hash }) });
       result.hidden = false; result.textContent = JSON.stringify(outcome.body, null, 2);
       status("x402Status", "Call completed", { message: outcome.paid ? "Paid with a confirmed mUSD transfer." : "The endpoint did not request payment.", hash: outcome.paymentHash || "" });

@@ -85,7 +85,7 @@ The shared Sepolia addresses are built into `web/config.js`, so no setup is need
 
 ```sh
 pnpm compile    # solc 0.8.30 → web/generated/*.json
-pnpm test       # compile + node --test (100 tests)
+pnpm test       # compile + node --test (102 tests)
 pnpm build      # static site → dist/
 ```
 
@@ -160,7 +160,7 @@ node scripts/release-freeze.mjs <commit-sha>
 
 ## Testing
 
-- **100 tests across 19 files**, run with `node --test` after compiling. They cover contract permissions and state machines, frontend pure functions, wallet recovery and sessions, deployment evidence, escrow integration, and UI message mapping.
+- **102 tests across 19 files**, run with `node --test` after compiling. They cover contract permissions and state machines, frontend pure functions, wallet recovery and sessions, deployment evidence, escrow integration, and UI message mapping.
 - **CI**: `.github/workflows/ci.yml` runs on every pull request — install with the lockfile, compile and test, assert the committed contract artefact is unchanged, then build the static site.
 
 ```sh
@@ -194,7 +194,7 @@ web/                  Static frontend, no build step
   config.js           Deployed addresses (DEPLOYMENT)
   generated/          Compiled artefacts committed to the repo
 scripts/              Compile, build, serve, verification and reporting tools
-tests/                node:test suites (19 files, 100 tests)
+tests/                node:test suites (19 files, 102 tests)
 agent-service/        Sample agent: serves its card, auto-delivers escrow jobs, sells calls over HTTP 402
 docs/                 Design, acceptance and evidence records
   project/            Deployment records, acceptance reports, freeze and release material
