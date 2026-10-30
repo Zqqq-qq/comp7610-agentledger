@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="220" viewBox="0 0 560 220" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">A shared record, confirmed together</title>
+  <desc id="desc">Two collaborators connect to one shared work document, with a confirmation mark for each contributor.</desc>
+  <ellipse cx="280" cy="104" rx="169" ry="88" fill="#e3ebd7" opacity=".65"/>
+  <circle cx="280" cy="104" r="83" fill="#f0f4e7"/>
+  <g stroke="#b4c5a3" stroke-width="1.5" stroke-linecap="round">
+    <path d="M153 101h23c19 0 18-22 37-22"/>
+    <path d="M407 101h-23c-19 0-18 22-37 22"/>
+  </g>
+  <rect x="211" y="34" width="138" height="139" rx="14" fill="#d4dfc6" opacity=".4" transform="rotate(-7 280 104)"/>
+  <rect x="211" y="29" width="138" height="139" rx="14" fill="#f1f5e9" stroke="#c5d3b6" transform="rotate(-7 280 104)"/>
+  <rect x="211" y="36" width="138" height="139" rx="14" fill="#d4dfc6" opacity=".45"/>
+  <rect x="211" y="31" width="138" height="139" rx="14" fill="#fbfcf7" stroke="#bfceaf"/>
+  <path d="M231 52h45m-45 10h75" stroke="#b0c39c" stroke-width="3" stroke-linecap="round"/>
+  <rect x="231" y="79" width="44" height="32" rx="7" fill="#eee5d4"/>
+  <path d="m243 99 7-9 6 6 7-4" stroke="#ae9569" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="283" y="79" width="44" height="32" rx="7" fill="#e2ecee"/>
+  <path d="M295 101V91m10 10V87m10 14v-7" stroke="#86a4ad" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M231 124h96" stroke="#e2e9d9"/>
+  <g fill="#e4edd9" stroke="#c6d6b7">
+    <circle cx="256" cy="146" r="10"/>
+    <circle cx="304" cy="146" r="10"/>
+  </g>
+  <path d="M266 146h28" stroke="#c6d6b7"/>
+  <g stroke="#718f59" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m252 146 3 3 5-6"/>
+    <path d="m300 146 3 3 5-6"/>
+  </g>
+  <circle cx="126" cy="101" r="30" fill="#f7f5ec" stroke="#dcd3be"/>
+  <circle cx="126" cy="94" r="7" fill="#b09b73"/>
+  <path d="M112 114c1-8 5.7-12 14-12s13 4 14 12" fill="#d7c7a7"/>
+  <circle cx="434" cy="101" r="30" fill="#f0f5f4" stroke="#cbdcde"/>
+  <circle cx="434" cy="94" r="7" fill="#86a4ad"/>
+  <path d="M420 114c1-8 5.7-12 14-12s13 4 14 12" fill="#bed2d6"/>
+</svg>

@@ -2,12 +2,9 @@
   <title id="title">A community built through conversation</title>
   <desc id="desc">Overlapping conversation bubbles connect people across a quiet network, representing shared ideas and collaboration.</desc>
   <ellipse cx="195" cy="135" rx="120" ry="102" fill="#f0f4e8"/>
-  <ellipse cx="195" cy="135" rx="159" ry="108" stroke="#dfe6d7" stroke-dasharray="1 9" stroke-linecap="round" transform="rotate(-12 195 135)"/>
   <g stroke="#c9d6bd" stroke-width="1.4" stroke-linecap="round">
     <path d="M67 100C106 100 101 135 151 135"/>
     <path d="M252 161c37 0 30 24 65 24"/>
-    <path d="M299 64c-24 0-23 23-49 27" stroke-dasharray="3 5"/>
-    <path d="M102 213c32 0 27-32 61-32" stroke-dasharray="3 5"/>
   </g>
   <circle cx="67" cy="98" r="29" fill="#fbfcf8"/>
   <circle cx="67" cy="98" r="24" fill="#f5eedf" stroke="#e1d8c4"/>
@@ -20,10 +17,11 @@
   <circle cx="301" cy="63" r="16" fill="#edf3e5" stroke="#d7e2ca"/>
   <circle cx="297" cy="63" r="2.2" fill="#94aa7f"/>
   <circle cx="305" cy="63" r="2.2" fill="#94aa7f"/>
-  <circle cx="101" cy="214" r="13" fill="#eef3e7" stroke="#dae4cf"/>
-  <path d="M97 214h8m-4-4v8" stroke="#93aa7c" stroke-width="1.5" stroke-linecap="round"/>
-  <ellipse cx="196" cy="222" rx="68" ry="6" fill="#dbe5cd" opacity=".28"/>
+  <circle cx="101" cy="214" r="16" fill="#edf3e5" stroke="#d7e2ca"/>
+  <circle cx="97" cy="214" r="2.2" fill="#94aa7f"/>
+  <circle cx="105" cy="214" r="2.2" fill="#94aa7f"/>
   <g transform="rotate(-8 187 120)">
+    <path d="M129 65h116a18 18 0 0 1 18 18v60a18 18 0 0 1-18 18h-85l-22 18v-18h-9a18 18 0 0 1-18-18V83a18 18 0 0 1 18-18Z" fill="#dfe8d3" opacity=".35" transform="translate(0 8)"/>
     <path d="M129 65h116a18 18 0 0 1 18 18v60a18 18 0 0 1-18 18h-85l-22 18v-18h-9a18 18 0 0 1-18-18V83a18 18 0 0 1 18-18Z" fill="#eaf1ef" stroke="#ccdcd5" stroke-width="1.2"/>
     <circle cx="136" cy="91" r="9" fill="#d1e0d7"/>
     <path d="M154 88h65m-65 9h43" stroke="#a9c1b1" stroke-width="3" stroke-linecap="round"/>
@@ -33,15 +31,10 @@
     <path d="M153 108h107a18 18 0 0 1 18 18v56a18 18 0 0 1-18 18h-20l-18 17v-17h-69a18 18 0 0 1-18-18v-56a18 18 0 0 1 18-18Z" fill="#dfe8d3" opacity=".35" transform="translate(0 4)"/>
     <path d="M153 104h107a18 18 0 0 1 18 18v56a18 18 0 0 1-18 18h-20l-18 17v-17h-69a18 18 0 0 1-18-18v-56a18 18 0 0 1 18-18Z" fill="#f8faf4" stroke="#cddbbf" stroke-width="1.2"/>
     <path d="M156 122h30" stroke="#cfddc2" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="174" cy="150" r="5" fill="#91ac77"/>
+    <circle cx="174" cy="150" r="5" fill="#789963"/>
     <circle cx="196" cy="150" r="5" fill="#789963"/>
-    <circle cx="218" cy="150" r="5" fill="#91ac77"/>
+    <circle cx="218" cy="150" r="5" fill="#789963"/>
+    <circle cx="240" cy="150" r="5" fill="#789963"/>
     <path d="M157 175h59" stroke="#d6e2ca" stroke-width="3" stroke-linecap="round"/>
   </g>
-  <g stroke="#a4b991" stroke-width="1.4" stroke-linecap="round">
-    <path d="M333 108h8m-4-4v8"/>
-    <path d="M76 163h5m-2.5-2.5v5"/>
-  </g>
-  <circle cx="238" cy="35" r="3" fill="#cad9ba"/>
-  <circle cx="148" cy="237" r="2" fill="#d4dfc7"/>
 </svg>
