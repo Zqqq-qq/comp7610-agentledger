@@ -1,11 +1,11 @@
 {
   "schema": "agentledger-release-manifest-v1",
-  "generatedAt": "2026-10-30T06:29:43.878Z",
-  "commit": "3d30dc398d25d9a364eb0056977604d2c1f64c15",
-  "shortCommit": "3d30dc3",
-  "tree": "3f85e060728436e07da98448c3c01258fd21b632",
-  "commitSubject": "Merge pull request #55 from Zqqq-qq/feature/release-refresh-v05-qiuqiuxuan",
-  "commitDate": "2026-10-30T14:29:26+08:00",
+  "generatedAt": "2026-10-30T09:32:28.136Z",
+  "commit": "788fde9e9ae1e94873c69451d90dff2ed7498582",
+  "shortCommit": "788fde9",
+  "tree": "31f9c895c77215f492314c675cfc20132c4a9738",
+  "commitSubject": "Merge pull request #62 from Zqqq-qq/feature/release-v06-qiuqiuxuan",
+  "commitDate": "2026-10-30T17:32:08+08:00",
   "isAncestorOfMain": true,
   "mainRef": "origin/main",
   "mainAncestry": {
@@ -34,8 +34,8 @@
     },
     {
       "path": "package.json",
-      "bytes": 415,
-      "sha256": "f04f7458bce56b0c24e49d431f3a1f059b8c71d1b6773c0e222bfc3e62d638d5"
+      "bytes": 511,
+      "sha256": "d8940ce0f92af3296b97c3e123b56079f2dd780075f67dffd84ba03aa9a6ac58"
     },
     {
       "path": "pnpm-lock.yaml",
@@ -89,13 +89,13 @@
     },
     {
       "path": "docs/project/REPORT.md",
-      "bytes": 36182,
-      "sha256": "63c8bcb0c8a483b100e9563b830d75a46b97edb45437e2f2c986712242c21c1e"
+      "bytes": 38909,
+      "sha256": "de4431efa0dfd3d3f035a7752e0a52842a680b0dc10602f26204b22dd3d74320"
     },
     {
       "path": "docs/project/REPORT.pdf",
-      "bytes": 675300,
-      "sha256": "8f096d41e837d59c41cfffb0993ee1cca1ab17282ba72b95086bf8ef0696482e"
+      "bytes": 695859,
+      "sha256": "2c063f5bf0e439d6e26b49a9c3e534409d2773d5d2fd746e36d6017b83cb9698"
     }
   ],
   "filePolicy": {
@@ -127,8 +127,8 @@
     },
     {
       "path": "package.json",
-      "bytes": 432,
-      "sha256": "2aa11140591c83b84d07076b5a465f1b87767ffe08a1a5fcd28a2196c5f413f2"
+      "bytes": 530,
+      "sha256": "0c86c01a5452c00a8e8e2efe70f1af3073df89803970402da7eb95f34092cb6b"
     },
     {
       "path": "pnpm-lock.yaml",
@@ -142,8 +142,8 @@
     },
     {
       "path": "docs/project/REPORT.md",
-      "bytes": 36652,
-      "sha256": "23b2a891924390e3b9a5e5ea3f3fff8d72717221adb9853c55f4640fdcd9fd30"
+      "bytes": 39394,
+      "sha256": "00b3173497c6aaf5f9a6f9cd95bb7a8872ac151b2d0660b103bfb5c0ae1d1f91"
     }
   ],
   "notes": [
