@@ -11,7 +11,7 @@
 // 只有 blob（LF 内容）才是跨平台可比较的基准。
 //
 // 输出：默认写 docs/project/evidence/release-manifest.json，并在 stdout 打印摘要。
-// 任一读取失败即非零退出。
+// 必需文件缺失或任一现有文件读取失败即非零退出；可选缺失显式记录。
 
 import { execFileSync } from "node:child_process";
 import crypto from "node:crypto";
@@ -21,7 +21,7 @@ import path from "node:path";
 const SHA_INPUT = process.argv[2] || process.env.FREEZE_SHA || "HEAD";
 const OUT = process.env.FREEZE_OUT || "docs/project/evidence/release-manifest.json";
 
-const FILES = [
+const REQUIRED_FILES = [
   "web/config.js",
   "package.json",
   "pnpm-lock.yaml",
@@ -33,6 +33,12 @@ const FILES = [
   "contracts/JobEscrow.sol",
   "contracts/MockUSDC.sol",
   "contracts/ReputationRegistry.sol",
+];
+// Supplementary release evidence may not exist in an earlier code candidate.
+const OPTIONAL_FILES = [
+  "backend-provenance.json",
+  "docs/project/REPORT.md",
+  "docs/project/REPORT.pdf",
 ];
 
 function git(args, opts = {}) {
@@ -83,19 +89,38 @@ for (const ref of mainRefs) {
 const mainRef = mainRefs.find((ref) => ancestry[ref]) ?? mainRefs[0] ?? null;
 const onMain = mainRefs.length ? mainRefs.some((ref) => ancestry[ref]) : null;
 
-const files = [];
-for (const file of FILES) {
-  let buf;
-  try {
-    buf = blob(sha, file);
-  } catch {
-    continue; // 该版本没有这个文件（例如托管产物尚未生成）
+// A missing optional path is different from a failed Git read or a non-file.
+function frozenFile(file) {
+  const entries=git(["ls-tree","-z",sha,"--",file]).toString("utf8").split("\0").filter(Boolean);
+  if (!entries.length) return null;
+  const entry=entries.find(e=>e.slice(e.indexOf("\t")+1)===file);
+  if (!entry || !/^100(?:644|755) blob [0-9a-f]+\t/.test(entry)) {
+    throw new Error(`${file}: expected a regular Git blob (directories, symlinks and submodules are not accepted)`);
   }
-  files.push({
-    path: file,
-    bytes: buf.length,
-    sha256: crypto.createHash("sha256").update(buf).digest("hex"),
-  });
+  return blob(sha,file); // Any read failure is fatal, even for an optional file.
+}
+const files = [], missingRequiredFiles = [], missingOptionalFiles = [];
+try {
+  for (const [required,paths] of [[true,REQUIRED_FILES],[false,OPTIONAL_FILES]]) {
+    for (const file of paths) {
+      const buf=frozenFile(file);
+      if (buf===null) {
+        (required?missingRequiredFiles:missingOptionalFiles).push(file);
+        continue;
+      }
+      files.push({path:file,bytes:buf.length,sha256:crypto.createHash("sha256").update(buf).digest("hex")});
+    }
+  }
+} catch (error) {
+  console.error(`FAIL: cannot read frozen input from ${sha}: ${error.message}`);
+  process.exit(1);
+}
+if (missingRequiredFiles.length) {
+  console.error(`FAIL: missing required files in ${sha}:\n${missingRequiredFiles.map(p=>`  ${p}`).join("\n")}`);
+  process.exit(1); // Do not create an output directory or overwrite an existing manifest.
+}
+if (missingOptionalFiles.length) {
+  console.error(`WARN: optional files absent in ${sha}: ${missingOptionalFiles.join(", ")}`);
 }
 
 // 工作副本对照：仅用于提醒"本机 CRLF 值不可当通用校验和"
@@ -162,8 +187,11 @@ const manifest = {
   tag: tag,
   deployment,
   files,
+  filePolicy: { required: REQUIRED_FILES, optional: OPTIONAL_FILES },
+  missingOptionalFiles,
   workingCopyDiffersFromBlob: workingCopyDiff,
   notes: [
+    "所有必需项必须是目标提交中的普通文件；可选缺失列于 missingOptionalFiles，读取错误仍会失败。",
     "deployment 与 web/config.js 校验和均取自 commit 指定的 Git blob，不执行配置模块。",
     "校验和以 Git blob（LF）为基准；workingCopyDiffersFromBlob 记录工作副本的字节差异，可能来自换行符或本地内容修改，不影响冻结值。",
     "本清单不判断是否可发布：阻断项与提交回执见 docs/project/RELEASE_FREEZE_DRAFT.zh-CN.md 与 Issue #11。",

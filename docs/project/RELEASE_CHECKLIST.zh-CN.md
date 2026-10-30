@@ -36,15 +36,26 @@ node scripts/release-freeze.mjs <完整 SHA>
 - 解析完整 SHA 与 tree；
 - 用 `git cat-file blob` 取**原始内容**算 SHA-256（**不用工作副本**，避免 Windows CRLF 差异）；
 - 从指定提交的 `web/config.js` Git blob 读取静态配置及其哈希，不 import 工作副本；缺失、无效或动态表达式配置会非零退出，且不覆盖已有清单；
+- 校验 11 个必需输入：配置、package.json、锁文件、AgentCommunity/JobEscrow/MockUSDC 三个生成 JSON，以及五个合约源码。任一缺失时列出缺失路径并非零退出，不创建输出目录、不覆盖原清单；
+- 可选补充为 `backend-provenance.json`、`docs/project/REPORT.md`、`docs/project/REPORT.pdf`：存在即计入哈希，缺失则告警并记入 `missingOptionalFiles`；目录、符号链接、子模块或读取错误均失败，不按可选缺失跳过；
 - 报告该提交是否为 `main` 祖先（`origin` 与 `origin-ssh` 分别判断，任一为真即可）；
 - 列出「工作副本与 blob 不同」的文件（通常是 CRLF 检出），提醒不要混用。
 
 核对要点：
 
 - [ ] `commit` 与第一步记下的 SHA 一致
-- [ ] `files` 覆盖 `package.json`、`pnpm-lock.yaml`、`web/generated/*.json`、`contracts/*.sol`
+- [ ] `filePolicy.required` 的 11 项均出现在 `files` 中；哈希只取自目标提交的普通 Git 文件
+- [ ] 核对 `filePolicy.optional` 与 `missingOptionalFiles`；可选缺失不代表最终报告可以不交，release 仍需检查提交物完整性
 - [ ] `deployment.community` / `escrow` / `token` 与 `DEPLOYMENTS.md` 一致
 - [ ] `isAncestorOfMain` 为 `true`
+
+### 必需/可选策略与兼容性
+
+保留清单 v1 的既有字段，新增 `filePolicy.required`、`filePolicy.optional` 与 `missingOptionalFiles`。当前完整仓库通常会列出 14 个文件（11 必需 + 3 可选），不能继续把 `files.length === 11` 当作完整性的唯一依据。可选项是代码候选冻结时的补充，最终提交仍按报告/视频等交付要求验收。本脚本校验声明输入的存在及 Git 对象类型、计算哈希，不验证所有文件内容的语义，也不代替发布决策。
+
+历史提交若缺少必需代码输入，将明确失败，不自动降级为部分清单。例如没有托管产物的旧版本不能冒充本应用的完整代码冻结。只在工作副本补文件不能修复目标 SHA 的缺失；需选择/提交包含完整输入的新 SHA 再生成。
+
+验证（2026-10-30，Zqqq-qq 使用 Codex 协助）：临时 Git 仓库逐一删除 11 个必需项，恢复工作副本后仍应失败且保留原输出；缺失可选项则成功并记录，存在的可选项使用目标提交哈希；目录与 Git 符号链接被拒绝。原静态配置、不同检出与历史 SHA 回归保留。专项 6/6、全量 77/77 与构建通过；对 main `0123272` 生成的临时清单独立复算 14 个 Git blob 哈希，全部一致。本次不重写已入库清单或最终版本标记。
 
 ## 三、打版本标记
 
