@@ -5,6 +5,7 @@
 | 日期 | GitHub 用户名 | Issue | PR/提交 | 工作与结果 | 验收证据/审阅人 |
 | --- | --- | --- | --- | --- | --- |
 | 待填写 | 待填写 | 待填写 | 待填写 | 待填写 | 待填写 |
+| 2026-10-30 | ffmitrg（使用 Claude Code 协助） | 蓝图 P0–P2 | `feat/blueprint-marketplace` | 实现功能蓝图剩余项：名片标准与生成器、详情页名片渲染、一键雇佣、市场排序筛选、我的订单与评价授权入口、示例 Agent 服务（自动交付）、x402 简化按次付费、Agent 社区证据；同步 README / BLUEPRINT。 | `tests/marketplace.test.mjs`、`tests/agent-service.test.mjs`（Ganache 真实合约）；全量 99/99、构建通过；浏览器实测桌面与手机布局；不改 Solidity / 产物 / 部署，无新增 Sepolia 交易 |
 | 2026-10-30 | ffmitrg（使用 Claude Code 协助） | #3 / #4 / #30 | `review/b-independent-ffmitrg` | B 本人独立复核 B1 权限、B2 内容边界与产物、#30 设计：本地重编与 Sepolia runtime 逐字节一致；更正 B1 文档中 `inviteTeam` 调用者与 `kind` 强制性两处表述；新增 4 项回归锁定「非发帖人可当 host」「kind 由合约强制」「纯空白文本链上可存、Demo 拒绝」「邀请时不查 guest 圈子资格」。#30 结论：有意设计。 | `REVIEW_B_INDEPENDENT_2026-10-30.zh-CN.md`；`tests/b-independent-review.test.mjs` 4/4；全量通过；无 Solidity/产物/部署改动，无新增 Sepolia 交易 |
 | 2026-10-28 | Zqqq-qq（使用 Codex 协助） | #1 | `fix/1-social-mobile-ux` | 逐项审阅圈子、发帖、回复、关注、组队、共同作品；修复连续长标题与队名溢出、手机触摸区域及弹窗名称/焦点恢复。 | `A1_UI_ACCEPTANCE_2026-10-28.zh-CN.md`，390×844 / 1440×1000 实际浏览器截图与测量；64 项测试及构建通过；同伴审阅待完成；本次无新增链上交易 |
 | 2026-10-28 | Zqqq-qq（使用 Codex 协助） | #8 | `docs/8-macos-clean-clone` | 用户亲自完成 GitHub 授权；Mac 新目录真实 git clone、固定 7db718a 后安装、64 项测试、构建、工作区/产物/行尾及前端启动检查，补齐归档包不能替代 clone 的缺口。 | `MACOS_CLEAN_CLONE_2026-10-28.zh-CN.md`，原日志、结构化快照与截图；Node v24.22.1；未代 D 声称重跑 Windows 或全部链上交易；同伴审阅待完成 |
@@ -78,3 +79,8 @@ Zqqq-qq 使用 Codex 协助修复冻结清单混入工作副本部署配置的�
 ## 2026-10-29 来源与许可说明修正（#38 后续）
 
 Zqqq-qq 使用 Codex 协助逐一读取固定上游提交的树及原始 blob，核对三个核心合约当前 LF 文件与上游一致、导入快照的 CRLF 哈希及 MIT 通知，明确 MockUSDC 不在该上游提交的来源边界。更新当前/历史哈希及离线核验脚本，修正 README、LICENSE 和第三方说明。见 SOURCE_PROVENANCE.zh-CN.md；未修改合约或补写未核实作者，同伴复审待完成。
+
+
+## 2026-10-30 #59 安全与持久化修复（D · QiuQiu-xuan）
+
+复审 #59 时确认并修复三项失败场景：x402 增加服务端一次性 challenge，调用方须用付款钱包签名，服务端校验签名者等于链上 `tx.from` 后才消费（防止公开哈希被他人抢先使用）；自动服务只接受配置 mUSD 且金额不低于报价的订单（防止另一代币或低价订单消耗模型与签名钱包 gas）；交付字节在 `submit` 前持久化到 `AGENT_RESULTS_DIR` 并在启动时恢复（重启后 `/results/:id` 仍与链上摘要一致）。新增对应回归，全量 102 项（101 pass + 1 win32 skip）；未改合约、ABI 或部署地址。原 #59 作者 ffmitrg 的提交与署名保留。

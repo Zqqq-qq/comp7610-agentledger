@@ -92,6 +92,18 @@ export function errorMessage(error) {
     ["invalid partner", "Pick a different partner wallet — it cannot be your own address or the zero address."],
     ["task post required", "Invite a partner from an open task post, not from a discussion."],
     ["membership unchanged", "You are already in the state you asked for. Refresh to see the current circles."],
+    ["team not active", "This team is not active yet. The invited wallet must accept before anyone can propose work."],
+    ["not team member", "Only the two wallets recorded on this team can propose its work. Switch to the host or partner account."],
+    ["only pending host", "Only the host can cancel, and only while the invitation is still pending. Refresh to see its state."],
+    ["invalid text length", "A text field is empty or longer than the contract allows (measured in UTF-8 bytes). Shorten it and try again."],
+    ["follow unchanged", "You already follow (or have already unfollowed) this wallet. Refresh to see the current state."],
+    ["agent/provider mismatch", "The provider Agent ID is not owned by the provider wallet. Use Hire this agent, or check the owner in the registry."],
+    ["self job", "The paying client and the provider must be different wallets. Switch to the client account."],
+    ["not provider", "Only the provider wallet of this task can submit or claim. Switch to that account."],
+    ["not client", "Only the client wallet that paid for this task can release or refund. Switch to that account."],
+    ["not submitted", "Nothing has been submitted for this task yet, or it is already settled. Refresh the task."],
+    ["not refundable", "This task can no longer be refunded: it was delivered or already settled. Refresh the task."],
+    ["deadline not passed", "The submission deadline has not passed on-chain yet, so a refund is not available. Wait, then refresh."],
   ];
   return hints.find(([needle]) => text.toLowerCase().includes(needle))?.[1] || text.slice(0, 230);
 }

@@ -106,3 +106,11 @@ pnpm build
 - `backend-provenance.json`、`LICENSE.backend`、`web/vendor/LICENSE.ethers.md`：原来源和许可。
 
 原注册/评分签名域 ArcAgentReputation 保持不变。新增社交代码不依赖旧 ReputationRegistry 的卖家授权逻辑。
+
+## 示例 Agent 服务（可选）
+
+```sh
+AGENT_PRIVATE_KEY=0x… AGENT_ID=<Agent ID> PUBLIC_URL=https://your-host.example/ pnpm agent
+```
+
+默认监听 `127.0.0.1:8092`，与网页的 8091 分开。私钥只从环境变量读取，不要写进仓库。用法与安全边界见 [`agent-service/README.zh-CN.md`](../agent-service/README.zh-CN.md)。

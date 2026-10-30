@@ -4,6 +4,11 @@ import { verifyEscrow } from "./escrow-core.js";
 import { createEscrowUI } from "./escrow.js";
 import { createEscrowLinkUI } from "./escrow-link-ui.js";
 import { FEEDBACK_TYPES, domainFor, agentId, scoreValue, cardUri, safeLink, tagValue, parseAuthorization, requestAccounts, shortAddress, errorMessage } from "./core.js";
+import { buildCard, parseCard, cardFetchUrl, hirePrefill, CARD_MAX_BYTES } from "./agent-card.js";
+import { marketView, skillCloud } from "./market.js";
+import { agentCollaboration } from "./social-core.js";
+import { loadCommunity } from "./social-chain.js";
+import { payPerCall } from "./x402.js";
 
 const $ = (id) => document.getElementById(id);
 const sdk = globalThis.ethers;
@@ -11,6 +16,7 @@ const walletSession=createWalletSession({getEthereum:()=>window.ethereum,createP
 const STORAGE = "agent-ledger.sepolia.v1";
 const PAGE_SIZE = 15n;
 let escrowUI, escrowLinkUI;
+const cardCache = new Map();
 const IDENTITY_ABI = [
   "function register(string tokenURI_) returns (uint256)",
   "function agentCount() view returns (uint256)",
@@ -225,6 +231,37 @@ async function saveSettings(event) {
   finally { button.disabled = false; setBusy(false); }
 }
 
+// Off-chain documents are read with a size cap, no cookies and no referrer; JSON is never executed.
+async function fetchText(url, limit = 1000000) {
+  const response = await fetch(url, { signal: AbortSignal.timeout(10000), credentials: "omit", referrerPolicy: "no-referrer" });
+  if (!response.ok) throw new Error(`The server returned HTTP ${response.status}.`);
+  if (Number(response.headers.get("content-length")) > limit) throw new Error(`The document exceeds the ${Math.round(limit / 1024)} KB limit.`);
+  const reader = response.body.getReader(); let text = "", size = 0; const decoder = new TextDecoder();
+  while (true) { const { value, done } = await reader.read(); if (done) break; size += value.length; if (size > limit) { await reader.cancel(); throw new Error(`The document exceeds the ${Math.round(limit / 1024)} KB limit.`); } text += decoder.decode(value, { stream: true }); }
+  return text + decoder.decode();
+}
+function loadCard(uri) {
+  if (!cardCache.has(uri)) {
+    const url = cardFetchUrl(uri);
+    const pending = url ? fetchText(url, CARD_MAX_BYTES).then(raw => ({ raw, card: parseCard(raw) })) : Promise.reject(new Error("This card URI cannot be fetched by the browser."));
+    // Failed reads are not cached, so Refresh retries them.
+    cardCache.set(uri, pending.catch(error => { cardCache.delete(uri); throw error; }));
+  }
+  return cardCache.get(uri);
+}
+async function hydrateCards(agents, generation) {
+  for (let i = 0; i < agents.length; i += 3) {
+    await Promise.all(agents.slice(i, i + 3).map(async agent => {
+      try { agent.card = (await loadCard(agent.uri)).card; agent.cardError = ""; } catch (error) { agent.card = null; agent.cardError = errorMessage(error); }
+    }));
+    if (generation !== state.generation) return;
+    renderAgents();
+  }
+}
+function marketFilters() {
+  return { query: $("agentSearch").value, owner: $("ownerFilter").value === "mine" ? state.account || "0x0" : "", sort: $("marketSort").value, minScore: Number($("minScore").value), skill: $("skillFilter").value };
+}
+
 async function loadRegistry() {
   if (state.loading) { state.reloadRequested = true; return; }
   if (!configReady()) { state.total = null; state.agents = []; renderRegistryState(); return; }
@@ -252,7 +289,7 @@ async function loadRegistry() {
       if (generation !== state.generation) return;
       for (const result of batch) if (result.status === "fulfilled") agents.push(result.value); else failures++;
     }
-    state.agents = agents;
+    state.agents = agents; hydrateCards(agents, generation);
     $("latestBlock").textContent = block.toLocaleString("en-US");
     $("syncLabel").textContent = `Updated ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
     if (failures) { $("registryNotice").textContent = `${failures} record(s) could not be read. Their scores are not shown as zero. Refresh to retry.`; $("registryNotice").hidden = false; }
@@ -286,8 +323,9 @@ function renderAgents() {
   $("agentRows").replaceChildren();
   if (!configReady()) { emptyState("Your registry, ready to connect.", "Configure your contracts to load agent identities. Only confirmed on-chain records appear here.", "configure"); return; }
   if (state.total === 0n) { emptyState("A fresh registry. Your first identity awaits.", "Register an agent to create the first on-chain record.", "register"); return; }
-  const query = $("agentSearch").value.trim().toLowerCase(); const mine = $("ownerFilter").value === "mine";
-  const filtered = state.agents.filter(a => (!query || `${a.id} ${a.owner} ${a.uri}`.toLowerCase().includes(query)) && (!mine || (state.account && a.owner.toLowerCase() === state.account.toLowerCase())));
+  const filters = marketFilters(), mine = $("ownerFilter").value === "mine", query = filters.query.trim() || filters.skill.trim() || filters.minScore;
+  const filtered = marketView(state.agents, filters);
+  $("skillOptions").replaceChildren(...skillCloud(state.agents).map(({ skill, count }) => node("option", { value: skill, label: `${skill} · ${count}` })));
   if (!filtered.length) {
     if (!state.agents.length && state.total > 0n && !query && !mine) emptyState("These records could not be read.", "Refresh to retry the page. A failed read is not a zero score.");
     else emptyState(mine && !state.account ? "Connect a wallet to filter your agents." : "No matching agents on this page.", "Try another search, owner filter or registry page.");
@@ -295,8 +333,10 @@ function renderAgents() {
   }
   $("registryEmpty").hidden = true;
   for (const agent of filtered) {
-    const avatar = node("span", { class: "agent-avatar", text: "A" });
-    const title = node("div", {}, [node("div", { class: "agent-name", text: `Agent #${agent.id}` }), node("div", { class: "agent-subtitle", text: agent.uri || "No card URI", title: agent.uri })]);
+    const card = agent.card;
+    const avatar = node("span", { class: "agent-avatar", text: (card?.name || "A").slice(0, 1).toUpperCase() });
+    const subtitle = card ? [card.skills.slice(0, 4).join(" · "), card.price ? `${card.price} mUSD / job` : ""].filter(Boolean).join(" — ") || card.description || agent.uri : agent.uri || "No card URI";
+    const title = node("div", {}, [node("div", { class: "agent-name", text: card?.name ? `${card.name} · #${agent.id}` : `Agent #${agent.id}` }), node("div", { class: "agent-subtitle", text: subtitle, title: agent.uri })]);
     const copyOwner = node("button", { class: "address-button", title: `Copy owner ${agent.owner}` }, [shortAddress(agent.owner, 8, 5), icon("copy")]);
     copyOwner.addEventListener("click", () => copy(agent.owner));
     const score = node("td");
@@ -332,24 +372,60 @@ async function showAgent(agent) {
   const copyButton = node("button", { class: "button button-outline button-small", text: "Copy Agent ID" }, [icon("copy")]); copyButton.addEventListener("click", () => copy(agent.id.toString())); actions.append(copyButton);
   const authorize = node("button", { class: "button button-primary button-small", text: "Authorize review" }, [icon("arrow")]); authorize.addEventListener("click", () => { $("authAgentId").value = agent.id.toString(); $("agentDialog").close(); location.hash = "reputation"; setFeedbackStep("authorize"); }); actions.append(authorize);
   const output = node("pre", { class: "metadata-output", hidden: "" });
-  if (uriLink) {
-    const fetchButton = node("button", { class: "button button-outline button-small", text: "Fetch metadata" }, [icon("file")]);
-    fetchButton.addEventListener("click", async () => {
-      fetchButton.disabled = true; output.hidden = false; output.textContent = "Fetching the off-chain document…";
-      try {
-        const response = await fetch(uriLink, { signal: AbortSignal.timeout(10000), credentials: "omit", referrerPolicy: "no-referrer" });
-        if (!response.ok) throw new Error(`Metadata server returned HTTP ${response.status}.`);
-        if (Number(response.headers.get("content-length")) > 1000000) throw new Error("Metadata exceeds the 1 MB display limit.");
-        const reader = response.body.getReader(); let text = "", size = 0; const decoder = new TextDecoder();
-        while (true) { const { value, done } = await reader.read(); if (done) break; size += value.length; if (size > 1000000) { await reader.cancel(); throw new Error("Metadata exceeds the 1 MB display limit."); } text += decoder.decode(value, { stream: true }); }
-        text += decoder.decode(); try { text = JSON.stringify(JSON.parse(text), null, 2); } catch { /* Display non-JSON documents as plain text only. */ }
-        output.textContent = text;
-      } catch (error) { output.textContent = `Metadata could not be loaded: ${errorMessage(error)}\nThe chain identity remains valid; the document server may block cross-origin reads.`; }
-      finally { fetchButton.disabled = false; }
-    }); actions.append(fetchButton);
-  }
-  $("agentDetail").replaceChildren(score, list, actions, output, node("p", { class: "detail-disclaimer", text: "Ownership and scores are read from the configured contracts. Metadata is an off-chain document supplied by the owner." }));
+  const cardView = node("div", { class: "agent-card-view", role: "status" }, [node("p", { class: "muted", text: cardFetchUrl(agent.uri) ? "Reading the agent card…" : "This card URI cannot be fetched by the browser." })]);
+  const evidence = node("div", { class: "agent-evidence" }, [node("h3", { text: "Community evidence" }), node("p", { class: "muted", text: "Reading teams and confirmed works bound to this Agent ID…" })]);
+  const hire = node("button", { class: "button button-dark button-small", text: "Hire this agent" }, [icon("arrow")]);
+  hire.addEventListener("click", () => {
+    escrowUI.prefill(hirePrefill(agent, agent.card));
+    $("agentDialog").close(); location.hash = "jobs";
+    toast(`Provider and Agent ID filled from ownerOf(#${agent.id})${agent.card?.price ? `, price ${agent.card.price} mUSD from the card` : ""}. Approve, then create & pay.`);
+  });
+  actions.prepend(hire);
+  const rawButton = node("button", { class: "button button-outline button-small", text: "Show raw JSON", hidden: "" }, [icon("file")]);
+  rawButton.addEventListener("click", () => { output.hidden = !output.hidden; rawButton.firstChild.textContent = output.hidden ? "Show raw JSON" : "Hide raw JSON"; });
+  actions.append(rawButton);
+  $("agentDetail").replaceChildren(score, cardView, list, actions, output, evidence, node("p", { class: "detail-disclaimer", text: "Ownership and scores are read from the configured contracts. The card is an off-chain document supplied by the owner; price and endpoint are claims, not guarantees." }));
   $("agentDialog").showModal();
+  if (cardFetchUrl(agent.uri)) loadCard(agent.uri).then(({ raw, card }) => {
+    agent.card = card; output.textContent = (() => { try { return JSON.stringify(JSON.parse(raw), null, 2); } catch { return raw; } })(); rawButton.hidden = false;
+    renderCard(cardView, agent, card);
+  }).catch(error => { cardView.replaceChildren(node("p", { class: "inline-notice", text: `Card could not be loaded: ${errorMessage(error)} The chain identity remains valid; the server may block cross-origin reads.` })); });
+  renderEvidence(evidence, agent).catch(error => evidence.replaceChildren(node("h3", { text: "Community evidence" }), node("p", { class: "muted", text: `Community records could not be read: ${errorMessage(error)}` })));
+}
+function renderCard(root, agent, card) {
+  const rows = node("dl", { class: "detail-list card-facts" });
+  const fact = (label, value) => rows.append(node("div", {}, [node("dt", { text: label }), node("dd", {}, [value])]));
+  if (card.endpoint) fact("SERVICE ENDPOINT", node("a", { href: card.endpoint, target: "_blank", rel: "noopener noreferrer", text: card.endpoint }));
+  fact("PRICE", card.price ? `${card.price} mUSD per job (escrow)` : "Not stated — agree before funding");
+  if (card.submitMinutes || card.reviewWindowSeconds !== null) fact("ESCROW TERMS", `Deliver within ${card.submitMinutes || 60} min · review window ${card.reviewWindowSeconds ?? 600} s`);
+  if (card.x402) fact("PAY PER CALL", `${card.x402Price || card.price || "?"} mUSD via HTTP 402`);
+  const chips = node("div", { class: "skill-chips" }, card.skills.map(skill => { const chip = node("button", { class: "skill-chip", type: "button", text: skill }); chip.addEventListener("click", () => { $("skillFilter").value = skill; $("agentDialog").close(); renderAgents(); }); return chip; }));
+  root.replaceChildren(node("h3", { text: card.name || `Agent #${agent.id}` }), node("p", { text: card.description || "No description." }), chips, rows);
+  if (card.schema === "legacy") root.append(node("p", { class: "field-help", text: "Legacy card format: fields outside agentledger-card-v1 are shown only when they pass validation." }));
+  if (card.x402) {
+    const call = node("form", { class: "x402-form" }, [node("label", { text: "Pay-per-call input" }), node("input", { name: "input", maxlength: "500", value: "hello", required: "" }), node("button", { class: "button button-outline button-small", type: "submit", text: "Pay & call" })]);
+    const result = node("pre", { class: "metadata-output", hidden: "" });
+    call.addEventListener("submit", event => { event.preventDefault(); runAction("x402Status", async () => {
+      const signer = await selectedSigner(); const url = new URL(card.x402); url.searchParams.set("input", call.elements.input.value.slice(0, 500));
+      const outcome = await payPerCall({ url: url.href, signer, sdk, token: state.config.token, chainId: DEPLOYMENT.chainId, expectedPayTo: agent.owner,
+        confirm: req => window.confirm(`Pay ${sdk.formatUnits(req.amount, 6)} mUSD to ${req.payTo} for one call?\nYou will sign a one-time payment challenge, then the mUSD transfer.\nThis is a direct token transfer, not escrow: there is no refund path.`),
+        onPayment: hash => status("x402Status", "Payment sent", { message: "Waiting for confirmation, then retrying the call with the receipt.", pending: true, hash }) });
+      result.hidden = false; result.textContent = JSON.stringify(outcome.body, null, 2);
+      status("x402Status", "Call completed", { message: outcome.paid ? "Paid with a confirmed mUSD transfer." : "The endpoint did not request payment.", hash: outcome.paymentHash || "" });
+    }); });
+    root.append(call, node("div", { class: "form-status", id: "x402Status", role: "status", hidden: "" }), result);
+  }
+}
+async function renderEvidence(root, agent) {
+  // Same address the community pages use: a verified per-browser choice, else the shared deployment.
+  const community = readStored("agentledger-community-config", {}).address || DEPLOYMENT.community;
+  if (!community) { root.replaceChildren(node("h3", { text: "Community evidence" }), node("p", { class: "muted", text: "No community contract configured." })); return; }
+  const data = await loadCommunity(community, "", 50, state.config.identity, state.config.rpcUrl);
+  const { teams, works, partners } = agentCollaboration(data, agent.id);
+  const heading = node("h3", { text: `Community evidence · ${works.length} confirmed work${works.length === 1 ? "" : "s"}, ${partners} partner${partners === 1 ? "" : "s"}` });
+  const labels = ["", "Pending", "Active", "Declined", "Cancelled"];
+  const items = teams.map(t => node("div", { class: "work-row" }, [node("div", {}, [node("strong", { text: `Team #${t.id} · ${t.title}` }), node("small", { text: `${labels[t.status] || "?"} · ${t.hostAgentId === Number(agent.id) ? t.hostRole : t.guestRole}` })]), node("span", { class: "soft-badge", text: `${works.filter(w => w.teamId === t.id).length} published` })]));
+  root.replaceChildren(heading, ...(items.length ? items : [node("p", { class: "muted", text: "No teams in the latest 50 community records were bound to this Agent ID." })]), node("p", { class: "field-help", text: "Teams record the Agent ID at invitation. Confirmed works mean the other member agreed; they are not an independent quality check." }));
 }
 
 function setBusy(value) {
@@ -469,6 +545,8 @@ function renderRecent() {
 
 function bindEvents() {
   window.addEventListener("hashchange", route);
+  // A detail dialog left open would cover the page the user just navigated to.
+  window.addEventListener("hashchange", () => { if ($("agentDialog").open) $("agentDialog").close(); });
   document.querySelectorAll("[data-open-settings]").forEach(e => e.addEventListener("click", openSettings));
   document.querySelectorAll("[data-close-dialog]").forEach(e => e.addEventListener("click", () => $(e.dataset.closeDialog).close()));
   document.querySelectorAll("[data-feedback]").forEach(e => e.addEventListener("click", () => setFeedbackStep(e.dataset.feedback)));
@@ -486,6 +564,20 @@ function bindEvents() {
   $("previousPage").addEventListener("click", () => { if (state.page > 1n && !state.loading) { state.page--; loadRegistry(); } });
   $("nextPage").addEventListener("click", () => { if (!state.loading) { state.page++; loadRegistry(); } });
   $("agentSearch").addEventListener("input", renderAgents); $("ownerFilter").addEventListener("change", renderAgents);
+  for (const id of ["marketSort", "minScore"]) $(id).addEventListener("change", renderAgents);
+  $("skillFilter").addEventListener("input", renderAgents);
+  $("cardForm").addEventListener("submit", event => {
+    event.preventDefault(); clearStatus("cardStatus");
+    try {
+      const card = buildCard(Object.fromEntries(new FormData(event.target)));
+      $("cardJson").value = JSON.stringify(card, null, 2); $("cardOutput").hidden = false;
+    } catch (error) { $("cardOutput").hidden = true; status("cardStatus", "Card not generated", { message: errorMessage(error), error: true }); }
+  });
+  $("copyCard").addEventListener("click", () => copy($("cardJson").value, "Agent card JSON copied."));
+  $("downloadCard").addEventListener("click", () => {
+    const link = node("a", { href: URL.createObjectURL(new Blob([$("cardJson").value + "\n"], { type: "application/json" })), download: "agent-card.json" });
+    link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+  });
   $("useExample").addEventListener("click", () => { $("cardUri").value = `${location.origin}/.well-known/agent-card.json`; toast("Local example selected. Use a public URI when sharing the project."); });
   $("registerForm").addEventListener("submit", register); $("authorizeForm").addEventListener("submit", authorize); $("feedbackForm").addEventListener("submit", feedback);
   $("copyAuthorization").addEventListener("click", () => copy($("authorizationJson").value, "Authorization JSON copied. Save it before changing browsers."));

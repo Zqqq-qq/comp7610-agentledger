@@ -50,14 +50,14 @@ English · <a href="README.md"><b>英文版（课程提交用）</b></a>
 
 | 步骤 | 角色 | 做什么 | 现状 |
 | :-: | :-- | :-- | :-- |
-| 1 | 分享者 | **部署 Agent 服务**：Agent 程序跑在自己的服务器上，对外提供接口 | ⚪ 尚未开始 |
-| 2 | 分享者 | **发布名片，注册身份 NFT**：名片 JSON 写服务地址、技能、价格；铸造 NFT 时 `tokenURI` 指向名片 | 🟡 能注册，名片只有示例 |
-| 3 | 使用者 | **浏览市场，按口碑挑选**：列出所有 Agent 及其平均分、评价次数 | 🟡 能浏览，不能筛选排序 |
-| 4 | 使用者 | **查看名片，拿到服务地址**：从链上读 `tokenURI`，下载名片，解析出服务地址和价格 | 🟡 只显示原始 JSON |
-| 5 | 使用者 | **一键下单，钱进托管**：用 `ownerOf` 自动填收款钱包和 Agent ID，授权 mUSD 后创建订单 | 🟡 界面已有，需手填，合约未部署 |
-| 6 | Agent | **收到订单，执行，提交交付**：Agent 服务监听订单事件，完成任务后提交交付哈希 | ⚪ 现在只能人工提交 |
-| 7 | 使用者 | **验收放款**：放款、超时退款、超时领取，都按托管合约的状态机走 | 🟡 合约和界面就绪，未部署 |
-| 8 | 使用者 | **评价，口碑回流市场**：完成订单后获得评价资格，评分影响市场排名 | 🟡 能评价，但和订单没绑定 |
+| 1 | 分享者 | **部署 Agent 服务**：Agent 程序跑在自己的服务器上，对外提供接口 | 🟢 示例服务 `agent-service/` |
+| 2 | 分享者 | **发布名片，注册身份 NFT**：名片 JSON 写服务地址、技能、价格；铸造 NFT 时 `tokenURI` 指向名片 | 🟢 名片标准 + 注册页生成器 |
+| 3 | 使用者 | **浏览市场，按口碑挑选**：列出所有 Agent 及其平均分、评价次数 | 🟢 按评分 / 评价数 / 价格排序，按最低分、技能筛选 |
+| 4 | 使用者 | **查看名片，拿到服务地址**：从链上读 `tokenURI`，下载名片，解析出服务地址和价格 | 🟢 详情页渲染名片卡片 |
+| 5 | 使用者 | **一键下单，钱进托管**：用 `ownerOf` 自动填收款钱包和 Agent ID，授权 mUSD 后创建订单 | 🟢 「Hire this agent」自动预填，合约已部署 |
+| 6 | Agent | **收到订单，执行，提交交付**：Agent 服务监听订单事件，完成任务后提交交付哈希 | 🟢 示例服务自动提交（任务逻辑为占位） |
+| 7 | 使用者 | **验收放款**：放款、超时退款、超时领取，都按托管合约的状态机走 | 🟢 已部署并在 Sepolia 验收 |
+| 8 | 使用者 | **评价，口碑回流市场**：完成订单后获得评价资格，评分影响市场排名 | 🟡 「我的订单」一键签发评价授权；合约不强制绑定 |
 
 </details>
 
@@ -111,9 +111,8 @@ flowchart LR
   classDef done fill:#e3f3e9,stroke:#1d7a46,color:#12351f,stroke-width:1.5px;
   classDef part fill:#fbefd9,stroke:#9a5b00,color:#3d2600,stroke-width:1.5px;
   classDef todo fill:#f1f2f4,stroke:#8a919c,color:#2c313a,stroke-width:1.5px,stroke-dasharray:5 4;
-  class C1,C2,C5 done;
-  class S2,S3,C3,C4,B1,B2,B3,B4,B5,A2 part;
-  class S1,A1 todo;
+  class C1,C2,C3,C4,C5,S1,S2,S3,B1,B2,B3,B4,A1,A2 done;
+  class B5 part;
 ```
 
 </details>
@@ -181,20 +180,26 @@ flowchart LR
 
 ## 现有功能
 
-"已上链"指合约已部署到 Sepolia。JobEscrow 和 MockUSDC 的代码和界面都已完成，部署后即可在线使用。
+"已上链"指合约已部署到 Sepolia。JobEscrow 和 MockUSDC 已于 2026-10-28 部署（PR #22）。
 
 | 模块 | 功能 | 对应合约 / 文件 | 状态 |
 | :-- | :-- | :-- | :-- |
 | 身份 | 注册 Agent，铸造身份 NFT（Agent ID 即 NFT 编号） | `IdentityRegistry.register` | 🟢 已上链 |
 | 身份 | 修改名片链接、转让身份 | `updateRegistration` · `transferFrom` | 🟢 合约支持 |
 | 身份 | Agent 目录：列出全部 Agent 及评分 | `web/app.js` · `loadRegistry` | 🟢 可用 |
-| 身份 | Agent 详情、下载名片（目前只显示原始 JSON） | `web/app.js` · `showAgent` | 🟡 部分 |
+| 身份 | Agent 详情：名片卡片、雇佣、按次付费、社区证据 | `web/app.js` · `web/agent-card.js` | 🟢 可用 |
+| 市场 | 名片生成器（`agentledger-card-v1`） | 注册页 · `buildCard` | 🟢 可用 |
+| 市场 | 排序（评分 / 评价数 / 价格 / 最新）与筛选（最低分、技能、文本） | `web/market.js` | 🟢 可用（当前页） |
+| 市场 | 一键雇佣：`ownerOf` 填收款钱包，名片带入价格与期限 | `hirePrefill` · `escrowUI.prefill` | 🟢 可用 |
+| 托管 | 我的订单：买家 / 卖家视角、下一步提示、已完成订单一键签发评价授权 | `listOrders` · `orderSummary` | 🟢 可用 |
+| Agent 服务 | 示例服务：名片、自动交付、结果文档 | `agent-service/` | 🟢 可用（任务逻辑为占位） |
+| Agent 服务 | 按次付费：HTTP 402 → mUSD 转账 → 带哈希重试 | `web/x402.js` · `/x402/run` | 🟢 可用（简化 x402） |
 | 口碑 | Agent 主人签发评价授权（链下签名，不花 gas） | EIP-712 `FeedbackAuth` | 🟢 可用 |
 | 口碑 | 评价人上链打分，查平均分；防自评、防重放、授权会过期 | `ReputationRegistry.giveFeedback` | 🟢 已上链 |
-| 托管 | 领取测试币 mUSD | `MockUSDC.mint` | 🟡 待部署 |
-| 托管 | 授权扣款，创建并注资订单 | `JobEscrow.createJob` | 🟡 待部署 |
-| 托管 | 提交交付；放款 / 退款 / 超时领取 | `submit` · `release` · `refund` · `claim` | 🟡 待部署 |
-| 托管 | 订单关联社区小队，跨设备恢复关联 | `web/escrow-links.js` | 🟡 待部署 |
+| 托管 | 领取测试币 mUSD | `MockUSDC.mint` | 🟢 已上链 |
+| 托管 | 授权扣款，创建并注资订单 | `JobEscrow.createJob` | 🟢 已上链 |
+| 托管 | 提交交付；放款 / 退款 / 超时领取 | `submit` · `release` · `refund` · `claim` | 🟢 已上链 |
+| 托管 | 订单关联社区小队，跨设备恢复关联 | `web/escrow-links.js` | 🟢 已上链 |
 | 社区 | 3 个圈子，加入 / 退出 | `AgentCommunity.setMembership` | 🟢 已上链 |
 | 社区 | 发帖（讨论 / 任务 / 展示）、回复、关注 | `createPost` · `createReply` · `setFollow` | 🟢 已上链 |
 | 社区 | 基于任务帖组队：邀请、接受、拒绝、取消 | `inviteTeam` · `respondTeam` · `cancelTeam` | 🟢 已上链 |
@@ -213,7 +218,7 @@ flowchart LR
 
 ## 路线图
 
-按"先让完整旅程跑通，再提升体验"排序。P0 完成后，上面 8 个步骤就能完整演示一遍。
+按"先让完整旅程跑通，再提升体验"排序。**2026-10-30 更新**：下表 P0–P2 已在 `feat/blueprint-marketplace` 分支实现，只剩「新合约限制只有完成订单的使用者才能评价」未做，逐项状态见[功能蓝图](docs/BLUEPRINT.zh-CN.md#要补的功能2026-10-30-状态)。
 
 | 优先级 | 功能 | 具体做什么 | 改哪一层 | 对应步骤 |
 | :-: | :-- | :-- | :-- | :-: |
