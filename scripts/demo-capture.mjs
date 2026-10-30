@@ -29,7 +29,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import {pathToFileURL} from "node:url";
-import {parseJobStates,shortContract,jobCaption,liveReady,jobReady} from "./lib/demo-captions.mjs";
+import {parseJobStates,shortContract,jobCaption,liveReady,jobReady,workReady} from "./lib/demo-captions.mjs";
 
 // ---------- 参数与路径（先校验，后做任何写入） ----------
 
@@ -222,10 +222,7 @@ try {
   currentStep = "场景 3/7 Shared works";
   await scene("works", 1500);
   await assertLive();
-  await mustWait((id) => {
-    const button=[...document.querySelectorAll('button[data-social="work"]')].find((x)=>x.dataset.id===id);
-    return button?.closest(".work-card")?.querySelector(".work-seal")?.textContent.includes("JOINTLY CONFIRMED");
-  }, WORK_ID, `找不到作品 #${WORK_ID} 的入口`);
+  await mustWait(workReady, WORK_ID, `找不到作品 #${WORK_ID} 的入口或封面`);
   await caption(`3/7  Shared works · Work #${WORK_ID} · jointly confirmed`,{workId:WORK_ID});
   await hold();
 

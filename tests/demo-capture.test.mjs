@@ -6,7 +6,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {parseJobStates,jobCaption,liveReady,jobReady} from '../scripts/lib/demo-captions.mjs';
+import {parseJobStates,jobCaption,liveReady,jobReady,workReady} from '../scripts/lib/demo-captions.mjs';
 const C='0x'+'12'.repeat(20),E='0x'+'34'.repeat(20);
 test('job expectations preserve order and reject ambiguous IDs or contradictory status labels',()=>{
   assert.deepEqual([...parseJobStates('7=2;8=1 · Funded;9=4 · Refunded')],[[7,'2 · Submitted'],[8,'1 · Funded'],[9,'4 · Refunded']]);
@@ -52,4 +52,11 @@ test('capture aborts on a stale card with the same state and creates no success 
   for(const patch of [{DEMO_JOB_STATES:'7=2 · Completed;8=1;9=4'},{DEMO_POST_ID:'0'},{DEMO_WORK_ID:'not-a-number'}]){
     const invalid=capture(t,patch);assert.notEqual(invalid.result.status,0);assert(!fs.existsSync(invalid.out));
   }
+});
+test('works readiness follows the current published cover, not the removed seal badge',()=>{
+  const doc=card=>({querySelectorAll:sel=>sel.includes('data-social="work"')?[{dataset:{id:'8'},closest:()=>card}]:[]});
+  const current={querySelector:sel=>sel==='.work-cover-illustration'?{}:null};
+  assert.equal(vm.runInNewContext(`(${workReady})('8')`,{document:doc(current)}),true);
+  const old={querySelector:sel=>sel==='.work-seal'?{textContent:'JOINTLY CONFIRMED'}:null};
+  assert.equal(vm.runInNewContext(`(${workReady})('8')`,{document:doc(old)}),false);
 });

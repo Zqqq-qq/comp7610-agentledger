@@ -8,7 +8,7 @@ export const chromium={async launch(){
   const card={hidden:true,scrollIntoView(){}};
   const node=(textContent='')=>({textContent,getAttribute(){return 'true';}});
   const post={dataset:{id:process.env.DEMO_POST_ID||'2'},click(){modal=true;title='Fixture post';}};
-  const work={dataset:{id:process.env.DEMO_WORK_ID||'1'},click(){modal=true;title='Fixture work';},closest(){return {querySelector(){return node('JOINTLY CONFIRMED');}};}};
+  const work={dataset:{id:process.env.DEMO_WORK_ID||'1'},click(){modal=true;title='Fixture work';},closest(){return {querySelector(sel){return sel==='.work-cover-illustration'?node(''):null;}};}};
   const input={value:''};
   const form={requestSubmit(){
     const id=String(input.value);card.hidden=false;

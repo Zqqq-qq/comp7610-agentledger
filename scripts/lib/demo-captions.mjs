@@ -37,3 +37,9 @@ export function jobReady({id,want,escrow}){
     &&document.getElementById('loadedJobTitle')?.textContent.trim()===`Task #${id}`
     &&document.getElementById('loadedJobState')?.textContent.trim()===want;
 }
+// The works list only renders published works; the current card uses an SVG cover, not the old seal badge.
+export function workReady(id){
+  const button=[...document.querySelectorAll('button[data-social="work"]')].find(x=>x.dataset.id===String(id));
+  const card=button?.closest('.work-card');
+  return !!card&&!!card.querySelector('.work-cover-illustration');
+}
