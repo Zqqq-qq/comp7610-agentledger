@@ -1,15 +1,15 @@
 {
   "schema": "agentledger-release-manifest-v1",
-  "generatedAt": "2026-10-29T13:49:31.463Z",
-  "commit": "781f2c277006d9033a31de089ce92ace5e038782",
-  "shortCommit": "781f2c2",
-  "tree": "ab90fc9168b3a0e3a6bd55166f15aabf9cfcf2bd",
-  "commitSubject": "Merge pull request #49 from Zqqq-qq/docs/source-provenance-correction",
-  "commitDate": "2026-10-29T21:48:26+08:00",
+  "generatedAt": "2026-10-30T06:29:43.878Z",
+  "commit": "3d30dc398d25d9a364eb0056977604d2c1f64c15",
+  "shortCommit": "3d30dc3",
+  "tree": "3f85e060728436e07da98448c3c01258fd21b632",
+  "commitSubject": "Merge pull request #55 from Zqqq-qq/feature/release-refresh-v05-qiuqiuxuan",
+  "commitDate": "2026-10-30T14:29:26+08:00",
   "isAncestorOfMain": true,
-  "mainRef": "origin-ssh/main",
+  "mainRef": "origin/main",
   "mainAncestry": {
-    "origin/main": false,
+    "origin/main": true,
     "origin-ssh/main": true,
     "main": true
   },
@@ -81,8 +81,44 @@
       "path": "contracts/ReputationRegistry.sol",
       "bytes": 5872,
       "sha256": "cc5dc6bbb85dfd5b012dc9524d649f5efaea1cd8d8d68e36b92e86d6629570ff"
+    },
+    {
+      "path": "backend-provenance.json",
+      "bytes": 3366,
+      "sha256": "6b3ba2bc17673ca544c092a6010c89c66aebdd5adfdea4d3bfa269b96f264096"
+    },
+    {
+      "path": "docs/project/REPORT.md",
+      "bytes": 36182,
+      "sha256": "63c8bcb0c8a483b100e9563b830d75a46b97edb45437e2f2c986712242c21c1e"
+    },
+    {
+      "path": "docs/project/REPORT.pdf",
+      "bytes": 675300,
+      "sha256": "8f096d41e837d59c41cfffb0993ee1cca1ab17282ba72b95086bf8ef0696482e"
     }
   ],
+  "filePolicy": {
+    "required": [
+      "web/config.js",
+      "package.json",
+      "pnpm-lock.yaml",
+      "web/generated/AgentCommunity.json",
+      "web/generated/JobEscrow.json",
+      "web/generated/MockUSDC.json",
+      "contracts/AgentCommunity.sol",
+      "contracts/IdentityRegistry.sol",
+      "contracts/JobEscrow.sol",
+      "contracts/MockUSDC.sol",
+      "contracts/ReputationRegistry.sol"
+    ],
+    "optional": [
+      "backend-provenance.json",
+      "docs/project/REPORT.md",
+      "docs/project/REPORT.pdf"
+    ]
+  },
+  "missingOptionalFiles": [],
   "workingCopyDiffersFromBlob": [
     {
       "path": "web/config.js",
@@ -98,9 +134,20 @@
       "path": "pnpm-lock.yaml",
       "bytes": 10534,
       "sha256": "432381fa4b5845f3f7bb48ebd67832201fc0a642e8b7fdddbaf7beb7bc3e2501"
+    },
+    {
+      "path": "backend-provenance.json",
+      "bytes": 3426,
+      "sha256": "21d035615f937584134443d89c16211e62e324f2e3a2215ec45304fe0b9021a7"
+    },
+    {
+      "path": "docs/project/REPORT.md",
+      "bytes": 36652,
+      "sha256": "23b2a891924390e3b9a5e5ea3f3fff8d72717221adb9853c55f4640fdcd9fd30"
     }
   ],
   "notes": [
+    "所有必需项必须是目标提交中的普通文件；可选缺失列于 missingOptionalFiles，读取错误仍会失败。",
     "deployment 与 web/config.js 校验和均取自 commit 指定的 Git blob，不执行配置模块。",
     "校验和以 Git blob（LF）为基准；workingCopyDiffersFromBlob 记录工作副本的字节差异，可能来自换行符或本地内容修改，不影响冻结值。",
     "本清单不判断是否可发布：阻断项与提交回执见 docs/project/RELEASE_FREEZE_DRAFT.zh-CN.md 与 Issue #11。"
