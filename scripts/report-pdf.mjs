@@ -11,6 +11,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
+import { pathToFileURL } from "node:url";
+import { findChrome } from "./lib/chrome-path.mjs";
 
 const input = process.argv[2];
 if (!input) {
@@ -23,6 +25,10 @@ if (!fs.existsSync(mdPath)) {
   process.exit(1);
 }
 const outPdf = path.resolve(process.argv[3] || mdPath.replace(/\.md$/i, ".pdf"));
+if (!/\.pdf$/i.test(outPdf)) {
+  console.error("Output filename must end in .pdf");
+  process.exit(1);
+}
 const outHtml = outPdf.replace(/\.pdf$/i, ".html");
 
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -151,6 +157,7 @@ closeList();
 const title = (lines.find((l) => /^#\s+/.test(l)) || "# Report").replace(/^#\s+/, "");
 const doc = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
+<base href="${esc(pathToFileURL(path.dirname(mdPath)+path.sep).href)}">
 <title>${esc(title)}</title>
 <style>
   @page { size: A4; margin: 18mm 16mm 18mm 16mm; }
@@ -180,28 +187,34 @@ ${html.join("\n")}
 
 fs.writeFileSync(outHtml, doc, "utf8");
 
-const CHROME = [
-  "C:/Program Files/Google/Chrome/Application/chrome.exe",
-  "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
-].find((p) => fs.existsSync(p));
-if (!CHROME) {
-  console.error("未找到系统 Chrome，已生成 HTML 但未打印 PDF：" + outHtml);
+let chrome;
+try { chrome=findChrome(); }
+catch(error) {
+  console.error(`${error.message}\nHTML retained: ${outHtml}`);
   process.exit(1);
 }
 
-execFileSync(process.env.CHROME_BIN || CHROME, [
-  "--headless=new",
-  "--disable-gpu",
-  "--no-sandbox",
-  "--no-pdf-header-footer",
-  `--print-to-pdf=${outPdf}`,
-  "file:///" + outHtml.replace(/\\/g, "/"),
-], { stdio: ["ignore", "pipe", "pipe"] });
-
-if (!fs.existsSync(outPdf)) {
-  console.error("PDF 生成失败");
-  process.exit(1);
+// Isolate headless Chrome from an already-open user profile. Publish only a fresh
+// PDF, so an old output cannot be mistaken for a successful rendering.
+const temporary=fs.mkdtempSync(path.join(path.dirname(outPdf),".report-pdf-"));
+const freshPdf=path.join(temporary,"report.pdf");
+try {
+  execFileSync(chrome, [
+    "--headless=new", "--disable-gpu", "--no-sandbox", "--no-pdf-header-footer",
+    `--user-data-dir=${path.join(temporary,"profile")}`,
+    `--print-to-pdf=${freshPdf}`,
+    pathToFileURL(outHtml).href,
+  ], { stdio:["ignore","pipe","pipe"], timeout:60000 });
+  const pdf=fs.readFileSync(freshPdf);
+  if(pdf.subarray(0,5).toString()!=="%PDF-")throw new Error("Chrome did not produce a PDF");
+  fs.renameSync(freshPdf,outPdf);
+} catch(error) {
+  console.error(`PDF generation failed: ${error.message}\nHTML retained: ${outHtml}`);
+  process.exitCode=1;
+} finally {
+  fs.rmSync(temporary,{recursive:true,force:true,maxRetries:3,retryDelay:100});
 }
-const kb = (fs.statSync(outPdf).size / 1024).toFixed(1);
+if(process.exitCode)process.exit(process.exitCode);
+console.log(`Chrome: ${chrome}`);
 console.log(`HTML: ${outHtml}`);
-console.log(`PDF : ${outPdf} (${kb} KB)`);
+console.log(`PDF : ${outPdf} (${(fs.statSync(outPdf).size/1024).toFixed(1)} KB)`);
