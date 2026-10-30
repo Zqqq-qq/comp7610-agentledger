@@ -27,7 +27,7 @@
 
 ## 三、未合并 PR 与 main 的关系
 
-- PR #57（Zqqq-qq，演示字幕）只改 `scripts/demo-capture.mjs`、`scripts/lib/`、`tests/demo-*` 和两份文档，GitHub 显示可合并，与本次 B 分支、蓝图分支改动的文件没有交集。
+- PR #57（Zqqq-qq，演示字幕）只改 `scripts/demo-capture.mjs`、`scripts/lib/`、`tests/demo-*` 和两份文档，GitHub 显示可合并。与本次分支唯一重叠的文件是 `docs/project/CONTRIBUTIONS.md`（双方都只在表里加行），后合并的一方需要手动保留两行。
 
 ## 四、没有发现矛盾的地方
 
