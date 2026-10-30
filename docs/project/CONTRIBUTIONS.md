@@ -23,6 +23,10 @@
 
 Zqqq-qq 使用 Codex 协助完善四类团队/三类作品状态、角色限制与双向回溯。实际在 1280px 与 390px Demo 浏览器检查邀请接受/拒绝/取消、作品提议/拒绝及种子发布态，保存截图和尺寸记录。见 A2_STATUS_ACCEPTANCE_2026-10-29.zh-CN.md；无新增 Sepolia 交易，PAisHere / QiuQiu-xuan 同伴复审待完成。
 
+## 2026-10-30 报告 PDF 跨平台生成（#9 / #11 工具修复）
+
+Zqqq-qq 使用 Codex 协助修复 Chrome 检测：CHROME_BIN 优先，覆盖 macOS / Windows / Linux 常见路径与 PATH；正确编码 file URL，并按源文件解析图片。五项回归验证检测和失败保留旧 PDF；本机真实 Chrome 自动/显式路径均成功生成 v0.4 报告，15 页排版与架构图检查通过。全量 79 项测试、构建通过，Windows/Linux 为路径逻辑测试而非实际浏览器运行；见 REPORT_PDF_GENERATION.zh-CN.md。同伴复审待完成，不改最终报告或冻结版本。
+
 ## #6 钱包切换与失败恢复（Codex 辅助）
 
 Zqqq-qq 发起并负责交付；Codex 辅助实现钱包会话快照与过期响应隔离、签名账户复核、社区签名网络检查，以及本机双 Provider/双账户和故障恢复回归测试。详见 `WALLET_RECOVERY_VERIFICATION.zh-CN.md`。此段记录首轮本机验证；后续真实 MetaMask / Sepolia 验收见下一节，未将本机测试记作公链验收。
