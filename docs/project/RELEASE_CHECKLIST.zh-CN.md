@@ -10,7 +10,7 @@
 
 全部满足后才开始冻结，否则算出来的 SHA 会立刻过期：
 
-- [x] 所有待合并 PR 已合并（当前：0 个 open PR；最后合并 #49）
+- [x] 所有待合并 PR 已合并（当前：0 个 open PR；最后合并 #55）
 - [ ] main 的 CI `verify` 绿
 - [ ] `node scripts/release-freeze.mjs` 能对目标 SHA 正常输出
 
@@ -68,7 +68,7 @@ git push origin-ssh v1.0.0-submission     # 用可用的远端；origin 走 HTTP
 
 ## 四、更新文档与贡献记录
 
-- [x] `RELEASE_FREEZE_DRAFT.zh-CN.md`：§一 候选 SHA、§三 映射表、§四 校验和已按 `781f2c2` 的清单更新（2026-10-29）；§二 阻断项按实际情况勾选或注明
+- [x] `RELEASE_FREEZE_DRAFT.zh-CN.md`：§一 候选 SHA、§三 映射表、§四 校验和已按 `3d30dc3` 的清单更新（2026-10-30）；§二 阻断项按实际情况勾选或注明
 - [ ] `CONTRIBUTIONS.md`：补 E（#9 报告、#10 演示）与 R（#11 冻结）的条目
 - [ ] `DEMO_RECORDING_SCENES.zh-CN.md`：视频一行填最终文件名与 SHA-256（若视频有改动）
 
