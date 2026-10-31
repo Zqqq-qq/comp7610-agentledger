@@ -2,7 +2,7 @@
 
 **COMP7610 Final Project Report (draft)**
 
-- Version: v0.6 (2026-10-30; blueprint features, x402 security and demo tooling)
+- Version: v0.6 (2026-10-30; blueprint features, x402 security, demo tooling; deployment operations addendum)
 - Code baseline: `aab1440` (main). Since v0.5 this adds the B independent review and live-write trim (#58), the blueprint features — agent card, market, hire, My orders, sample agent service and x402 (#59, merged through #60) — the x402 payer-signature / token-price / persistence fixes (#60) and the demo-caption compatibility fix (#61); the automated suite is now 14 files / 108 tests. No contract source, ABI, generated artefact or deployment address changed.
 - Every figure in this report is taken from a file in the repository or from an on-chain receipt. Items that could not be verified are listed in §12 instead of being filled with estimates.
 
@@ -177,7 +177,9 @@ Titles, bodies, and delivery summaries are stored directly in the contracts. Thi
 | `proposeWork` (summary and link) | 12006079 | 1,903,577 |
 | `reviewWork` | 12006101 | 258,347 |
 
-The ten transactions total `24,457,402` gas. The **deployment accounts for 70.3%**, at a cost of `0.02577 ETH` (`effectiveGasPrice` 1.5 gwei, the wallet default); the other nine executed at 16 / 18 / 25 wei and cost about `0.00000000012 ETH` together, i.e. negligible.
+The ten transactions total `24,457,402` gas. The **deployment accounts for 70.3%**, at a cost of `0.02577 ETH` (`effectiveGasPrice` 1,500,000,014 wei, approximately 1.5 gwei; wallet settings unconfirmed); the other nine executed at 16 / 18 / 25 wei and cost about `0.00000000012 ETH` together, i.e. negligible.
+
+**Deployment operations and limits of the record.** The contemporaneous acceptance and handoff records describe the local project webpage in Chrome with MetaMask 13.54.0; the user personally confirmed the Sepolia deployment. The deployment-source snapshot (`fb6c325`) calls ethers.js `ContractFactory.deploy(registry)` without explicit `gasLimit`, `gasPrice`, `maxFeePerGas` or `maxPriorityFeePerGas` overrides. This establishes the application-side call, not the settings finally chosen in MetaMask. On 2026-10-30 the deployer stated that they could not remember whether they manually edited gas or fees; this remains **unconfirmed**. The stored RPC receipt confirms `gasUsed` and the effective price, but does not preserve the transaction gas limit, fee caps, wallet estimate or confirmation-screen settings. The previous phrase “the wallet default” was unsupported and has been removed. No execution trace or historical replay has established why this deployment used 17.18M gas. The source-by-source record and remaining unknowns are in [Deployment operation record](DEPLOYMENT_OPERATIONS_2026-10-27.zh-CN.md).
 
 **Effect of text length on cost (RPC gas estimates)**: using `eth_estimateGas` on the same `createPost(circle 2, agentId 0, kind 0)` while varying only the body length:
 
@@ -478,7 +480,7 @@ pnpm build
 | 3 | **E and R contribution entries** | `CONTRIBUTIONS.md` lacks these two rows, so §9 is incomplete | daizhiqi / whoever takes over |
 | 4 | **Peer assignment** (individual submission) | Required by the course; not tracked anywhere in this repository, format still unknown | Course information needed |
 | 5 | **Demo narration audio** | Script is complete (`docs/project/DEMO_SCRIPT.en.md`, timecoded, English); the video itself has visuals plus the real wallet segment but no audio track | Recorder |
-| 6 | **Deployment gas attribution** | §5.3 reports receipt values only; explaining the 17.18M figure needs the deployer's account of how it was sent | Zqqq-qq |
+| 6 | **Deployment gas attribution** | Operation/tool record added in §5.3; deployer cannot recall manual gas/fee edits. Wallet settings and execution-level explanation of 17.18M remain unconfirmed; no attribution claimed | Zqqq-qq |
 
 Two items that were open when this report was first drafted are now closed and are recorded here so the record is not silently edited:
 
