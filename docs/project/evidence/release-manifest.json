@@ -1,16 +1,16 @@
 {
   "schema": "agentledger-release-manifest-v1",
-  "generatedAt": "2026-10-31T10:09:12.459Z",
-  "commit": "10c98aac3bdf6b71f431cc611eb9e1cbfffad3db",
-  "shortCommit": "10c98aa",
-  "tree": "b04b1480f592db6d34d603c390b09c1234f4853f",
-  "commitSubject": "Merge pull request #64 from Zqqq-qq/docs/deployment-operations-record",
-  "commitDate": "2026-10-31T18:08:57+08:00",
+  "generatedAt": "2026-11-02T11:17:04.444Z",
+  "commit": "d126891f0103ec3617d69b22e04d7010be1f1b28",
+  "shortCommit": "d126891",
+  "tree": "56c64f2845f4b947cef412e39931766bebe4909f",
+  "commitSubject": "Merge pull request #68 from Zqqq-qq/feature/report-v07-qiuqiuxuan",
+  "commitDate": "2026-11-02T19:16:41+08:00",
   "isAncestorOfMain": true,
-  "mainRef": "origin-ssh/main",
+  "mainRef": "origin/main",
   "mainAncestry": {
-    "origin/main": false,
-    "origin-ssh/main": true,
+    "origin/main": true,
+    "origin-ssh/main": false,
     "main": true
   },
   "tag": null,
@@ -89,13 +89,13 @@
     },
     {
       "path": "docs/project/REPORT.md",
-      "bytes": 40172,
-      "sha256": "afb88507d82e607dd3321b63f374ec27086ce3cd5b2a95db7dfb925e8ab42f02"
+      "bytes": 50072,
+      "sha256": "5ca86b4d0ce26c6568a9f594a9ef012912d9a7547aaed6501617af74bacdaa93"
     },
     {
       "path": "docs/project/REPORT.pdf",
-      "bytes": 1287652,
-      "sha256": "37df4f6f6368532c5b1d6acc75961667a12a97d1eb9884fdf6abb33d9e635c35"
+      "bytes": 746934,
+      "sha256": "2b0ac92050111e4d3bfcdc1c18df9f694f6c3cc7a66057da8eb88110597ea73d"
     }
   ],
   "filePolicy": {
@@ -142,8 +142,8 @@
     },
     {
       "path": "docs/project/REPORT.md",
-      "bytes": 40659,
-      "sha256": "122a2431e61ffb77cd8616fdd8e5629467f526b85793e154b1db357fbe25d656"
+      "bytes": 50616,
+      "sha256": "d63000a760107e6d81e2627da3ff344c32008be096989287c38b5a15ee45d578"
     }
   ],
   "notes": [
