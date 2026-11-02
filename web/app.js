@@ -94,10 +94,10 @@ function configKey(config) { return `${config.rpcUrl}|${config.identity.toLowerC
 
 function route() {
   const view = location.hash.slice(1) || "community";
-  const name = ["registry", "register", "jobs", "reputation", "guide", "community", "circles", "network", "teams", "works"].includes(view) ? view : "registry";
+  const name = ["registry", "register", "jobs", "reputation", "guide", "community", "circles", "network", "teams", "works", "portfolio", "activity"].includes(view) ? view : "registry";
   document.querySelectorAll(".view").forEach(e => e.hidden = e.id !== `view-${name}`);
   document.querySelectorAll("[data-nav]").forEach(e => { e.classList.toggle("active", e.dataset.nav === name); if (e.dataset.nav === name) e.setAttribute("aria-current", "page"); else e.removeAttribute("aria-current"); });
-  $("breadcrumb").textContent = { registry: "Agent registry", register: "Register an agent", jobs: "Task escrow", reputation: "Reputation", guide: "How it works", community: "Community", circles: "Circles", network: "People & partners", teams: "My teams", works: "Shared works" }[name];
+  $("breadcrumb").textContent = { registry: "Agent registry", register: "Register an agent", jobs: "Task escrow", reputation: "Reputation", guide: "How it works", community: "Community", circles: "Circles", network: "People & partners", teams: "My teams", works: "Shared works", portfolio: "My collaboration history", activity: "My activity" }[name];
   document.title = `${$("breadcrumb").textContent} · Agent Ledger`;
   window.scrollTo({ top: 0, behavior: "instant" });
 }

@@ -18,3 +18,9 @@
  .social-dialog-header .icon-button{min-width:44px}
  .post-footer{flex-wrap:wrap}
 }
+
+/* Account-scoped social projections; long wallet/content text must fit mobile. */
+.insight-panel{background:var(--surface,#fff);border:1px solid var(--border,#deded8);border-radius:16px;padding:24px;min-width:0;overflow-wrap:anywhere}
+.insight-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:18px 0;border-bottom:1px solid var(--border,#deded8);min-width:0;overflow-wrap:anywhere}
+.insight-row>div{flex:1 1 220px;min-width:0}.insight-row h3{margin:8px 0}.insight-row p{margin:6px 0}.insight-row small{color:var(--muted,#676d68)}
+@media(max-width:600px){.insight-panel{padding:16px}.insight-row .button{max-width:100%;white-space:normal}.insight-row .author-link{max-width:100%}}

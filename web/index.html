@@ -36,6 +36,8 @@
     <a class="nav-link" href="#network" data-nav="network"><svg><use href="#i-shield"/></svg>People & partners</a>
     <a class="nav-link" href="#teams" data-nav="teams"><svg><use href="#i-wallet"/></svg>My teams</a>
     <a class="nav-link" href="#works" data-nav="works"><svg><use href="#i-file"/></svg>Shared works</a>
+    <a class="nav-link" href="#portfolio" data-nav="portfolio"><svg><use href="#i-file"/></svg>My collaboration history</a>
+    <a class="nav-link" href="#activity" data-nav="activity"><svg><use href="#i-grid"/></svg>My activity</a>
   </nav>
   <p class="nav-label">IDENTITY & REPUTATION</p>
   <nav aria-label="Main navigation">
@@ -51,7 +53,7 @@
 </aside>
 <div class="app-shell">
   <header class="topbar"><div class="breadcrumb"><span>Workspace</span><span>/</span><strong id="breadcrumb">Agent registry</strong></div><div class="topbar-actions"><button class="button button-plain" data-open-settings><svg><use href="#i-settings"/></svg><span>Contracts</span></button><span class="network-pill"><span></span>Sepolia</span><div class="wallet-anchor"><button class="button button-dark" id="walletButton"><svg><use href="#i-wallet"/></svg><span id="walletButtonLabel">Connect wallet</span></button><div class="wallet-popover" id="walletPopover" hidden><div class="popover-heading">YOUR WALLET<button class="icon-button" id="closeWallet" aria-label="Close wallet menu"><svg><use href="#i-close"/></svg></button></div><label for="accountSelect">Active account</label><select id="accountSelect"></select><p class="small muted" id="walletNetworkLabel"></p><button class="button button-outline full-width" id="chooseAccounts">Choose another account</button><button class="button button-plain full-width" id="disconnectWallet">Disconnect this session</button><p class="tiny muted">Account access is managed by your wallet. Choose another account to authorize wallet B.</p></div></div></div></header>
-  <main id="main"><section id="view-community" class="view social-view" hidden></section><section id="view-circles" class="view social-view" hidden></section><section id="view-network" class="view social-view" hidden></section><section id="view-teams" class="view social-view" hidden></section><section id="view-works" class="view social-view" hidden></section>
+  <main id="main"><section id="view-community" class="view social-view" hidden></section><section id="view-circles" class="view social-view" hidden></section><section id="view-network" class="view social-view" hidden></section><section id="view-teams" class="view social-view" hidden></section><section id="view-works" class="view social-view" hidden></section><section id="view-portfolio" class="view social-view" hidden></section><section id="view-activity" class="view social-view" hidden></section>
     <div id="libraryError" class="notice notice-error" hidden>The Ethers.js library could not load. Check that web/vendor/ethers.umd.min.js is present.</div>
     <div id="walletWarning" class="notice notice-warning" hidden><svg><use href="#i-info"/></svg><span>Your wallet is on another network. Reads use Sepolia; switch before signing.</span><button class="text-button" id="switchNetwork">Switch to Sepolia →</button></div>
     <section id="view-registry" class="view">
