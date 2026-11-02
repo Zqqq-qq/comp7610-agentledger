@@ -2,8 +2,9 @@
 
 **COMP7610 Final Project Report (draft)**
 
-- Version: v0.6 (2026-10-30; blueprint features, x402 security, demo tooling; deployment operations addendum)
+- Version: v0.7 (2026-11-01; social product rationale and user story; documentation revision)
 - Code baseline: `aab1440` (main). Since v0.5 this adds the B independent review and live-write trim (#58), the blueprint features — agent card, market, hire, My orders, sample agent service and x402 (#59, merged through #60) — the x402 payer-signature / token-price / persistence fixes (#60) and the demo-caption compatibility fix (#61); the automated suite is now 14 files / 108 tests. No contract source, ABI, generated artefact or deployment address changed.
+- Release scope: this report revises the documentation after the `v1.0.0-submission` freeze. The code baseline and historical acceptance results are unchanged; this revision needs a new report hash and release review before inclusion in a final submission.
 - Every figure in this report is taken from a file in the repository or from an on-chain receipt. Items that could not be verified are listed in §12 instead of being filled with estimates.
 
 ---
@@ -11,6 +12,8 @@
 ## 1. Abstract
 
 AgentLedger is a community application deployed on the Ethereum Sepolia testnet. It addresses a specific question: how can AI agents (or their owners) establish trustworthy working relationships and settle the value they create?
+
+Its target users are agent developers and operators seeking complementary collaborators. The product explores how discovery can develop into a mutually acknowledged working relationship and an inspectable collaboration history. User demand and retention remain hypotheses, not measured outcomes.
 
 The system uses **circles** to organise interests, **posts and replies** to enable discovery, **teams** to formalise a one-to-one working agreement, **shared works** to record an output confirmed by both parties, and an **escrow contract** to handle payment, refund, and timeout-based claims.
 
@@ -37,9 +40,54 @@ Collaboration between several parties (or several agents) is hard for three reas
 2. **Agreement**: turning "who does what, and when is it done" into a record both sides accept.
 3. **Settlement**: making "confirm the output" and "pay for it" part of one auditable process instead of relying on chat screenshots.
 
-Existing social platforms solve discovery, but collaboration and settlement stay off-chain and cannot be audited. Pure contract tooling can settle value, but offers no place to discover partners or discuss an idea. The premise of this project is to **put discovery, discussion, agreement, confirmation, and settlement on one on-chain data chain**, so that each step leaves a verifiable receipt.
+A collaboration can span a discussion platform, a portfolio and a payment service. Participants may then have to reconcile separate records of an agreement, an acknowledgement and a payment. AgentLedger explores making these actions inspectable through a shared community and escrow interface. The community-to-job reference is checked by the application; the contracts do not enforce a single atomic workflow across every step.
 
 `docs/BLUEPRINT.zh-CN.md` is the functional blueprint written at the planning stage. It contains several ideas that were **not** implemented; this report only describes what was built and verified. The difference between blueprint and implementation is documented in `docs/IMPLEMENTATION.zh-CN.md` ("differences from the original full plan").
+
+
+### 2.1 Why a Social DApp: relationships formed through collaboration
+
+The intended users are agent developers and operators who want to find people with complementary skills, discuss a concrete need and build a visible history of working together. AgentLedger focuses on **relationships formed by doing something together**. Its social contribution is the distinction between attention, commitment and acknowledgement:
+
+| Interaction | Meaning | Implemented mechanism |
+| --- | --- | --- |
+| Follow | Interest in another account | `setFollow` |
+| Accept a team invitation | Consent to a specific collaboration | `respondTeam`, restricted to the invited account |
+| Confirm a shared work | The other participant acknowledges the proposed output record | `reviewWork`; self-confirmation and third-party confirmation are rejected |
+
+These records express different levels of participation. A completed collaboration can give a future partner more context than a follower count, but it is not an objective trust score. The contract records consent and updates pairwise collaboration counts; it cannot establish that participants are independent people or that a work is useful.
+
+The course material **DApps in Web3** (provided as `DApps v2.pdf`, slide 11, “Social Dapps: Lens Protocol”) motivates user-controlled identity and shared social data accessible to other frontends. AgentLedger applies that motivation to collaborative work. This is a comparison to the lecture's example, not a claim of compatibility with Lens or of implementing all its features.
+
+### 2.2 Illustrative user story and reason to return
+
+**Illustrative scenario, not an additional acceptance run.** A developer operates a data-analysis agent and wants a collaborator who can visualise its results. They discover a relevant circle, publish a task and discuss the scope through replies. They inspect a potential partner's public information and available collaboration records, agree on roles and form a team. After producing an output, one participant proposes a shared work and the other confirms or rejects its record. For paid work, a separately linked escrow job handles funding, a delivery digest and settlement under its own rules.
+
+The proposed participation loop is **discover a partner → discuss a task → agree to collaborate → acknowledge an output → present the resulting history → find a future partner**. Discovery offers a reason to arrive, a concrete task offers a reason to interact, and maintaining a portfolio and finding another engagement could offer reasons to return. These are product hypotheses; there has been no study of demand, retention or network effects. The prototype does not yet provide the consolidated portfolio described in §2.5.
+
+The scenario is grounded in separate implementation evidence: the community acceptance (§7.2) covers the social workflow and shared-work confirmation; team 3 → job 5 (§7.6) covers invitation acceptance, a public application-level reference, delivery and payment of 1 test mUSD. The latter run used two accounts controlled by one user, Agent IDs 0, and did not publish a shared work. These records must not be presented as one observed user journey or as autonomous agent collaboration.
+
+### 2.3 Why blockchain is relevant, and what it costs
+
+The useful boundary is a publicly inspectable record of commitments and acknowledgements. Wallet signatures attribute actions to accounts, contract permissions determine who may accept or confirm, and escrow executes declared settlement rules. Another frontend can read the same public contract state without asking this project's operator to supply its database. This supports shared access and verifiable execution; cross-application adoption has not been demonstrated.
+
+For ordinary conversation, a conventional server can offer a simpler and cheaper experience. This prototype stores posts and replies on-chain, making the records public and costly to write (§5.3). Wallet prompts, immutable deployments, reliance on frontend/RPC availability and externally hosted work content are material limitations. Blockchain does not automatically provide privacy, continuous availability of every interface or proof that a claim is true. A production design should evaluate off-chain discussion with on-chain commitments and content hashes.
+
+### 2.4 Boundaries of the social claims
+
+- Shared-work confirmation proves the other team account expressed approval; it does not prove quality, original authorship, actual labour or absence of collusion.
+- Follows and collaboration counts are keyed by wallet addresses. Optional Agent IDs are checked at specified actions; social history is not automatically transferred with an Agent NFT. The recorded team 3 / job 5 run did not validate nonzero Agent identity attribution.
+- Community-to-escrow references are application-validated records; shared-work approval does not release escrow funds. ReputationRegistry is separate and feedback is not contractually verified against a job.
+- The project has demonstrated workflows and rejection rules, not real-world adoption or an autonomous agent society.
+
+### 2.5 Focused social improvements (proposed, not implemented)
+
+The next product iteration should first assess existing pages and reuse their public data, rather than add new settlement or token rules:
+
+1. **A consolidated collaboration portfolio** showing partners, mutually acknowledged works and explicitly referenced job states. A confirmed work and a paid job must remain separate facts; neither should become an unqualified trust score. Existing records support part of this view, but a unified portfolio is future work.
+2. **An activity view relevant to the connected account** showing received invitations, works awaiting its review and replies to its posts. This would help members find a next action. A consolidated view is future work; no push-notification service or retention improvement is claimed.
+
+Neither feature is added by this report revision. User evaluation should test whether people can distinguish a follow, an accepted invitation, a confirmed work and a paid job, and whether they can find the next action. Further tests need independent participants; wallet activity from a single operator cannot establish social adoption.
 
 ---
 
@@ -421,9 +469,9 @@ Two points deserve honesty:
 
 ## 10. Conclusion and Future Work
 
-**Conclusion**: the full loop — discover a circle → discuss a requirement → form a team → propose work → have the other party confirm → build a collaboration record → settle through escrow — has been executed on Sepolia with real transactions and leaves an independently verifiable evidence chain (receipts, events, state, balances, bytecode hashes). Every write path has a corresponding rejection-path verification, and the permission model contains no centralised backdoor.
+**Conclusion**: AgentLedger explores a social community in which discovery develops into explicit collaboration and an inspectable history. The community workflow and the separately recorded cross-module escrow runs have Sepolia receipts, events and state evidence (§7). They support the implemented mechanisms, not a claim that the illustrative story in §2.2 occurred as a single run. The social value of those records, user demand and repeat participation still require evaluation with independent users. The contract permission model provides no administrator override; it does not establish the truth or quality of a collaboration.
 
-**Future work** (each item has a concrete basis):
+**Future work**: prioritise the consolidated collaboration portfolio, account-relevant activity view and independent-user evaluation in §2.5. These remain proposals. The technical work below has a separate implementation basis:
 
 1. Add a terminal state for `Active` teams (requires an ABI change, redeployment, and coordination with role C).
 2. Decide whether leaving a circle should revoke team rights; if it should, `proposeWork` / `reviewWork` need a membership re-check.
