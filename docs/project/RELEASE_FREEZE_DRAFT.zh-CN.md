@@ -11,24 +11,24 @@
 
 | 项 | 值 |
 | --- | --- |
-| 冻结提交（清单基准） | `10c98aac3bdf6b71f431cc611eb9e1cbfffad3db`（tree `b04b1480f592db6d34d603c390b09c1234f4853f`，2026-10-31 18:08 +08:00） |
-| 代码基线 | `aab1440`（#61 合并后的代码；`788fde9` 重算报告 v0.6，`10c98aa` 追加部署操作补记） |
-| 发布提交（tag 指向） | 本次记录的合并提交（含报告 v0.6 + 部署补记、14 文件清单与本记录） |
-| 测试 | **108 / 108 通过**（14 个测试文件；`aab1440`、`788fde9` 与 `10c98aa` 均为 108，CI 为 `tests 108 / pass 108 / fail 0`；本地 Windows 为 107 pass + 1 个 win32 主动 skip） |
+| 冻结提交（清单基准） | `d126891f0103ec3617d69b22e04d7010be1f1b28`（tree `56c64f2845f4b947cef412e39931766bebe4909f`，2026-11-02 19:16 +08:00） |
+| 代码基线 | `2e59b10`（#67 合并后的代码；`d126891` 只在其后追加报告 v0.7） |
+| 发布提交（tag 指向） | 本次记录的合并提交（含报告 v0.7、14 文件清单与本记录） |
+| 测试 | **112 / 112 通过**（21 个测试文件；`aab1440`、`2e59b10` 与 `d126891` 均为 112，CI 为 `tests 112 / pass 112 / fail 0`；本地 Windows 为 111 pass + 1 个 win32 主动 skip） |
 | 构建 | `pnpm build` 成功；`web/generated/AgentCommunity.json` 未被改写 |
 | 工作区 | 测试与构建后保持干净 |
-| 未并入的待评审改动 | **无**（open PR 0；#47 #48 #49 #50 #52 #53 #54 #55 #56 #58 #60 #61 #62 #64 均已合并） |
+| 未并入的待评审改动 | **无**（open PR 0；#47 #48 #49 #50 #52 #53 #54 #55 #56 #58 #60 #61 #62 #64 #67 #68 均已合并） |
 | 版本标记 | `v1.0.0-submission`（annotated tag，指向本记录所在合并提交） |
 | 冻结清单 | `docs/project/evidence/release-manifest.json`，**14 个输入（11 必需 + 3 可选）**，`isAncestorOfMain = true` |
 
-> 清单里的 `commit` 记 `10c98aa`；代码自 `aab1440` 起未变，§四 的 `package.json` 因 #59 新增 `agent` / `rehearse` 脚本而变化，其余必需哈希不变。tag 指向的合并提交只在其后追加本记录。
+> 清单里的 `commit` 记 `d126891`；代码自 `2e59b10` 起未变（#67 只改前端与测试），§四 的 `package.json` 因 #59 新增 `agent` / `rehearse` 脚本而变化，其余必需哈希不变。tag 指向的合并提交只在其后追加本记录。
 
 ## 二、阻断问题清单（2026-10-30 更新）
 
 | Issue | 标题 | 状态 | 阻断提交？ | 说明 |
 | --- | --- | --- | --- | --- |
 | #8 | D2 验证 CI、跨平台启动与冻结版本回归 | 关 | — | macOS 带凭据 clone 与 Windows 记录均已完成（PR #28/#35） |
-| #9 | E1 更新报告与架构图 | 开 | 否 | 报告已到 v0.6 + 部署操作补记（英/中架构图、PDF），Issue 待 E 收口 |
+| #9 | E1 更新报告与架构图 | 开 | 否 | 报告已到 v0.7（Social DApp 定位、合作履历/动态已实现、英/中架构图、PDF），Issue 待 E 收口 |
 | #10 | E2 演示录屏与五人彩排 | 开 | **是（提交前）** | `docs/project/assets/*.mp4` 已有成片素材；旁白音轨与五人彩排未完成 |
 | #11 | R1 汇总冻结版本、提交物与备份 | 开 | **是（提交前）** | tag 已打；备份与课程提交待 release 执行 |
 | #1 | A1 六类界面交互与手机布局 | 关 | — | PR #32 已合并（22 张截图 + 测量） |
@@ -42,7 +42,7 @@
 
 | 维度 | 值 | 复核方式 |
 | --- | --- | --- |
-| 源码（代码基线） | `aab1440` | `git rev-parse v1.0.0-submission^{}` 得到本记录的合并提交；两者代码输入一致 |
+| 源码（代码基线） | `2e59b10` | `git rev-parse v1.0.0-submission^{}` 得到本记录的合并提交；两者代码输入一致 |
 | 合约（社区） | `0x8CDc9987D46D140a982713B359286bC451262406` | `web/config.js`；`verify-community.mjs` |
 | 部署交易 / 区块 | `0x8a537cd6c49e68d4f2301683146bcabc0acc9a2bbde89e797b08dedb80a8ddc5` / 12005434 | 回执 `status=1` |
 | 部署者 | `0xD3Ce5196125cd6e25212de4D04911093D3F62D5d` | 回执 `from` |
@@ -51,7 +51,7 @@
 | 创建代码哈希 | `0x71c9098723ea3e4b4929493ebd3ddccfce0b684ddf95566332795e1c672f91e0` | 创建交易输入 → keccak |
 | 托管合约 | `0x3C129b436247368dA71cC31512984c3DB17F1f63`（JobEscrow） | 托管验收记录 |
 | 支付代币 | `0x6a920b13d6396B7b58BfE562c274Ea76a6409C85`（mUSD，6 位小数） | 同上 |
-| 报告 | `REPORT.md` / `REPORT.pdf`（v0.6 + 部署补记）、`ACCEPTANCE_D1`、`ACCEPTANCE_D2`、`SEPOLIA_ACCEPTANCE_2026-10-27`、`ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28`、`TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29`、`A1_UI_ACCEPTANCE_2026-10-28`、`A2_STATUS_ACCEPTANCE_2026-10-29`、`TEAM_CIRCLE_POLICY`、`CONTENT_BOUNDARY_REVIEW_2026-10-29`、`SOURCE_PROVENANCE`、`REPORT_PDF_GENERATION`、`DEMO_BLUEPRINT_FLOW`、`DEPLOYMENT_OPERATIONS_2026-10-27`、`REVIEW_B_INDEPENDENT_2026-10-30`、`CROSS_MEMBER_CONSISTENCY_2026-10-30`、`REVIEW_B1_AGENTCOMMUNITY_2026-10-28` | 均在 main |
+| 报告 | `REPORT.md` / `REPORT.pdf`（v0.7）、`ACCEPTANCE_D1`、`ACCEPTANCE_D2`、`SEPOLIA_ACCEPTANCE_2026-10-27`、`ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28`、`TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29`、`A1_UI_ACCEPTANCE_2026-10-28`、`A2_STATUS_ACCEPTANCE_2026-10-29`、`TEAM_CIRCLE_POLICY`、`CONTENT_BOUNDARY_REVIEW_2026-10-29`、`SOURCE_PROVENANCE`、`REPORT_PDF_GENERATION`、`DEMO_BLUEPRINT_FLOW`、`DEPLOYMENT_OPERATIONS_2026-10-27`、`SOCIAL_INSIGHTS_2026-11-02`、`REVIEW_B_INDEPENDENT_2026-10-30`、`CROSS_MEMBER_CONSISTENCY_2026-10-30`、`REVIEW_B1_AGENTCOMMUNITY_2026-10-28` | 均在 main |
 | 视频 | `docs/project/assets/` 下 5 个 mp4（完整版、带钱包版、英文版、走查、真实钱包片段）；无旁白音轨 | #10 仍开 |
 | 贡献记录 | `docs/project/CONTRIBUTIONS.md` | E / R 条目仍缺 |
 
@@ -59,7 +59,7 @@
 
 **基准**：以冻结提交的 **Git blob（LF 内容）** 为准，而不是某台机器工作副本的字节。`web/config.js`、`package.json`、`pnpm-lock.yaml` 不在 `.gitattributes` 归一化范围内，Windows 下 `core.autocrlf=true` 会检出为 CRLF，字节数与哈希随之改变——**两者不可跨平台直接比较**。
 
-冻结提交 `10c98aa`，用 `git cat-file blob <SHA>:<path>` 读原始内容后计算（与 `release-manifest.json` 的 `files` 一一对应，共 14 项）：
+冻结提交 `d126891`，用 `git cat-file blob <SHA>:<path>` 读原始内容后计算（与 `release-manifest.json` 的 `files` 一一对应，共 14 项）：
 
 | 文件 | Git blob 字节 | SHA-256（规范基准） |
 | --- | --- | --- |
@@ -75,8 +75,8 @@
 | `contracts/MockUSDC.sol` | 1793 | `48783f227eadc77ff8fd36cfef7e35e65d20f8a2d2e421f7323a123db9878b2a` |
 | `contracts/ReputationRegistry.sol` | 5872 | `cc5dc6bbb85dfd5b012dc9524d649f5efaea1cd8d8d68e36b92e86d6629570ff` |
 | `backend-provenance.json`（可选） | 3366 | `6b3ba2bc17673ca544c092a6010c89c66aebdd5adfdea4d3bfa269b96f264096` |
-| `docs/project/REPORT.md`（可选） | 40172 | `afb88507d82e607dd3321b63f374ec27086ce3cd5b2a95db7dfb925e8ab42f02` |
-| `docs/project/REPORT.pdf`（可选） | 1287652 | `37df4f6f6368532c5b1d6acc75961667a12a97d1eb9884fdf6abb33d9e635c35` |
+| `docs/project/REPORT.md`（可选） | 50072 | `5ca86b4d0ce26c6568a9f594a9ef012912d9a7547aaed6501617af74bacdaa93` |
+| `docs/project/REPORT.pdf`（可选） | 746934 | `2b0ac92050111e4d3bfcdc1c18df9f694f6c3cc7a66057da8eb88110597ea73d` |
 
 **Windows 工作副本的差异值**（仅作对照，**不要**当通用校验和用）：
 
@@ -86,7 +86,7 @@
 | `package.json` | 530 | `0c86c01a5452c00a8e8e2efe70f1af3073df89803970402da7eb95f34092cb6b` |
 | `pnpm-lock.yaml` | 10534 | `432381fa4b5845f3f7bb48ebd67832201fc0a642e8b7fdddbaf7beb7bc3e2501` |
 | `backend-provenance.json` | 3426 | `21d035615f937584134443d89c16211e62e324f2e3a2215ec45304fe0b9021a7` |
-| `docs/project/REPORT.md` | 40659 | `122a2431e61ffb77cd8616fdd8e5629467f526b85793e154b1db357fbe25d656` |
+| `docs/project/REPORT.md` | 50616 | `d63000a760107e6d81e2627da3ff344c32008be096989287c38b5a15ee45d578` |
 
 合约与三个生成产物在两种环境下一致，因为 `.gitattributes` 固定了 `*.sol` 与生成产物为 LF（PR #15 修掉的缺陷：按 CRLF 编译会让 solc metadata 变化）；上表的 CRLF 值只对本机检出成立。
 
@@ -98,14 +98,14 @@
 git clone https://github.com/Zqqq-qq/comp7610-agentledger.git
 cd comp7610-agentledger
 # 必须固定到冻结提交；不固定就会测到移动的默认分支
-git checkout --detach 10c98aac3bdf6b71f431cc611eb9e1cbfffad3db
-test "$(git rev-parse HEAD)" = "10c98aac3bdf6b71f431cc611eb9e1cbfffad3db" || { echo "HEAD 不是冻结提交，停止"; exit 1; }
+git checkout --detach d126891f0103ec3617d69b22e04d7010be1f1b28
+test "$(git rev-parse HEAD)" = "d126891f0103ec3617d69b22e04d7010be1f1b28" || { echo "HEAD 不是冻结提交，停止"; exit 1; }
 pnpm install --frozen-lockfile
-pnpm test                               # 预期 108 项通过
+pnpm test                               # 预期 112 项通过
 pnpm build                              # 预期成功
 git status --short                      # 预期为空
 git diff --exit-code -- web/generated/AgentCommunity.json   # 预期通过（产物未被改写）
-node scripts/release-freeze.mjs 10c98aac3bdf6b71f431cc611eb9e1cbfffad3db   # 14 个 SHA-256 应与 §四 一致
+node scripts/release-freeze.mjs d126891f0103ec3617d69b22e04d7010be1f1b28   # 14 个 SHA-256 应与 §四 一致
 node scripts/verify-community.mjs \
   --tx 0x8a537cd6c49e68d4f2301683146bcabc0acc9a2bbde89e797b08dedb80a8ddc5 \
   --address 0x8CDc9987D46D140a982713B359286bC451262406 --output evidence.json
@@ -117,7 +117,7 @@ node scripts/verify-community.mjs \
 
 | 对象 | 备份内容 | 位置建议 |
 | --- | --- | --- |
-| 源码 | `git archive` 冻结提交 `10c98aa` 的包（tag `v1.0.0-submission` 可复核） | 课程提交目录 + 个人云盘 |
+| 源码 | `git archive` 冻结提交 `d126891` 的包（tag `v1.0.0-submission` 可复核） | 课程提交目录 + 个人云盘 |
 | 社区合约 | `web/generated/AgentCommunity.json`（ABI + bytecode）与 `contracts/AgentCommunity.sol`、`contracts/IdentityRegistry.sol` | 同上 |
 | **托管合约** | `docs/project/evidence/escrow-deployment-sources.json`（实际部署源文件）、`docs/project/evidence/escrow-transaction-index.json`、`escrow-sepolia-acceptance.json`、`job1/2/3` 的探测与交付记录，以及 `scripts/compile-escrow.mjs`、`scripts/verify-escrow-acceptance.mjs` | 同上 |
 | 冻结清单 | `docs/project/evidence/release-manifest.json`（14 个输入 = 11 必需 + 3 可选，+ 部署地址） | 同上 |
@@ -131,8 +131,8 @@ node scripts/verify-community.mjs \
 
 ## 七、状态与剩余动作
 
-1. **冻结 SHA**：已固定为 `10c98aa`（代码基线 `aab1440`）；§四 的 14 个校验和即按该提交计算。
-2. **版本标记**：`v1.0.0-submission` 已创建并推送，指向本记录的合并提交（报告 v0.6 + 部署补记、14 文件清单与本记录）；若之后再合并 PR，需要重新冻结并移动 tag。
+1. **冻结 SHA**：已固定为 `d126891`（代码基线 `2e59b10`）；§四 的 14 个校验和即按该提交计算。
+2. **版本标记**：`v1.0.0-submission` 已创建并推送，指向本记录的合并提交（报告 v0.7、14 文件清单与本记录）；若之后再合并 PR，需要重新冻结并移动 tag。
 3. **#8 的收口口径**：已关闭；macOS 带 GitHub 凭据的真实 clone 记录在 `MACOS_CLEAN_CLONE_2026-10-28.zh-CN.md`。
 4. **#30 的处置**：已按“有意设计”定稿，写入 `TEAM_CIRCLE_POLICY.zh-CN.md` 并有 4 项回归。
 5. **贡献记录**：E / R 的条目仍未加入 `CONTRIBUTIONS.md`，提交前由 release/E 补齐或明确留白。
