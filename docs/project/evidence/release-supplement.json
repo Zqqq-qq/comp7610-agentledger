@@ -1,0 +1,60 @@
+{
+  "schema": "agentledger-release-supplement-v1",
+  "commit": "bdb0a6f7d4b4057c88040b741b39ab53ceb89408",
+  "tree": "1532491c497af9aeb7941542cd5933a02faaf949",
+  "isFinalSubmission": false,
+  "canonicalManifest": "release-manifest.json",
+  "files": [
+    {
+      "path": "docs/assets/architecture.svg",
+      "bytes": 6799,
+      "sha256": "e49519bb3fd71d03afe38101e0dace481894dc388c7753d475936cb2daf27f4a"
+    },
+    {
+      "path": "docs/project/CONTRIBUTIONS.md",
+      "bytes": 19907,
+      "sha256": "fa17d961159b42f4ab4fe0d0afda0ad39701389f951403c6e9abb28b78a67e96"
+    },
+    {
+      "path": "docs/project/render-report-review.py",
+      "bytes": 6997,
+      "sha256": "a81019f3458e962522d94a080f67132368c1b92a50be310ce72d9369b62caed3"
+    },
+    {
+      "path": "docs/project/REPORT_RENDERING.md",
+      "bytes": 874,
+      "sha256": "d2711f63bc4b5e5a7f987e02920438a7f94961a23770b6adcacbcbfd513c4766"
+    },
+    {
+      "path": "docs/project/assets/demo-full-en.mp4",
+      "bytes": 1807754,
+      "sha256": "24f54656149ca5f1ba3b249cf62a42dd585694274230b34013967c05589e43a6"
+    },
+    {
+      "path": "docs/project/assets/demo-full-with-wallet.mp4",
+      "bytes": 1809330,
+      "sha256": "1a7838996ca0fef9c43c75007d609b12c8a3461a33a8ef467cbaef86c347c189"
+    },
+    {
+      "path": "docs/project/assets/demo-walkthrough-en.mp4",
+      "bytes": 485370,
+      "sha256": "be86c0b746b2463167abf2722379b278b44b667b9625e291236197818cfdff38"
+    },
+    {
+      "path": "docs/project/assets/demo-walkthrough.mp4",
+      "bytes": 486569,
+      "sha256": "cffbd292633732124aaf7aab161a8eec9b55f2f21ab170e17af87600bcaaf1b3"
+    },
+    {
+      "path": "docs/project/assets/demo-wallet-live.mp4",
+      "bytes": 1324394,
+      "sha256": "f23ef04e458bb7ebdd584493e39b02627eb6ad2a8fe3584d431b3222d8cfed27"
+    }
+  ],
+  "notes": [
+    "Snapshot of additional Git blobs at the canonical manifest commit; these nine files supplement its fourteen inputs.",
+    "CONTRIBUTIONS.md is the historical report-merge snapshot. This PR appends a later R1 entry; final freeze must hash the later contribution record again.",
+    "Five MP4 files are existing source material, not a completed 6–8 minute narrated submission. New collaboration-history and activity scenes still require recording.",
+    "This record and the canonical manifest do not certify rehearsal, backups, teacher submission or a final tag."
+  ]
+}

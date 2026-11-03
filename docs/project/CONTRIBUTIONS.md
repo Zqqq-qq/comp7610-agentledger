@@ -130,3 +130,14 @@ Issue提醒：https://github.com/Zqqq-qq/comp7610-agentledger/issues/9#issuecomm
 从GitHub最新main 78be532建立codex/9-report-integration。daizhiqi按组员提供的信息和Issue #9说明整理v0.9正文、图注、五人身份/贡献、架构图和PDF，保留既有来源与验证范围；新增文档专用ReportLab渲染脚本及使用说明。个人贡献草稿中的“本地”状态为历史记录，后续PR/批准/合并以GitHub #9关联记录为准。
 
 本轮实际执行：node --test tests/report-pdf.test.mjs tests/social-insights.test.mjs，9/9通过；node scripts/build.mjs通过。PDF渲染和文本检查、五人姓名/学号、路径及源文件一致性检查在提交前进行。未重跑112项全量业务套件、未新增真实RPC/MetaMask/Sepolia验收；远端CI及同伴审阅另行记录。
+
+
+## 2026-11-03 E1 合并收尾与 R1 报告基准更新（#9 / #11）
+
+daizhiqi 使用 Codex 辅助完成报告整合 PR #70；Zqqq-qq 在 head 49fd499 上正式批准，随后合并为 bdb0a6f7d4b4057c88040b741b39ab53ceb89408，#9 已自动关闭。以上更新早期本地准备条目的状态，不把同伴的批准归为本人审阅。
+
+本轮从真实 Git 克隆及该合并提交的 Git blob 运行现有冻结脚本，更新 14 项清单；另登记架构图、报告合并时的贡献快照、PDF 渲染脚本/说明和 5 个现有视频，共 23 项，独立复算摘要。同步冻结记录与执行清单，注明旧 v1.0.0-submission 仍指向 78be532、不包含新报告；本次未移动标签。补充清单中的贡献文件是 bdb0a6f 快照，当前追加记录将在最终冻结时重新纳入。
+
+本轮只核对发布输入和版本映射，未新增应用/合约改动、真实 RPC 或钱包交易；演示旁白、新页面录屏、五人彩排、最终备份和课程提交仍待完成。请求 QiuQiu-xuan 复核本轮记录，实际审阅、测试结果及后续合并以本轮 PR 和 #11 记录为准。
+
+本轮本地专项：冻结脚本与 PDF 工具测试 11/11 通过、0 跳过（使用 `--test-isolation=none`）；23 项独立摘要及文档表格核对、五个部署地址对照与 `git diff --check` 通过。合并后 main 的 verify CI 为 success（run 41604537634）；不记作本轮本地全量 112 项复跑。

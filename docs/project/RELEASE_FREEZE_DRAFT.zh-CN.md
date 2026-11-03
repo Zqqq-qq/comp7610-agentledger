@@ -1,48 +1,54 @@
-# 提交版本冻结记录（R1）
+# 提交版本冻结记录（R1 / #11）
 
-- 关联任务：[#11 R1](https://github.com/Zqqq-qq/comp7610-agentledger/issues/11)
-- 归属角色：release · @daizhiqi；本记录由 D · @QiuQiu-xuan 于 2026-10-30 按最终 main 汇总，**tag、备份与课程提交仍由 release 执行**
-- 状态：**已冻结**（2026-10-30）。tag `v1.0.0-submission` → 本次记录的合并提交（`git rev-parse v1.0.0-submission^{}` 可复核）；机器可读清单：[`evidence/release-manifest.json`](evidence/release-manifest.json)
-- 上一版是 2026-10-28 的草案（候选 `3e473c3`，已作废）；本文件已按新清单重算 §一 与 §四
+- 更新：2026-11-03；负责人 @daizhiqi，使用 Codex 辅助执行与整理；请求 @QiuQiu-xuan 复核，实际批准以 PR 为准。
+- 状态：**报告合并后的阶段核对；最终提交未冻结**。本记录替代旧 v0.7 清单作为当前报告基准，不表示 #10 / #11 完成。
+- 关联：[任务 #11](https://github.com/Zqqq-qq/comp7610-agentledger/issues/11)、[报告 PR #70](https://github.com/Zqqq-qq/comp7610-agentledger/pull/70)。
 
-> 为什么由 D 汇总：R1 需要的事实（冻结候选回归、链上回执、产物一致性、测试演进）多数在 D 的验收记录里。本记录只陈述可复算的值；是否提交、如何提交仍由 release 判断。
-
-## 一、冻结提交
+## 一、实际提交与版本标记
 
 | 项 | 值 |
 | --- | --- |
-| 冻结提交（清单基准） | `d126891f0103ec3617d69b22e04d7010be1f1b28`（tree `56c64f2845f4b947cef412e39931766bebe4909f`，2026-11-02 19:16 +08:00） |
-| 代码基线 | `2e59b10`（#67 合并后的代码；`d126891` 只在其后追加报告 v0.7） |
-| 发布提交（tag 指向） | 本次记录的合并提交（含报告 v0.7、14 文件清单与本记录） |
-| 测试 | **112 / 112 通过**（21 个测试文件；`aab1440`、`2e59b10` 与 `d126891` 均为 112，CI 为 `tests 112 / pass 112 / fail 0`；本地 Windows 为 111 pass + 1 个 win32 主动 skip） |
-| 构建 | `pnpm build` 成功；`web/generated/AgentCommunity.json` 未被改写 |
-| 工作区 | 测试与构建后保持干净 |
-| 未并入的待评审改动 | **无**（open PR 0；#47 #48 #49 #50 #52 #53 #54 #55 #56 #58 #60 #61 #62 #64 #67 #68 均已合并） |
-| 版本标记 | `v1.0.0-submission`（annotated tag，指向本记录所在合并提交） |
-| 冻结清单 | `docs/project/evidence/release-manifest.json`，**14 个输入（11 必需 + 3 可选）**，`isAncestorOfMain = true` |
+| 当前报告合并基准（完整 SHA） | `bdb0a6f7d4b4057c88040b741b39ab53ceb89408` |
+| Git tree | `1532491c497af9aeb7941542cd5933a02faaf949` |
+| 报告版本 | `v0.9-review`（沿用已批准正文中的版本字符串），#70 已于 2026-11-03 合并，#9 已关闭 |
+| 代码功能基线 | `2e59b10`（#67）；本轮仅更新发布记录，无应用、合约或 ABI 改动 |
+| 旧清单基准（历史） | `d126891f0103ec3617d69b22e04d7010be1f1b28`，报告 v0.7；已由本轮清单替代 |
+| 现有标签（历史） | `v1.0.0-submission` → `78be5327e1fcb3fa0a0d5ebf3a58033ee0e78ee0`，**不包含 #70，不能作为当前完整提交版本** |
+| 当前基准的精确标签 | 无（`release-manifest.json` 的 `tag: null`） |
+| 最终版本标记 | **待定**。视频与剩余验收完成后选定实际最终提交，优先使用新的 annotated tag（例如 `v1.0.1-submission`，名称届时确认），不自动覆盖已有标签 |
+| 机器清单 | `evidence/release-manifest.json`：14 项（11 必需 + 3 可选）；`evidence/release-supplement.json`：9 项补充，共 23 项 |
 
-> 清单里的 `commit` 记 `d126891`；代码自 `2e59b10` 起未变（#67 只改前端与测试），§四 的 `package.json` 因 #59 新增 `agent` / `rehearse` 脚本而变化，其余必需哈希不变。tag 指向的合并提交只在其后追加本记录。
+哈希直接读取上述提交的 Git blob，避免 Windows CRLF 工作副本差异。清单的 `commit` 是被核对的内容基准，不是存放清单的后续文档提交；新清单不能自引用自身哈希。本 PR 合并后及最终视频变动后，应再次选择实际提交复算。贡献补充记录也须在最终复算范围内。
 
-## 二、阻断问题清单（2026-10-30 更新）
+## 二、验收状态与剩余动作
 
-| Issue | 标题 | 状态 | 阻断提交？ | 说明 |
-| --- | --- | --- | --- | --- |
-| #8 | D2 验证 CI、跨平台启动与冻结版本回归 | 关 | — | macOS 带凭据 clone 与 Windows 记录均已完成（PR #28/#35） |
-| #9 | E1 更新报告与架构图 | 开 | 否 | 报告已到 v0.7（Social DApp 定位、合作履历/动态已实现、英/中架构图、PDF），Issue 待 E 收口 |
-| #10 | E2 演示录屏与五人彩排 | 开 | **是（提交前）** | `docs/project/assets/*.mp4` 已有成片素材；旁白音轨与五人彩排未完成 |
-| #11 | R1 汇总冻结版本、提交物与备份 | 开 | **是（提交前）** | tag 已打；备份与课程提交待 release 执行 |
-| #1 | A1 六类界面交互与手机布局 | 关 | — | PR #32 已合并（22 张截图 + 测量） |
-| #2 / #4 | A2 / B2 | 关 | — | A2 状态引导（PR #47）与 B2 边界复核（PR #48）已合并 |
-| #30 | 退圈后仍可提议/确认作品 | 关 | — | 按“有意设计”写入 `TEAM_CIRCLE_POLICY.zh-CN.md` |
-| #6 | C2 账户切换与跨设备共享 | 关 | — | D 提供跨浏览器/跨设备佐证后关闭 |
-| #3 / #5 / #7 / #12 | B1 / C1 / D1 / C3 | 关 | — | 已验收关闭 |
-| #20 / #21 / #25 / #39 | 三个缺陷 + 视觉打磨 | 关 | — | 均已修复并合入 |
-
-## 三、版本一致性映射
-
-| 维度 | 值 | 复核方式 |
+| 事项 | 当前状态 | 后续 |
 | --- | --- | --- |
-| 源码（代码基线） | `2e59b10` | `git rev-parse v1.0.0-submission^{}` 得到本记录的合并提交；两者代码输入一致 |
+| #8 跨平台启动与回归 | 已关闭，保留原验收记录 | 最终版本仍需按清单自检 |
+| #9 报告与架构图 | #70 经 Zqqq-qq 批准后合并，#9 已关闭 | 本轮更新哈希与发布映射 |
+| #10 演示与五人彩排 | **开放，阻断最终提交** | 约 6–8 分钟旁白演示、权限失败路径、新 social 两页场景、五人彩排和备份；核对老师正式要求 |
+| #11 冻结、备份和提交 | **开放** | 同伴复核本轮 PR；待 #10 收口后最终复算、标记、备份、实际提交并保存回执 |
+
+daizhiqi 负责报告基准核对、清单与记录更新及最终交付协调；请求 QiuQiu-xuan 协助复核 23 项哈希和版本映射，未替其承诺批准或完成时间。本轮目标为 11/03 发起复核；沿用 Issue 内排期：#10 11/06，#11 11/07，11/08 提交。**这些是仓库排期，老师正式渠道、截止时刻和个人提交要求仍须核对。**
+
+## 三、源码、PDF、架构图、合约与视频映射
+
+| 对象 | 基准与证据 | 范围 |
+| --- | --- | --- |
+| 源码 | 上述完整 SHA 的 Git tree；功能基线 `2e59b10` | #70 仅文档/报告渲染工具变更；本轮不部署或广播交易 |
+| 报告与 PDF | `REPORT.md` / `REPORT.pdf`；14 项清单内 | #70 批准的正文和 21 页 PDF，不在本轮重新生成 |
+| 架构图 | `docs/assets/architecture.svg`；补充清单内 | 对应报告核心 DApp / 可选 Agent 服务及验证范围 |
+| 贡献 | `CONTRIBUTIONS.md`；补充清单记录报告合并时快照 | 本轮追加 R1 记录，最终提交须重算后续版本 |
+| PDF 渲染来源 | `render-report-review.py` / `REPORT_RENDERING.md`；补充清单内 | 保留 #70 可复现方法 |
+| 视频 | `assets/` 下 5 个 MP4；补充清单逐个登记 | 已有无旁白素材，**不是最终成片**；不证明已覆盖新增两页或已完成彩排 |
+
+以下是沿用部署记录的公开值，本轮仅核对配置与文档对应，未重新运行 RPC/链上验收：
+
+| 项 | 记录 | 来源 |
+| --- | --- | --- |
+| 网络 | Ethereum Sepolia，chain ID 11155111 | `web/config.js` |
+| IdentityRegistry | `0x13eA93eCdDeed63259792A39d7a4738a28b3E91d` | `web/config.js` / `DEPLOYMENTS.md` |
+| ReputationRegistry | `0x213AEEd69B82DBaebB2800D3904CBb16f9443864` | 同上 |
 | 合约（社区） | `0x8CDc9987D46D140a982713B359286bC451262406` | `web/config.js`；`verify-community.mjs` |
 | 部署交易 / 区块 | `0x8a537cd6c49e68d4f2301683146bcabc0acc9a2bbde89e797b08dedb80a8ddc5` / 12005434 | 回执 `status=1` |
 | 部署者 | `0xD3Ce5196125cd6e25212de4D04911093D3F62D5d` | 回执 `from` |
@@ -51,17 +57,15 @@
 | 创建代码哈希 | `0x71c9098723ea3e4b4929493ebd3ddccfce0b684ddf95566332795e1c672f91e0` | 创建交易输入 → keccak |
 | 托管合约 | `0x3C129b436247368dA71cC31512984c3DB17F1f63`（JobEscrow） | 托管验收记录 |
 | 支付代币 | `0x6a920b13d6396B7b58BfE562c274Ea76a6409C85`（mUSD，6 位小数） | 同上 |
-| 报告 | `REPORT.md` / `REPORT.pdf`（v0.7）、`ACCEPTANCE_D1`、`ACCEPTANCE_D2`、`SEPOLIA_ACCEPTANCE_2026-10-27`、`ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28`、`TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29`、`A1_UI_ACCEPTANCE_2026-10-28`、`A2_STATUS_ACCEPTANCE_2026-10-29`、`TEAM_CIRCLE_POLICY`、`CONTENT_BOUNDARY_REVIEW_2026-10-29`、`SOURCE_PROVENANCE`、`REPORT_PDF_GENERATION`、`DEMO_BLUEPRINT_FLOW`、`DEPLOYMENT_OPERATIONS_2026-10-27`、`SOCIAL_INSIGHTS_2026-11-02`、`REVIEW_B_INDEPENDENT_2026-10-30`、`CROSS_MEMBER_CONSISTENCY_2026-10-30`、`REVIEW_B1_AGENTCOMMUNITY_2026-10-28` | 均在 main |
-| 视频 | `docs/project/assets/` 下 5 个 mp4（完整版、带钱包版、英文版、走查、真实钱包片段）；无旁白音轨 | #10 仍开 |
-| 贡献记录 | `docs/project/CONTRIBUTIONS.md` | E / R 条目仍缺 |
 
-## 四、提交物清单与校验和
 
-**基准**：以冻结提交的 **Git blob（LF 内容）** 为准，而不是某台机器工作副本的字节。`web/config.js`、`package.json`、`pnpm-lock.yaml` 不在 `.gitattributes` 归一化范围内，Windows 下 `core.autocrlf=true` 会检出为 CRLF，字节数与哈希随之改变——**两者不可跨平台直接比较**。
+历史证据继续保留于 `evidence/` 及相应验收文档，单人双账户不改写为两名独立用户验收。托管部署使用的原始 CRLF 源码快照与当前 LF 源码不同；复现应保留 `escrow-deployment-sources.json`、交易索引和原编译核验脚本。
 
-冻结提交 `d126891`，用 `git cat-file blob <SHA>:<path>` 读原始内容后计算（与 `release-manifest.json` 的 `files` 一一对应，共 14 项）：
+## 四、当前基准的 23 项校验和
 
-| 文件 | Git blob 字节 | SHA-256（规范基准） |
+规范清单 14 项（由现有 `scripts/release-freeze.mjs` 生成）：
+
+| Git blob 路径 | 字节 | SHA-256 |
 | --- | --- | --- |
 | `web/config.js` | 776 | `9399113d290a2dde5beb038710d849afcb407a2970774ec4d183556ecce2eb65` |
 | `package.json` | 511 | `d8940ce0f92af3296b97c3e123b56079f2dd780075f67dffd84ba03aa9a6ac58` |
@@ -74,66 +78,41 @@
 | `contracts/JobEscrow.sol` | 9207 | `ce7d4c46fbd76caafca8d31c78d58c428ddb560fd7a46b6a8fd50a888710f907` |
 | `contracts/MockUSDC.sol` | 1793 | `48783f227eadc77ff8fd36cfef7e35e65d20f8a2d2e421f7323a123db9878b2a` |
 | `contracts/ReputationRegistry.sol` | 5872 | `cc5dc6bbb85dfd5b012dc9524d649f5efaea1cd8d8d68e36b92e86d6629570ff` |
-| `backend-provenance.json`（可选） | 3366 | `6b3ba2bc17673ca544c092a6010c89c66aebdd5adfdea4d3bfa269b96f264096` |
-| `docs/project/REPORT.md`（可选） | 50072 | `5ca86b4d0ce26c6568a9f594a9ef012912d9a7547aaed6501617af74bacdaa93` |
-| `docs/project/REPORT.pdf`（可选） | 746934 | `2b0ac92050111e4d3bfcdc1c18df9f694f6c3cc7a66057da8eb88110597ea73d` |
+| `backend-provenance.json` | 3366 | `6b3ba2bc17673ca544c092a6010c89c66aebdd5adfdea4d3bfa269b96f264096` |
+| `docs/project/REPORT.md` | 59609 | `6295f5dafe6ae35adb5c64797b26bb89215671b7d00e5fbb2d2d4640ab549f69` |
+| `docs/project/REPORT.pdf` | 71697 | `a003ab601d93ec4bec491d57d79eac9d44b563cfee0e6327173e68ebcc7924c2` |
 
-**Windows 工作副本的差异值**（仅作对照，**不要**当通用校验和用）：
+补充清单 9 项（同一完整 SHA 的 Git blob）：
 
-| 文件 | CRLF 字节 | SHA-256（CRLF） |
+| Git blob 路径 | 字节 | SHA-256 |
 | --- | --- | --- |
-| `web/config.js` | 791 | `b8159c8feb55d40508d66e16292fb5525470581e19b1a195032cc265782f4dc4` |
-| `package.json` | 530 | `0c86c01a5452c00a8e8e2efe70f1af3073df89803970402da7eb95f34092cb6b` |
-| `pnpm-lock.yaml` | 10534 | `432381fa4b5845f3f7bb48ebd67832201fc0a642e8b7fdddbaf7beb7bc3e2501` |
-| `backend-provenance.json` | 3426 | `21d035615f937584134443d89c16211e62e324f2e3a2215ec45304fe0b9021a7` |
-| `docs/project/REPORT.md` | 50616 | `d63000a760107e6d81e2627da3ff344c32008be096989287c38b5a15ee45d578` |
+| `docs/assets/architecture.svg` | 6799 | `e49519bb3fd71d03afe38101e0dace481894dc388c7753d475936cb2daf27f4a` |
+| `docs/project/CONTRIBUTIONS.md` | 19907 | `fa17d961159b42f4ab4fe0d0afda0ad39701389f951403c6e9abb28b78a67e96` |
+| `docs/project/render-report-review.py` | 6997 | `a81019f3458e962522d94a080f67132368c1b92a50be310ce72d9369b62caed3` |
+| `docs/project/REPORT_RENDERING.md` | 874 | `d2711f63bc4b5e5a7f987e02920438a7f94961a23770b6adcacbcbfd513c4766` |
+| `docs/project/assets/demo-full-en.mp4` | 1807754 | `24f54656149ca5f1ba3b249cf62a42dd585694274230b34013967c05589e43a6` |
+| `docs/project/assets/demo-full-with-wallet.mp4` | 1809330 | `1a7838996ca0fef9c43c75007d609b12c8a3461a33a8ef467cbaef86c347c189` |
+| `docs/project/assets/demo-walkthrough-en.mp4` | 485370 | `be86c0b746b2463167abf2722379b278b44b667b9625e291236197818cfdff38` |
+| `docs/project/assets/demo-walkthrough.mp4` | 486569 | `cffbd292633732124aaf7aab161a8eec9b55f2f21ab170e17af87600bcaaf1b3` |
+| `docs/project/assets/demo-wallet-live.mp4` | 1324394 | `f23ef04e458bb7ebdd584493e39b02627eb6ad2a8fe3584d431b3222d8cfed27` |
 
-合约与三个生成产物在两种环境下一致，因为 `.gitattributes` 固定了 `*.sol` 与生成产物为 LF（PR #15 修掉的缺陷：按 CRLF 编译会让 solc metadata 变化）；上表的 CRLF 值只对本机检出成立。
+相较旧 14 项清单，仅 `REPORT.md` 与 `REPORT.pdf` 改变，其余 12 项未变。规范清单没有可选缺失，`isAncestorOfMain = true`，生成时工作副本输入与 blob 无差异。23 项另以独立 SHA-256 复算核对。
 
-**行尾一致性**：提交前应在干净克隆里跑一遍 §五 的自检，确认 `git status` 为空且产物未被改写。
+## 五、本轮检查证据
 
-## 五、复现与自检（提交前必跑）
+- 真实 GitHub 凭据克隆成功，已核对 `origin/main` 与完整 SHA。
+- 合并后 main CI：[verify success](https://github.com/Zqqq-qq/comp7610-agentledger/actions/runs/41604537634)。本轮不将历史测试重新记成本地全量执行。
+- 本轮本地专项：`node --test --test-isolation=none --test-timeout=30000 tests/release-freeze.test.mjs tests/report-pdf.test.mjs`，**11/11 通过，0 跳过**。
+- 只更新发布文档、清单及贡献记录；无新 RPC、钱包交易、五人彩排或课程提交证据。
+
+## 六、复算、最终冻结与备份
+
+规范清单复算示例（固定 SHA；临时输出避免仅因时间戳改写入库记录）：
 
 ```sh
-git clone https://github.com/Zqqq-qq/comp7610-agentledger.git
-cd comp7610-agentledger
-# 必须固定到冻结提交；不固定就会测到移动的默认分支
-git checkout --detach d126891f0103ec3617d69b22e04d7010be1f1b28
-test "$(git rev-parse HEAD)" = "d126891f0103ec3617d69b22e04d7010be1f1b28" || { echo "HEAD 不是冻结提交，停止"; exit 1; }
-pnpm install --frozen-lockfile
-pnpm test                               # 预期 112 项通过
-pnpm build                              # 预期成功
-git status --short                      # 预期为空
-git diff --exit-code -- web/generated/AgentCommunity.json   # 预期通过（产物未被改写）
-node scripts/release-freeze.mjs d126891f0103ec3617d69b22e04d7010be1f1b28   # 14 个 SHA-256 应与 §四 一致
-node scripts/verify-community.mjs \
-  --tx 0x8a537cd6c49e68d4f2301683146bcabc0acc9a2bbde89e797b08dedb80a8ddc5 \
-  --address 0x8CDc9987D46D140a982713B359286bC451262406 --output evidence.json
+FREEZE_OUT=/tmp/agentledger-release-check.json node scripts/release-freeze.mjs bdb0a6f7d4b4057c88040b741b39ab53ceb89408
 ```
 
-最后一条应输出 `creationBytecodeHash` / `runtimeCodeHash` 与 §三 一致。
+补充项可按 §四 路径，以 `git cat-file blob <完整SHA>:<路径>` 读取并计算 SHA-256；不要用未提交工作副本替代。
 
-## 六、备份清单
-
-| 对象 | 备份内容 | 位置建议 |
-| --- | --- | --- |
-| 源码 | `git archive` 冻结提交 `d126891` 的包（tag `v1.0.0-submission` 可复核） | 课程提交目录 + 个人云盘 |
-| 社区合约 | `web/generated/AgentCommunity.json`（ABI + bytecode）与 `contracts/AgentCommunity.sol`、`contracts/IdentityRegistry.sol` | 同上 |
-| **托管合约** | `docs/project/evidence/escrow-deployment-sources.json`（实际部署源文件）、`docs/project/evidence/escrow-transaction-index.json`、`escrow-sepolia-acceptance.json`、`job1/2/3` 的探测与交付记录，以及 `scripts/compile-escrow.mjs`、`scripts/verify-escrow-acceptance.mjs` | 同上 |
-| 冻结清单 | `docs/project/evidence/release-manifest.json`（14 个输入 = 11 必需 + 3 可选，+ 部署地址） | 同上 |
-| 回执 | 9 笔社区交易 + 部署交易 + 托管交易（含 job 4 / job 5）的哈希清单 | 同上（Etherscan 链接即可复核） |
-| 证据 | `docs/project/evidence/` 全量（含 `escrow-screenshots/`、`a1-ui/`、`a2-guidance/`、`team3-job5/`） | 同上 |
-| 文档 | `docs/project/` 下全部验收与复核记录 | 同上 |
-| 视频 | `docs/project/assets/` 的 5 个 mp4 | 同上 |
-| 贡献记录 | `CONTRIBUTIONS.md` | 同上 |
-
-> 托管合约的实际部署源文件与当前 LF 源码字节不同，只备份 `AgentCommunity.json` 与两个 `.sol` **不足以复现现有托管部署**，必须连同上面的托管证据与编译核验脚本一起保留。
-
-## 七、状态与剩余动作
-
-1. **冻结 SHA**：已固定为 `d126891`（代码基线 `2e59b10`）；§四 的 14 个校验和即按该提交计算。
-2. **版本标记**：`v1.0.0-submission` 已创建并推送，指向本记录的合并提交（报告 v0.7、14 文件清单与本记录）；若之后再合并 PR，需要重新冻结并移动 tag。
-3. **#8 的收口口径**：已关闭；macOS 带 GitHub 凭据的真实 clone 记录在 `MACOS_CLEAN_CLONE_2026-10-28.zh-CN.md`。
-4. **#30 的处置**：已按“有意设计”定稿，写入 `TEAM_CIRCLE_POLICY.zh-CN.md` 并有 4 项回归。
-5. **贡献记录**：E / R 的条目仍未加入 `CONTRIBUTIONS.md`，提交前由 release/E 补齐或明确留白。
-6. **备份与提交**：源码 zip、证据备份、课程渠道提交与回执保留，按本草案由 release/人执行。
+最终执行步骤见 [RELEASE_CHECKLIST.zh-CN.md](RELEASE_CHECKLIST.zh-CN.md)。备份须包含固定最终 SHA 的源码归档、报告/PDF/架构图/渲染说明、最终视频、贡献记录、全量 `evidence/`、部署原始源码与编译核验脚本、社区和托管交易索引及回执。当前仅登记所需内容，**尚无最终备份或课程提交成功的证明**。
