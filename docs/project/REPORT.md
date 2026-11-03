@@ -2,9 +2,9 @@
 
 **COMP7610 Final Project Report (draft)**
 
-- Version: v0.7 (2026-11-02; social product rationale, user story, collaboration history/activity)
-- Code baseline: `2e59b10` (main). Since v0.5 this adds the B independent review and live-write trim (#58), the blueprint features — agent card, market, hire, My orders, sample agent service and x402 (#59, merged through #60) — the x402 payer-signature / token-price / persistence fixes (#60), the demo-caption compatibility fix (#61) and the read-only collaboration-history / activity views (#67). The automated suite is now 21 files / 112 tests. No contract source, ABI, generated artefact or deployment address changed.
-- Release scope: this report revises the documentation after the `v1.0.0-submission` freeze. The code baseline and historical acceptance results are unchanged; this revision needs a new report hash and release review before inclusion in a final submission.
+- Version: v0.9-review (2026-11-03; member details and Issue #9 acceptance-scope clarification)
+- Source snapshot: main `78be5327e1fcb3fa0a0d5ebf3a58033ee0e78ee0`, including merged PRs #66-#69. Functional code baseline: `2e59b10` (#67). This document builds on the repository report v0.7 and preserves its historical acceptance evidence. The source contains 21 top-level test files; the recorded suite result is 112 tests (see §7.1). No contract, ABI, generated artefact or deployment address is changed by this report revision.
+- Release scope: a report review revision after the #69 freeze record for `d126891`. This report and PDF have new bytes; the previous manifest/tag does not automatically cover them. After peer review and merge, release must record the new report hashes and submission version. This revision makes no claim of a new Sepolia run, independent-user study, completed peer review or final submission.
 - Every figure in this report is taken from a file in the repository or from an on-chain receipt. Items that could not be verified are listed in §12 instead of being filled with estimates.
 
 ---
@@ -17,15 +17,15 @@ Its target users are agent developers and operators seeking complementary collab
 
 The system uses **circles** to organise interests, **posts and replies** to enable discovery, **teams** to formalise a one-to-one working agreement, **shared works** to record an output confirmed by both parties, and an **escrow contract** to handle payment, refund, and timeout-based claims.
 
-There is no backend. The frontend is a static site; every write is signed by the user's wallet in the browser and sent directly to the contracts, while reads go through a public RPC endpoint. The contracts have **no owner, admin, pause, or upgrade function**; permissions are derived entirely from three sources: circle membership, Agent NFT ownership, and team participation.
+The core DApp is a static frontend: browser-initiated writes are signed by the user's wallet, and reads use public RPC. The optional Node.js agent service is an off-chain component with its own operator-controlled signing wallet, card endpoint and persisted delivery files. AgentCommunity has no privileged administrator, pause or upgrade entry point; its permissions derive from circle membership, optional Agent NFT attribution and team participation. The new history/activity pages are read-only projections of loaded records, not new on-chain writes or proof of user adoption.
 
-Verification combines local automated tests, browser and cross-platform checks, and Sepolia acceptance. Only the recorded testnet transactions and RPC probes are Sepolia evidence; local EVM tests, fixtures and Demo sandbox checks are not testnet transactions. Scale of the work at the stated code baseline:
+Verification combines local automated tests, browser and cross-platform checks, and Sepolia acceptance. Only the recorded testnet transactions and explicitly identified read-only RPC probes are Sepolia evidence; local EVM tests, Demo sandbox data and simulated live browser checks are not real Sepolia/RPC/MetaMask acceptance. In Zqqq-qq's runs, Account 1 and Account 2 were controlled by one operator who personally confirmed the wallet transactions; two account addresses do not establish two independent human testers. Scale of the work at the stated code baseline:
 
 | Dimension | Value |
 | --- | --- |
-| Contracts | 5 source files, 596 lines in total (AgentCommunity 135 / IdentityRegistry 117 / JobEscrow 180 / MockUSDC 42 / ReputationRegistry 122) |
-| Frontend | 13 own JavaScript modules (excluding the ethers dependency) |
-| Automated tests | 21 test files; `pnpm test` reports **112 passing tests** |
+| Contracts | Five source files: community, identity, reputation, escrow and the mUSD test token |
+| Frontend | 17 top-level JavaScript modules under `web/`, excluding the vendored ethers dependency |
+| Automated tests | 21 top-level test files; archived result: 112 tests, with platform-specific pass/skip details in §7.1 |
 | Community flow | 9 real transactions forming the complete loop, each with a receipt |
 | Escrow flow | 3 jobs in the standalone escrow acceptance (normal payment, refund after non-delivery, claim after timeout); jobs 4 and 5 are the two cross-module runs in §7.6 |
 | Cross-platform | macOS and Windows both ran a clean-clone verification at the **same commit** `7db718a` |
@@ -57,15 +57,15 @@ The intended users are agent developers and operators who want to find people wi
 
 These records express different levels of participation. A completed collaboration can give a future partner more context than a follower count, but it is not an objective trust score. The contract records consent and updates pairwise collaboration counts; it cannot establish that participants are independent people or that a work is useful.
 
-The course material **DApps in Web3** (provided as `DApps v2.pdf`, slide 11, “Social Dapps: Lens Protocol”) motivates user-controlled identity and shared social data accessible to other frontends. AgentLedger applies that motivation to collaborative work. This is a comparison to the lecture's example, not a claim of compatibility with Lens or of implementing all its features.
+The course material **DApps in Web3** (provided as `DApps v2.pdf`, slide 11, "Social Dapps: Lens Protocol") motivates user-controlled identity and shared social data accessible to other frontends. AgentLedger applies that motivation to collaborative work. This is a comparison to the lecture's example, not a claim of compatibility with Lens or of implementing all its features.
 
 ### 2.2 Illustrative user story and reason to return
 
 **Illustrative scenario, not an additional acceptance run.** A developer operates a data-analysis agent and wants a collaborator who can visualise its results. They discover a relevant circle, publish a task and discuss the scope through replies. They inspect a potential partner's public information and available collaboration records, agree on roles and form a team. After producing an output, one participant proposes a shared work and the other confirms or rejects its record. For paid work, a separately linked escrow job handles funding, a delivery digest and settlement under its own rules.
 
-The proposed participation loop is **discover a partner → discuss a task → agree to collaborate → acknowledge an output → present the resulting history → find a future partner**. Discovery offers a reason to arrive, a concrete task offers a reason to interact, and maintaining a portfolio and finding another engagement could offer reasons to return. These are product hypotheses; there has been no study of demand, retention or network effects. The prototype now provides the two read-only views described in §2.5, but their adoption is untested.
+The proposed participation loop is **discover a partner -> discuss a task -> agree to collaborate -> acknowledge an output -> present the resulting history -> find a future partner**. Discovery offers a reason to arrive, a concrete task offers a reason to interact, and maintaining a portfolio and finding another engagement could offer reasons to return. These are product hypotheses; there has been no study of demand, retention or network effects. The prototype now provides the two read-only views described in §2.5, but their adoption is untested.
 
-The scenario is grounded in separate implementation evidence: the community acceptance (§7.2) covers the social workflow and shared-work confirmation; team 3 → job 5 (§7.6) covers invitation acceptance, a public application-level reference, delivery and payment of 1 test mUSD. The latter run used two accounts controlled by one user, Agent IDs 0, and did not publish a shared work. These records must not be presented as one observed user journey or as autonomous agent collaboration.
+The scenario is grounded in separate implementation evidence: the community acceptance (§7.2) covers the social workflow and shared-work confirmation; team 3 -> job 5 (§7.6) covers invitation acceptance, a public application-level reference, delivery and payment of 1 test mUSD. The latter run used two accounts controlled by one user, Agent IDs 0, and did not publish a shared work. These records must not be presented as one observed user journey or as autonomous agent collaboration.
 
 ### 2.3 Why blockchain is relevant, and what it costs
 
@@ -113,7 +113,7 @@ The repository is organised around five roles plus release. Tasks and dependenci
 
 ### 3.3 Scope boundaries
 
-- No backend service and no database: state lives only on-chain; the frontend does not persist business data.
+- The core DApp requires no central business backend. Contract state is authoritative for on-chain records; browser-local settings/Demo data and optional service metadata/delivery files remain off-chain. The service uses a dedicated environment-configured wallet; the browser does not hold that key.
 - Settlement uses **a valueless test token** (mUSD, 6 decimals), never real assets.
 - No cross-chain support, no proxy upgradeability, no governance (the contracts have no owner).
 
@@ -125,12 +125,14 @@ The repository is organised around five roles plus release. Tasks and dependenci
 
 ![AgentLedger implementation architecture](../assets/architecture.svg)
 
-The diagram has three layers: **browser (static site, no backend)**, **wallet and public RPC**, and **five contracts on-chain**. Three distinct paths must not be confused:
+**Figure 1. Implementation architecture, not an acceptance-session diagram.** The user-wallet box represents a signing role, not a count of human operators or devices. Zqqq-qq controlled both test accounts in their recorded runs; the social-view browser checks used Demo/simulated data and do not establish new Sepolia, real RPC or MetaMask acceptance. Independent peer checks retain their separate attribution.
+
+The diagram distinguishes the **static browser DApp**, **user wallet and public RPC**, **five on-chain contracts**, and the **optional off-chain agent service and files**. The browser includes the two account-scoped social views; the service has a separate operator-controlled wallet and availability/storage responsibilities. Three core paths must not be confused:
 
 | Path | Trigger | Signature required |
 | --- | --- | --- |
 | Read | `eth_call` / `eth_getCode` against a contract address when a page loads | No |
-| Write | User submits in the UI → wallet signs → transaction is broadcast | Yes |
+| Write | User submits in the UI -> wallet signs -> transaction is broadcast | Yes |
 | Contract-to-contract | `AgentCommunity` calls `IdentityRegistry.ownerOf`; `JobEscrow` validates `Identity.exists / ownerOf` when a job is created, and calls `transfer / transferFrom` on the token supplied with the job | Executed internally by the contracts |
 
 `ReputationRegistry` is an independent module: no other contract calls it, feedback is written against a signature, and it has no on-chain coupling to the community or escrow flows.
@@ -160,13 +162,13 @@ The function-by-function permission table, including every revert reason, is in 
 **State machines** (ibid. §2):
 
 ```
-Team:  None ──inviteTeam──▶ Pending ──respondTeam(accept)──▶ Active
-                              │
-                              ├──respondTeam(decline)──▶ Declined
-                              └──cancelTeam(host)─────▶ Cancelled
+Team:  None --inviteTeam--> Pending --respondTeam(accept)--> Active
+                              |
+                              +--respondTeam(decline)--> Declined
+                              +--cancelTeam(host)-----> Cancelled
 
-Work:  None ──proposeWork──▶ Proposed ──reviewWork(true)──▶ Published
-                                  └────reviewWork(false)─▶ Rejected
+Work:  None --proposeWork--> Proposed --reviewWork(true)--> Published
+                                  +----reviewWork(false)-> Rejected
 ```
 
 Two constraints matter:
@@ -182,12 +184,14 @@ Three settlement paths: release on client approval, refund after the submission 
 
 ### 4.4 Frontend
 
-A static site with 13 own modules (excluding the ethers dependency), grouped by responsibility:
+A static site with 17 top-level JavaScript modules under `web/` (excluding the vendored ethers dependency), grouped by responsibility:
 
 | Layer | Modules | Purpose |
 | --- | --- | --- |
 | Entry & routing | `app.js` | View switching, wallet connection, shared interactions |
 | Community | `social.js`, `social-core.js`, `social-chain.js` | Rendering, pure state helpers, on-chain read/write |
+| Social projections | `social-insights.js` | Account-scoped portfolio, relevant activity and verified-order projections; rendered by `social.js` |
+| Discovery and HTTP payment | `agent-card.js`, `market.js`, `x402.js` | Card generation/parsing, loaded-page market filters, hire prefill and simplified HTTP payment client |
 | Escrow | `escrow.js`, `escrow-core.js`, `escrow-link-ui.js`, `escrow-links.js`, `escrow-deploy.js` | Job UI, validation, linking to community teams, deployment records |
 | Shared | `core.js`, `config.js`, `wallet-session.js`, `deployment-evidence.js` | Address validation, error messages, session recovery, deployment evidence |
 
@@ -195,22 +199,22 @@ A static site with 13 own modules (excluding the ethers dependency), grouped by 
 
 ## 5. Implementation Notes
 
-### 5.1 Every write goes through the wallet, and the network is checked first
+### 5.1 Browser community writes use the wallet and check the network first
 
 Writes go through `sendCommunity()` in `web/social-chain.js`. Before sending, it reads the signing wallet's `eth_chainId` and refuses to proceed unless it is Sepolia (`11155111`), so a user cannot sign on the wrong network. Covered by `tests/wallet-recovery.test.mjs`.
 
 ### 5.2 Impossible submissions are disabled at circle-selection time
 
-An earlier build allowed publishing into a circle the user had not joined; the contract rejected it with `join circle first`. Measurement showed something important: because ethers performs `eth_estimateGas` before sending, such a call **reverts during estimation**, so no gas is spent and no wallet prompt appears — the user simply saw a raw English revert string.
+An earlier build allowed publishing into a circle the user had not joined; the contract rejected it with `join circle first`. Measurement showed something important: because ethers performs `eth_estimateGas` before sending, such a call **reverts during estimation**, so no gas is spent and no wallet prompt appears - the user simply saw a raw English revert string.
 
 Two changes followed (PR #23):
 
 1. **Up-front gating**: `syncPostGate()` in `web/social.js` keeps the submit button in sync when rendering and when the circle changes; it disables submission with an explanation when the selected circle has not been joined. The reply form uses the circle of the post.
-2. **Message mapping**: `errorMessage` in `web/core.js` gained 10 human-readable mappings (20 in the table overall), so `join circle first` now reads "Join this circle before posting or replying — the contract only accepts members."
+2. **Message mapping**: `errorMessage` in `web/core.js` gained 10 human-readable mappings (20 in the table overall), so `join circle first` now reads "Join this circle before posting or replying - the contract only accepts members."
 
 ### 5.3 The real cost of on-chain storage (measured)
 
-Titles, bodies, and delivery summaries are stored directly in the contracts. This is deliberate — it keeps content and attribution tamper-evident — and the price is that storage dominates the cost. Measured `gasUsed`, taken from receipts rather than estimates:
+Titles, bodies, and delivery summaries are stored directly in the contracts. This is deliberate - it keeps content and attribution tamper-evident - and the price is that storage dominates the cost. Measured `gasUsed`, taken from receipts rather than estimates:
 
 | Operation | Block | gasUsed |
 | --- | --- | --- |
@@ -227,7 +231,7 @@ Titles, bodies, and delivery summaries are stored directly in the contracts. Thi
 
 The ten transactions total `24,457,402` gas. The **deployment accounts for 70.3%**, at a cost of `0.02577 ETH` (`effectiveGasPrice` 1,500,000,014 wei, approximately 1.5 gwei; wallet settings unconfirmed); the other nine executed at 16 / 18 / 25 wei and cost about `0.00000000012 ETH` together, i.e. negligible.
 
-**Deployment operations and limits of the record.** The contemporaneous acceptance and handoff records describe the local project webpage in Chrome with MetaMask 13.54.0; the user personally confirmed the Sepolia deployment. The deployment-source snapshot (`fb6c325`) calls ethers.js `ContractFactory.deploy(registry)` without explicit `gasLimit`, `gasPrice`, `maxFeePerGas` or `maxPriorityFeePerGas` overrides. This establishes the application-side call, not the settings finally chosen in MetaMask. On 2026-10-30 the deployer stated that they could not remember whether they manually edited gas or fees; this remains **unconfirmed**. The stored RPC receipt confirms `gasUsed` and the effective price, but does not preserve the transaction gas limit, fee caps, wallet estimate or confirmation-screen settings. The previous phrase “the wallet default” was unsupported and has been removed. No execution trace or historical replay has established why this deployment used 17.18M gas. The source-by-source record and remaining unknowns are in [Deployment operation record](DEPLOYMENT_OPERATIONS_2026-10-27.zh-CN.md).
+**Deployment operations and limits of the record.** The contemporaneous acceptance and handoff records describe the local project webpage in Chrome with MetaMask 13.54.0; the user personally confirmed the Sepolia deployment. The deployment-source snapshot (`fb6c325`) calls ethers.js `ContractFactory.deploy(registry)` without explicit `gasLimit`, `gasPrice`, `maxFeePerGas` or `maxPriorityFeePerGas` overrides. This establishes the application-side call, not the settings finally chosen in MetaMask. On 2026-10-30 the deployer stated that they could not remember whether they manually edited gas or fees; this remains **unconfirmed**. The stored RPC receipt confirms `gasUsed` and the effective price, but does not preserve the transaction gas limit, fee caps, wallet estimate or confirmation-screen settings. The previous phrase "the wallet default" was unsupported and has been removed. No execution trace or historical replay has established why this deployment used 17.18M gas. The source-by-source record and remaining unknowns are in [Deployment operation record](DEPLOYMENT_OPERATIONS_2026-10-27.zh-CN.md).
 
 **Effect of text length on cost (RPC gas estimates)**: using `eth_estimateGas` on the same `createPost(circle 2, agentId 0, kind 0)` while varying only the body length:
 
@@ -241,7 +245,7 @@ The ten transactions total `24,457,402` gas. The **deployment accounts for 70.3%
 
 Going from 10 to 4,000 characters multiplies the estimate by about 24. The real post 2 has a 224-character body and a 38-character title; its receipt shows 1,583,822 gas, which sits where the curve predicts.
 
-The implementation conclusion is therefore that **text length dominates write cost**. Reducing cost would mean storing the body off-chain and keeping only a hash on-chain, which trades away readability; this project deliberately keeps readability.
+For the measured inputs, the estimates illustrate that longer stored text materially increases write cost; byte length and execution context also matter. Contract text limits use UTF-8 bytes, not a universal character-count model. The implementation conclusion is therefore that **on-chain text storage is a significant cost trade-off**. Reducing cost would mean storing the body off-chain and keeping only a hash on-chain, which trades away readability; this project deliberately keeps readability.
 
 > Scope note: the composition of the deployment transaction's gas (11,220 bytes of creation input, 10,973 bytes of runtime code) is not attributed further; only the receipt value is reported.
 
@@ -289,7 +293,7 @@ On 2026-10-27 a duplicate deployment occurred: while the shared address had not 
 
 Remediation (Issue #20, closed):
 
-1. A pre-deployment checklist at the **top** of `docs/project/DEPLOYMENTS.md`: check this file first → run the read-only verification → record immediately in the same pull request as the deployment → announce one shared address to the whole team.
+1. A pre-deployment checklist at the **top** of `docs/project/DEPLOYMENTS.md`: check this file first -> run the read-only verification -> record immediately in the same pull request as the deployment -> announce one shared address to the whole team.
 2. Keep the duplicate in the history but mark it as "not adopted".
 3. Keep the wording discipline that "read-only verification is not the same as block-explorer source verification".
 
@@ -299,9 +303,11 @@ Remediation (Issue #20, closed):
 
 ### 7.1 Automation and CI
 
-CI is defined in `.github/workflows/ci.yml`. The `verify` job runs on `ubuntu-latest` in seven steps: checkout → Node 24 → install pnpm 11.25.0 → `pnpm install --frozen-lockfile` → `pnpm test` → confirm the committed contract artefact is unchanged (`git diff --exit-code -- web/generated/AgentCommunity.json`) → `pnpm build`.
+**Evidence and operator scope (Issue #9).** Local Ganache tests, Demo sandbox checks, simulated live browser fixtures, real read-only Sepolia RPC observations and wallet-signed Sepolia transactions are separate evidence categories. A simulated RPC failure is a fixture result, not an observation of a live RPC provider. In Zqqq-qq's wallet acceptance records, Account 1 and Account 2 are two test accounts controlled by the same user; Zqqq-qq personally confirmed transactions in MetaMask. These records do not demonstrate two members independently operating wallets, cross-device signing or independent peer acceptance. Other members' documented independent verification is credited separately; this clarification does not reattribute the distinct D1 or cross-module runs below.
 
-At the stated code baseline, local scale is **21 test files, 112 passing tests** (111 pass plus one CLI fixture that Windows skips). Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, UI message mapping, status guidance, content-boundary and URI rules, report-PDF generation, freeze-manifest validation, circle/team permission regressions, marketplace filters, agent cards, the sample agent service, x402 payments and collaboration-history/activity projections.
+CI is defined in `.github/workflows/ci.yml`. The `verify` job runs on `ubuntu-latest` in seven steps: checkout -> Node 24 -> install pnpm 11.25.0 -> `pnpm install --frozen-lockfile` -> `pnpm test` -> confirm the committed contract artefact is unchanged (`git diff --exit-code -- web/generated/AgentCommunity.json`) -> `pnpm build`.
+
+The reviewed source snapshot contains **21 top-level test files**. Repository acceptance and freeze records report **112 tests** at the stated functional baseline; the Windows record is **111 pass plus one deliberately skipped CLI fixture**, while CI is recorded as 112 pass. These are attributed historical results, not a claim that all tests or both platforms were rerun for this editorial revision. Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, UI message mapping, status guidance, content-boundary and URI rules, report-PDF generation, freeze-manifest validation, circle/team permission regressions, marketplace filters, agent cards, the sample agent service, x402 payments and collaboration-history/activity projections.
 
 The automated suite executes locally: contract tests deploy to an in-memory Ganache EVM, while frontend, wallet and service tests use pure functions or controlled fixtures. These results do not represent Sepolia transactions. The testnet evidence is identified separately below by transaction receipts, fixed-block RPC probes and state reads; the cross-platform Demo screenshot in §7.8 verifies local startup only. Counts refer to the code baseline above.
 
@@ -344,7 +350,7 @@ Eight `eth_call` probes at the fixed block **12011205** (four rejections, four p
 
 ### 7.4 Three escrow settlement paths
 
-Three jobs executed on Sepolia:
+Three jobs executed on Sepolia in Zqqq-qq's recorded escrow acceptance. The client and provider test accounts were controlled by the same operator, who personally confirmed the MetaMask transactions; this is a two-account protocol check, not independent two-member acceptance:
 
 | Job | Result | Description |
 | --- | --- | --- |
@@ -361,13 +367,13 @@ Final snapshot at block 12010056: client **98 mUSD**, provider **2 mUSD**, escro
 | Scenario | Observation |
 | --- | --- |
 | Another browser (fresh Edge profile, no wallet) | Read the same content as Chrome, including the confirmed work with `Confirmed at block 12010030` |
-| Another device (separate browser and storage, no wallet) | Read 2 posts and the same confirmed work, with matching signatures from both parties |
-| Real wallet, successful write | Joined a circle → the button changed from `Join circle` to `Leave circle` → left again to restore state; both transactions `status=1` |
+| Another device (separate browser and storage, no wallet) | Read 2 posts and the same confirmed work, with the same recorded two-account work confirmation |
+| Real wallet, successful write | Joined a circle -> the button changed from `Join circle` to `Leave circle` -> left again to restore state; both transactions `status=1` |
 | Real wallet, cancelled signature | `Request cancelled in your wallet. No action was completed.`; on-chain nonce unchanged |
 
-Boundary: the second device was used for **read-only** verification only; no cross-device signed write was performed.
+Boundary: the second device was used for **read-only** verification only; no cross-device signed write was performed. This table combines separately documented observations, not a single multi-device signing session. Zqqq-qq's own Account 1 / Account 2 switching and failure-recovery checks used one operator; other members' independent observations remain separately attributed.
 
-### 7.6 Cross-module entry point: community team → funded escrow job (verified)
+### 7.6 Cross-module entry point: community team -> funded escrow job (verified)
 
 This flow spans both modules and was executed end to end with two wallets on Sepolia on 2026-10-28.
 
@@ -382,13 +388,13 @@ This flow spans both modules and was executed end to end with two wallets on Sep
 | B submits a delivery digest | job 4 moves to submitted |
 | A accepts and releases | job 4 status **Completed(3)** |
 
-Final balances after release, read at block 12012205: **client 99 mUSD, provider 1 mUSD, escrow contract 0 mUSD** — the 1 mUSD left the client exactly once and arrived at the provider exactly once, and no funds remain locked.
+Final balances after release, read at block 12012205: **client 99 mUSD, provider 1 mUSD, escrow contract 0 mUSD** - the 1 mUSD left the client exactly once and arrived at the provider exactly once, and no funds remain locked.
 
 The team is linked to the job in the application layer only: the UI associates a team with an escrow job and can publish a client-authored reference as a community reply so the link is publicly checkable. JobEscrow itself has no team field. As the UI states, references "do not enforce settlement, prove quality, split payments or make feedback order-verified." This is a deliberate boundary, not an oversight.
 
-> Earlier state (kept for accuracy): before this run, a task post (post 3) and a team invitation (team 3) existed on-chain between two accounts of the same operator, but the invitation was never accepted and no job was ever funded from that team. That is why an earlier version of this report listed the cross-module path as unverified. **That gap was closed on 2026-10-29** by the second run below.
+> Earlier state (kept for accuracy): before this run, a task post (post 3) and a team invitation (team 3) existed on-chain between two accounts of the same operator, but the invitation had not yet been accepted and no job had yet been funded from that team at the time of that earlier snapshot. That is why an earlier version of this report listed the cross-module path as unverified. **That gap was closed on 2026-10-29** by the second run below.
 
-**Second cross-module run (2026-10-29, team 3 → job 5).** A separate run used the same team 3 with a different job and different balances: community post 3 → team 3 → reply 3 → escrow **job 5**. Six successful transactions (`status=1`, blocks 12018477–12018556) cover the guest accepting the invitation, the 1 mUSD approval, funding, the link reply, the delivery digest, and the client's release. Job 5 is `Completed`; balances were **98 / 2 / 0** mUSD (client / provider / escrow) before the run and **97 / 3 / 0** after it, so the 1 mUSD left the client once and reached the provider once. The delivered file's Keccak-256 matches the on-chain digest (`0xd878a566…29ad`), and a read-only duplicate `release(5)` returned `not submitted`. The accounts, team, job and balances differ from §7.6's post 4 / team 4 / job 4 run and must not be combined; the record is `docs/project/TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md`.
+**Second cross-module run (2026-10-29, team 3 -> job 5; Zqqq-qq, one operator / two test accounts).** Zqqq-qq controlled both accounts and personally confirmed all six transactions in MetaMask. No second member independently signed and no cross-device signed write was added. A separate run used the same team 3 with a different job and different balances: community post 3 -> team 3 -> reply 3 -> escrow **job 5**. Six successful transactions (`status=1`, blocks 12018477-12018556) cover the guest accepting the invitation, the 1 mUSD approval, funding, the link reply, the delivery digest, and the client's release. Job 5 is `Completed`; balances were **98 / 2 / 0** mUSD (client / provider / escrow) before the run and **97 / 3 / 0** after it, so the 1 mUSD left the client once and reached the provider once. The delivered file's Keccak-256 matches the on-chain digest (`0xd878a566…29ad`), and a read-only duplicate `release(5)` returned `not submitted`. The accounts, team, job and balances differ from §7.6's post 4 / team 4 / job 4 run and must not be combined; the record is `docs/project/TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md`.
 
 ### 7.7 Frozen-candidate regression (D2 / #8)
 
@@ -433,9 +439,21 @@ PR #58 is B's independent review of B1/B2: it corrects the host/`kind` descripti
 
 ### 7.13 Collaboration history and account activity (merged 2026-11-02)
 
-PR #67 adds two read-only, account-scoped views over the existing community records. "My collaboration history" (`#portfolio`) lists partners, mutually acknowledged works with their source discussion, recent posts and explicitly verified order references; it reuses `readLinks` / `verifyLink` and treats a confirmed work and a paid job as separate facts. "My activity" (`#activity`) lists pending invitations, works awaiting the connected account's review and replies to its posts, excluding self-replies, self-confirmation and terminal teams. Refreshing or changing wallet/mode/config invalidates an in-flight order scan so a late response cannot publish another account's rows; the hidden social views are cleared to avoid duplicate DOM.
+PR #67 is implemented in the reviewed main snapshot. My collaboration history (`#portfolio`) shows wallet partners, jointly confirmed works, source discussion, recent posts and explicitly verified order references. My activity (`#activity`) shows invitations addressed to the wallet, proposals awaiting the other member's review, and other accounts' replies to its posts. Opening an item returns to the source team, work or discussion; opening a reply does not mark it read. Ended invitations and self-reviews are excluded; replies remain historical activity, not an unread inbox.
 
-The change adds no contracts, writes or transactions. Four projection regressions cover participation/provenance, activity filtering, ordering and order-participant de-duplication; the suite is 112/112 (111 pass + one Windows skip) and the build passes. Chrome checks at 1440×950 and 390×950 exercise demo personas, source navigation and no horizontal overflow; a simulated-live browser check covers a stale account scan, RPC failure versus an empty result, retry and the source event. Those browser checks are synthetic demo/simulated-live evidence, not a new Sepolia or MetaMask acceptance run.
+The product rationale is now supported by implemented interfaces: a member can inspect prior collaboration and find a next action. This demonstrates availability of the features, not that they improve demand, retention or trust. A work confirmation, a valid order reference and a payment outcome remain distinct facts.
+
+| Check | Evidence and environment | Supported scope |
+| --- | --- | --- |
+| Wallet participation, provenance and activity filtering | Four projection regressions in `tests/social-insights.test.mjs`; local pure-function tests | Confirmed-work provenance, correct recipients, exclusion of self/terminal pending actions, ordering and order de-duplication |
+| Layout, account switching and source navigation | Archived browser checks at 1440×950 and 390×950 using synthetic Demo data; `tests/browser/social-insights-demo.mjs` | Page rendering, invited-account display, team/work/thread links, no horizontal overflow and no recorded page-script errors |
+| Delayed response and RPC failure | Controlled browser fixture replacing app/community readers and order scanning; `tests/browser/social-insights-live.mjs` | Old wallet result discarded, failure distinguished from no valid orders, retry, displayed order state/block and source-navigation event |
+| Order-reference validity | Reused `readLinks` / `verifyLink` and existing escrow-reference tests | Network/configuration, identity registries, task/team, client/provider, Agent ID, token and fixed-block validation; decoded text alone is not proof |
+| Peer review and integration | QiuQiu-xuan's approved review on PR #67; #68 updated the report and #69 archived the freeze | Reviewed implementation and integrated documentation; no claim that another requested reviewer completed review |
+
+These sources are indexed in `docs/project/SOCIAL_INSIGHTS_2026-11-02.zh-CN.md`. All layout, account-switching, stale-response, RPC-failure and retry checks listed for these two pages use Demo data or simulated live fixtures. They are not new real RPC, MetaMask or Sepolia acceptance. Real-chain conclusions in this report refer only to the separately identified historical receipts and scoped read-only RPC records. The change added no contracts or transaction functions; it did not produce a new Sepolia transaction or independent-user study. The 112-test suite result is the recorded baseline in §7.1, not an additional browser-test count.
+
+The default community window is 40 records per type plus linked provenance, expandable with Load older records. Public order references are scanned separately at one block with a 1,000-reply cap, so community and order snapshots may differ. Unverified, verifying, failed and completed-with-no-valid-reference states remain distinct; even a successful scan is not a list of all unreferenced jobs. The UI invalidates scans on normal refresh and wallet/mode/configuration changes; the controlled race test specifically covers a wallet change. No full-history completeness, background push, unread state or retention result is claimed.
 
 ---
 
@@ -458,20 +476,27 @@ Each item below is **confirmed**, not speculative:
 | 11 | x402 is a direct mUSD transfer with no escrow or refund; used payment hashes are kept in memory, so a restart within the 1-hour window can re-enable a hash for the same payer | `agent-service/README.zh-CN.md` |
 | 12 | Marketplace filters only the currently loaded registry page; community evidence is an application-level association, not a contract-enforced link | #59 |
 | 13 | Collaboration history / activity are projections of the loaded window (default 40 records per type), not all history; order references are scanned separately with a 1,000-reply cap and no completeness claim | #67 / §2.5 |
-| 14 | The activity view has no push service, unread state or read receipt; it shows pending actions only after a refresh, and no retention or adoption improvement is claimed | #67 |
+| 14 | The activity view has no push service, unread state or read receipt; externally changed records require refresh, and no retention or adoption improvement is claimed | #67 |
 
 ---
 
-## 9. Contribution Distribution
+## 9. Team Contributions
 
-Commit authorship on `main`: QiuQiu-xuan 81, Zqqq-qq 42, ffmitrg 7, PAisHere 4.
+Names and student IDs were supplied by the team on 2026-11-03. Names are written in Hanyu Pinyin with the given name before the family name, as requested by the report coordinator. The repository account for the report coordinator is `daizhiqi`. Contributions are based on repository evidence and member-provided descriptions, not PR counts. The source snapshot is `78be532`; this report integration is submitted for peer review; approval and merge are tracked on the PR linked to Issue #9.
 
-Per-member output is recorded in `docs/project/CONTRIBUTIONS.md`: entries for roles A, B, C and D are present, with the distinction between work "performed by the member" and work "assisted by tools (Codex)" stated explicitly. **Entries for E and R are still missing** (see §12).
+| Member / GitHub account / student ID | Recorded actual contribution | Main evidence |
+| --- | --- | --- |
+| Haipeng Wang / PAisHere / 3036841371 | Community interface visuals, icons and statistics layout; collaboration and work illustrations; workflow guide and interface copy. QiuQiu-xuan integrated the visual changes while retaining the original authorship. | #40, #51; integration #54 |
+| Dian Li / ffmitrg / 3036841890 | Independent permission/content-boundary review and input-normalisation regressions; agent cards, market filters, hire/order/review flows, sample agent service and HTTP payments; demo and rehearsal preparation. | #58, #59; original commits integrated through #60 |
+| Qing Zhang / Zqqq-qq / 3036843862 | Wallet connection and failure recovery, Sepolia community/escrow deployment, escrow integration and real-transaction acceptance; personal wallet confirmations, tests and evidence preparation. Mobile interaction, permission/content-boundary review and regressions; macOS clean-clone/startup validation. Social DApp rationale and user story; collaboration-history and account-activity implementation. Additional documented work includes PDF/freeze tooling, provenance/licence checks, configuration-aware captions and service-defect reproduction. | #13, #14, #16, #22, #32, #34, #35, #41, #47, #48; #43, #49, #52, #53, #57, #64; review of #59; #66, #67 |
+| Yaxuan Qiu / QiuQiu-xuan / 3036842040 | Cross-platform and artefact consistency, D1/D2 tests and regressions, membership guidance and error messages; report drafts/PDF iterations, demo materials and release preparation. Visual integration, service payment/signature and delivery-persistence fixes; review of the new social views and subsequent report/freeze-record alignment. | #15, #19, #23, #33, #36, #37, #54, #60; review of #67; #68, #69 |
+| Zhiqi Dai / daizhiqi / 3036841979 | Report review and revision, architecture diagram/PDF updates, contribution cross-checking and integration of current implementation and validation evidence. This work builds on the existing team report; peer approval and merge are tracked separately. | Local E1 deliverables, 2026-11-02 to 2026-11-03; progress comment on #9; Report integration PR linked to #9 |
 
-Two points deserve honesty:
+**Operator and validation boundaries.** Zqqq-qq's Account 1 and Account 2 were controlled by one user, who personally confirmed real transactions in MetaMask. Their wallet and team 3 / job 5 records are not two-member independent acceptance or cross-device signing. The new social pages' layout, switching, late-response and RPC-failure/retry checks used Demo or simulated live data, not new real RPC/MetaMask/Sepolia acceptance. Other members' independent reviews and verification remain credited to those members.
 
-1. Part of the acceptance work was **tool-assisted** (running commands, capturing screenshots), but "confirmation" is kept strictly separate: wherever a record says a member confirmed something, that member performed the action in a real wallet. Tool output was never presented as member acceptance.
-2. The designated owners of roles A and B were unreachable for long periods; their tasks were taken over by the repository owner, as recorded in `TEAM_TASKS.zh-CN.md` on 2026-10-28.
+Implementation, review and integration are distinct contributions: ffmitrg's original functionality entered main through QiuQiu-xuan's #60; PAisHere's visual authorship was retained through #54. The inspected approval for #67 is QiuQiu-xuan's; being requested as a reviewer does not establish completed review by ffmitrg or daizhiqi. Inherited MIT-licensed source is not claimed as student-authored from scratch. Detailed evidence and disclosed tool assistance remain in `docs/project/CONTRIBUTIONS.md`; this attribution is not a statement that every line was manually authored. Codex-assisted work and ffmitrg's recorded Claude Code assistance are distinguished from personal wallet confirmations and independent peer review.
+
+Final narration, rehearsal, release and course submission are recorded only when completed. No numerical hours or contribution percentages are inferred from PR counts; any course-required allocation remains a team confirmation item.
 
 ---
 
@@ -479,13 +504,13 @@ Two points deserve honesty:
 
 **Conclusion**: AgentLedger explores a social community in which discovery develops into explicit collaboration and an inspectable history. The community workflow and the separately recorded cross-module escrow runs have Sepolia receipts, events and state evidence (§7). They support the implemented mechanisms, not a claim that the illustrative story in §2.2 occurred as a single run. The social value of those records, user demand and repeat participation still require evaluation with independent users. The contract permission model provides no administrator override; it does not establish the truth or quality of a collaboration.
 
-**Future work**: prioritise independent-user evaluation of the implemented views in §2.5 — whether people can distinguish a follow, an accepted invitation, a confirmed work and a paid job, and whether the portfolio gives a reason to return. Demand, retention and adoption remain hypotheses; no feature is promised by this paragraph. The technical work below has a separate implementation basis:
+**Future work**: prioritise independent-user evaluation of the implemented views in §2.5 - whether people can distinguish a follow, an accepted invitation, a confirmed work and a paid job, and whether the portfolio gives a reason to return. Demand, retention and adoption remain hypotheses; no feature is promised by this paragraph. The technical work below has a separate implementation basis:
 
 1. Add a terminal state for `Active` teams (requires an ABI change, redeployment, and coordination with role C).
-2. Decide whether leaving a circle should revoke team rights; if it should, `proposeWork` / `reviewWork` need a membership re-check.
+2. Preserve the documented policy that leaving a circle does not revoke an established team's rights; evaluate lifecycle/completion improvements without presenting this settled policy as an unresolved defect.
 3. Submit the source for block-explorer verification to lower the reproduction cost of "recompile locally and compare".
 4. Move long text off-chain with an on-chain hash to reduce write cost.
-5. **Done**: on-site acceptance of the "community team → escrow job" cross-module entry point — post 4 / team 4 / job 4 completed, 1 mUSD released — see §7.6.
+5. Evaluate order-verified reputation and dispute handling as possible contract extensions; neither is enforced by the present application-layer references. The already completed cross-module acceptance remains in §7.6, not future work.
 
 ---
 
@@ -497,7 +522,7 @@ Two points deserve honesty:
 | --- | --- |
 | Deployment and receipts | `docs/project/DEPLOYMENTS.md`, `docs/project/evidence/community-sepolia-*.json` |
 | Escrow | `docs/project/ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28.zh-CN.md`, `evidence/escrow-*.json`, `evidence/escrow-screenshots/`, `evidence/job{1,2,3}-*` |
-| Cross-module (team 3 → job 5) | `docs/project/TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md`, `evidence/team3-job5/`, `scripts/verify-team3-acceptance.mjs` |
+| Cross-module (team 3 -> job 5) | `docs/project/TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md`, `evidence/team3-job5/`, `scripts/verify-team3-acceptance.mjs` |
 | D1 acceptance | `docs/project/ACCEPTANCE_D1.zh-CN.md` (including §7, the closing review) |
 | A1 UI acceptance | `docs/project/A1_UI_ACCEPTANCE_2026-10-28.zh-CN.md`, `evidence/a1-ui/` (22 screenshots plus measurements) |
 | Circle/team policy | `docs/project/TEAM_CIRCLE_POLICY.zh-CN.md`, `tests/team-circle-independence.test.mjs` |
@@ -532,14 +557,14 @@ pnpm build
 
 | # | Missing | Impact | Owner |
 | --- | --- | --- | --- |
-| 1 | Implementation architecture diagram (done) | `docs/assets/architecture.svg` (English) and `architecture.zh-CN.svg`, embedded in §4.1 | — |
-| 2 | **Member names, student IDs, effort** | §9 currently has only GitHub handles and commit counts | Team members |
-| 3 | **E and R contribution entries** | `CONTRIBUTIONS.md` lacks these two rows, so §9 is incomplete | daizhiqi / whoever takes over |
+| 1 | Implementation architecture diagram (done) | `docs/assets/architecture.svg` (English) and `architecture.zh-CN.svg`, embedded in §4.1 | - |
+| 2 | **Member details recorded; remaining confirmations** | All five names in Hanyu Pinyin and student IDs are recorded in §9; confirm final contribution descriptions and any course-required effort allocation | Team members |
+| 3 | **E/R final confirmation and publication** | E1 revision and checks are recorded; PR approval/merge are tracked under #9, and final release/submission remain under #11 | daizhiqi |
 | 4 | **Peer assignment** (individual submission) | Required by the course; not tracked anywhere in this repository, format still unknown | Course information needed |
 | 5 | **Demo narration audio** | Script is complete (`docs/project/DEMO_SCRIPT.en.md`, timecoded, English); the video itself has visuals plus the real wallet segment but no audio track | Recorder |
 | 6 | **Deployment gas attribution** | Operation/tool record added in §5.3; deployer cannot recall manual gas/fee edits. Wallet settings and execution-level explanation of 17.18M remain unconfirmed; no attribution claimed | Zqqq-qq |
 
 Two items that were open when this report was first drafted are now closed and are recorded here so the record is not silently edited:
 
-- **Cross-module entry point** (community team → funded escrow job): executed end to end on 2026-10-28 (post 4 → team 4 → job 4, Completed, balances 99 / 1 / 0). See §7.6.
+- **Cross-module entry point** (community team -> funded escrow job): executed end to end on 2026-10-28 (post 4 -> team 4 -> job 4, Completed, balances 99 / 1 / 0). See §7.6.
 - **English deliverables**: the report, the README, the architecture diagram and the demo captions now exist in English; the remaining English gap is the narration audio (item 5).
