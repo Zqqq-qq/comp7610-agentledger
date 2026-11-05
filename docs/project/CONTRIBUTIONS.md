@@ -144,4 +144,4 @@ daizhiqi 使用 Codex 辅助完成报告整合 PR #70；Zqqq-qq 在 head 49fd499
 
 ## 2026-11-05 E2 补录：合作履历与账户动态（#73）
 
-QiuQiu-xuan 按 Zqqq-qq 的 #73 安排，录制 #67 的两页：Maya 接受邀请、Maya 提议作品、Alex 审阅确认、Alex 履历/来源回溯。交付 40.80s 连续 MP4 + 3 段节选，1280×800、无音轨；全程 Demo sandbox，无钱包/Sepolia 交易，作品使用示例 URL、明确非真实 AI 交付。录制状态由 `social-core` 的 `applyAction` 预置，准备动作不入镜；脚本 `tests/browser/social-insights-recording.mjs` 可复跑。素材交给 daizhiqi 纳入 #10，未完成成片/旁白/五人彩排；本记录不移动 tag，最终视频哈希由 #11 重新登记。
+QiuQiu-xuan 按 Zqqq-qq 的 #73 安排录制 #67 的两页：Maya 接受邀请、Maya 提议作品、Alex 审阅确认、Alex 履历/来源回溯。初版 40.80s 后按复审反馈重录 v2：圈子统一为 Research & Insights、关键状态放慢、补拍 Awaiting partner、下滚展示 “Verified linked orders / Demo 无已核验订单”，并把配音对应修正为 01→voice-07、02→voice-08+09、03→voice-10。v2 交付 69.36s 连续 MP4 + 3 段（11.68s / 32.28s / 16.76s），1280×800、无音轨；全程 Demo sandbox，无钱包/Sepolia 交易，作品使用示例 URL、明确非真实 AI 交付。状态由 `social-core` 的 `applyAction` 预置，准备动作不入镜；脚本 `tests/browser/social-insights-recording.mjs` 可复跑。素材交给 daizhiqi 纳入 #10，未完成成片/旁白/五人彩排；本记录不移动 tag，最终视频哈希由 #11 重新登记。
