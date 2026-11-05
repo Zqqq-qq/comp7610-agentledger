@@ -141,3 +141,7 @@ daizhiqi 使用 Codex 辅助完成报告整合 PR #70；Zqqq-qq 在 head 49fd499
 本轮只核对发布输入和版本映射，未新增应用/合约改动、真实 RPC 或钱包交易；演示旁白、新页面录屏、五人彩排、最终备份和课程提交仍待完成。请求 QiuQiu-xuan 复核本轮记录，实际审阅、测试结果及后续合并以本轮 PR 和 #11 记录为准。
 
 本轮本地专项：冻结脚本与 PDF 工具测试 11/11 通过、0 跳过（使用 `--test-isolation=none`）；23 项独立摘要及文档表格核对、五个部署地址对照与 `git diff --check` 通过。合并后 main 的 verify CI 为 success（run 41604537634）；不记作本轮本地全量 112 项复跑。
+
+## 2026-11-05 E2 补录：合作履历与账户动态（#73）
+
+QiuQiu-xuan 按 Zqqq-qq 的 #73 安排，录制 #67 的两页：Maya 接受邀请、Maya 提议作品、Alex 审阅确认、Alex 履历/来源回溯。交付 40.80s 连续 MP4 + 3 段节选，1280×800、无音轨；全程 Demo sandbox，无钱包/Sepolia 交易，作品使用示例 URL、明确非真实 AI 交付。录制状态由 `social-core` 的 `applyAction` 预置，准备动作不入镜；脚本 `tests/browser/social-insights-recording.mjs` 可复跑。素材交给 daizhiqi 纳入 #10，未完成成片/旁白/五人彩排；本记录不移动 tag，最终视频哈希由 #11 重新登记。
