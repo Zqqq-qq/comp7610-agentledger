@@ -62,7 +62,7 @@ These images predate the activity/history views and current community illustrati
 
 </details>
 
-There is no backend. The frontend is a static site that talks to the contracts directly; every write is signed in the user's wallet.
+The core DApp is a static site that reads contracts through public RPC and asks the user's wallet to sign browser writes. The optional `agent-service/` runs separately with its own operator-controlled wallet and off-chain result files.
 
 > This repository is the deliverable for **COMP7610 Introduction to Web3 and Blockchain**. See [`docs/project/REPORT.md`](docs/project/REPORT.md) for the full report ([PDF](docs/project/REPORT.pdf)) and [`docs/project/DEMO_RECORDING_SCENES.zh-CN.md`](docs/project/DEMO_RECORDING_SCENES.zh-CN.md) for the demo walkthrough.
 
@@ -136,8 +136,8 @@ Three layers: a static browser frontend, the wallet plus a public RPC endpoint, 
 
 **Design principles**
 
-- **No backend, no private keys**: the page only ever asks the wallet to sign.
-- **Identity is the single anchor**: reputation, escrow and community all resolve ownership through the same identity NFT.
+- **Static browser DApp**: the page asks the user wallet to sign and does not store a private key. The optional agent service has its own separately configured signing wallet.
+- **Optional Agent attribution**: linked Agent IDs resolve through the configured identity registry. Community access and collaboration permissions also depend on wallet membership and team roles; Agent ID 0 is unlinked.
 - **Reproducible deployment**: compiler settings are fixed and anyone can re-verify the deployment with a read-only script.
 
 Deeper design notes: [`docs/IMPLEMENTATION.zh-CN.md`](docs/IMPLEMENTATION.zh-CN.md) (architecture, state machines, boundaries) and [`docs/project/REVIEW_B1_AGENTCOMMUNITY_2026-10-28.zh-CN.md`](docs/project/REVIEW_B1_AGENTCOMMUNITY_2026-10-28.zh-CN.md) (permission table per function).

@@ -2,8 +2,8 @@
 
 **COMP7610 Final Project Report**
 
-- Version: v1.0-delivery-candidate (2026-11-08; final narrated demonstration and delivery-status synchronisation)
-- Source snapshot: main `70629990d78a62c059a53d6df5c3c3c2b9e9a08e`, including report integration #70 and Social v2 recording #75. Functional code baseline remains `2e59b10` (#67). The recorded historical suite result is 112 tests (see §7.1); video production does not establish a new full-suite result or deployment. No application, contract, ABI, generated artefact or deployment address is changed by this delivery revision.
+- Version: v1.0-delivery-candidate-r2 (2026-11-08; report consistency audit and README screenshot alignment)
+- Source snapshot: main `7389bbe93fb27c98f042a83bd837d7ca767eb61a`, including report integration #70, Social v2 recording #75 and README screenshots #77. The unmerged delivery changes remain in PR #76. Functional code baseline remains `2e59b10` (#67). The recorded historical suite result is 112 tests (see §7.1); video production does not establish a new full-suite result or deployment. No application, contract, ABI, generated artefact or deployment address is changed by this delivery revision.
 - Release scope: the v0.9 report was approved and merged through #70, closing #9. This candidate synchronises the report with the narrated demonstration produced on 2026-11-08. The candidate still requires peer review; refreshed report/PDF/video hashes and the final submission version must be recorded after merge under #11. No new Sepolia run, independent-user study, final freeze or course submission is claimed.
 - Every figure in this report is taken from a file in the repository or from an on-chain receipt. Items that could not be verified are listed in §12 instead of being filled with estimates.
 
@@ -106,10 +106,13 @@ The repository is organised around five roles plus release. Tasks and dependenci
 | E Report & Integration | Report, demo, final submission | #9 E1, #10 E2 |
 | R Release | Freeze, submission artefacts, backup | #11 R1 |
 
-### 3.2 Status at the baseline
+### 3.2 Delivery status as of 2026-11-08
 
-- **Closed (14)**: #1 (A1 interface acceptance), #2 (A2 status guidance), #3 (B1 permission review), #4 (B2 content boundaries), #5 (C1 community deployment), #6 (C2 wallet switching and cross-device), #7 (D1 dual-wallet acceptance), #8 (D2 CI and cross-platform regression), #12 (C3 escrow integration), #20 / #21 / #25 (three defects), #30 (circle/team permission semantics), #39 (README banner and community visuals).
-- **Open (3)**: #9 / #10 / #11 (E1 report, E2 demo, R1 release).
+This selected task list covers the original coursework roles and acceptance defects; it is not a count of every repository issue or PR. The main baseline is `7389bbe`; PR #76 remains a delivery candidate.
+
+- **Previously completed acceptance tasks (14)**: #1 (A1 interface acceptance), #2 (A2 status guidance), #3 (B1 permission review), #4 (B2 content boundaries), #5 (C1 community deployment), #6 (C2 wallet switching and cross-device), #7 (D1 dual-wallet acceptance), #8 (D2 CI and cross-platform regression), #12 (C3 escrow integration), #20 / #21 / #25 (three defects), #30 (circle/team permission semantics), #39 (README banner and community visuals).
+- **Report completed**: #70 was approved and merged; Issue #9 is closed.
+- **Delivery and release still open**: #10 and #11 await final human confirmation, a teacher-accessible video link, final version/backup and actual course submission receipts. PR #77 is merged; PR #76 is not yet approved or merged.
 
 ### 3.3 Scope boundaries
 
@@ -203,7 +206,7 @@ A static site with 17 top-level JavaScript modules under `web/` (excluding the v
 
 Writes go through `sendCommunity()` in `web/social-chain.js`. Before sending, it reads the signing wallet's `eth_chainId` and refuses to proceed unless it is Sepolia (`11155111`), so a user cannot sign on the wrong network. Covered by `tests/wallet-recovery.test.mjs`.
 
-### 5.2 Impossible submissions are disabled at circle-selection time
+### 5.2 Membership gating for posts and replies
 
 An earlier build allowed publishing into a circle the user had not joined; the contract rejected it with `join circle first`. Measurement showed something important: because ethers performs `eth_estimateGas` before sending, such a call **reverts during estimation**, so no gas is spent and no wallet prompt appears - the user simply saw a raw English revert string.
 
@@ -231,7 +234,7 @@ Titles, bodies, and delivery summaries are stored directly in the contracts. Thi
 
 The ten transactions total `24,457,402` gas. The **deployment accounts for 70.3%**, at a cost of `0.02577 ETH` (`effectiveGasPrice` 1,500,000,014 wei, approximately 1.5 gwei; wallet settings unconfirmed); the other nine executed at 16 / 18 / 25 wei and cost about `0.00000000012 ETH` together, i.e. negligible.
 
-**Deployment operations and limits of the record.** The contemporaneous acceptance and handoff records describe the local project webpage in Chrome with MetaMask 13.54.0; the user personally confirmed the Sepolia deployment. The deployment-source snapshot (`fb6c325`) calls ethers.js `ContractFactory.deploy(registry)` without explicit `gasLimit`, `gasPrice`, `maxFeePerGas` or `maxPriorityFeePerGas` overrides. This establishes the application-side call, not the settings finally chosen in MetaMask. On 2026-10-30 the deployer stated that they could not remember whether they manually edited gas or fees; this remains **unconfirmed**. The stored RPC receipt confirms `gasUsed` and the effective price, but does not preserve the transaction gas limit, fee caps, wallet estimate or confirmation-screen settings. The previous phrase "the wallet default" was unsupported and has been removed. No execution trace or historical replay has established why this deployment used 17.18M gas. The source-by-source record and remaining unknowns are in [Deployment operation record](DEPLOYMENT_OPERATIONS_2026-10-27.zh-CN.md).
+**Deployment operations and limits of the record.** The contemporaneous acceptance and handoff records describe the local project webpage in Chrome with MetaMask 13.54.0; the user personally confirmed the Sepolia deployment. The deployment-source snapshot (`fb6c325`) calls ethers.js `ContractFactory.deploy(registry)` without explicit `gasLimit`, `gasPrice`, `maxFeePerGas` or `maxPriorityFeePerGas` overrides. This establishes the application-side call, not the settings finally chosen in MetaMask. On 2026-10-30 the deployer stated that they could not remember whether they manually edited gas or fees; this remains **unconfirmed**. The stored RPC receipt confirms `gasUsed` and the effective price, but does not preserve the transaction gas limit, fee caps, wallet estimate or confirmation-screen settings. The previous phrase "the wallet default" was unsupported and has been removed. No execution trace or historical replay has established why this deployment used 17.18M gas. The source-by-source record and remaining unknowns are in the submitted source package at `docs/project/DEPLOYMENT_OPERATIONS_2026-10-27.zh-CN.md`. This package path is the offline reference; access to the private GitHub repository is not assumed.
 
 **Effect of text length on cost (RPC gas estimates)**: using `eth_estimateGas` on the same `createPost(circle 2, agentId 0, kind 0)` while varying only the body length:
 
@@ -309,6 +312,8 @@ CI is defined in `.github/workflows/ci.yml`. The `verify` job runs on `ubuntu-la
 
 The reviewed source snapshot contains **21 top-level test files**. Repository acceptance and freeze records report **112 tests** at the stated functional baseline; the Windows record is **111 pass plus one deliberately skipped CLI fixture**, while CI is recorded as 112 pass. These are attributed historical results, not a claim that all tests or both platforms were rerun for this editorial revision. Coverage spans contract permissions and state machines, frontend pure functions, wallet recovery and session handling, deployment evidence, escrow and community integration, UI message mapping, status guidance, content-boundary and URI rules, report-PDF generation, freeze-manifest validation, circle/team permission regressions, marketplace filters, agent cards, the sample agent service, x402 payments and collaboration-history/activity projections.
 
+Delivery-stage CI at `44adbb5` also completed 112 passing tests, the committed-artifact check and the static build on 2026-11-08 (GitHub Actions run `42462640689`). This is an automated result at that named commit, not a new Sepolia run or a claim that this later report revision has already passed CI.
+
 The automated suite executes locally: contract tests deploy to an in-memory Ganache EVM, while frontend, wallet and service tests use pure functions or controlled fixtures. These results do not represent Sepolia transactions. The testnet evidence is identified separately below by transaction receipts, fixed-block RPC probes and state reads; the cross-platform Demo screenshot in §7.8 verifies local startup only. Counts refer to the code baseline above.
 
 `tests/d1-failure-path.test.mjs` raises four rejection paths from "throws an error" to "is rejected **for the specific reason the contract declares**", so that a broken implementation cannot keep the suite green.
@@ -359,6 +364,8 @@ Three jobs executed on Sepolia in Zqqq-qq's recorded escrow acceptance. The clie
 | Job 3 | `Completed`(3) | Client did not act; provider claimed after the 60-second review window |
 
 Final snapshot at block 12010056: client **98 mUSD**, provider **2 mUSD**, escrow contract **0 mUSD**, summing to 100.
+
+Job 3 had a submitted delivery digest before the provider claimed payment; inactivity alone does not make an unfunded or unsubmitted job claimable.
 
 **Boundary precision**: job 3 was submitted at 12:48:48 with a 60-second review window. At block 12010027, whose timestamp is exactly 12:49:48, `claim` still returned `review window open`; only a later block succeeded. This shows the implementation does not release early.
 
@@ -463,12 +470,12 @@ Each item below is **confirmed**, not speculative:
 
 | # | Limitation | Source |
 | --- | --- | --- |
-| 1 | No owner, no pause, no upgrade: wording-level issues can only be fixed in the frontend | B1 review §1 |
+| 1 | No administrator, pause or upgrade path in AgentCommunity; frontend messages can be revised, but changing contract rules requires a new deployment | B1 review §1 |
 | 2 | An `Active` team has no terminal state; it cannot be cancelled or marked complete | B1 review §5 |
 | 3 | `proposeWork` / `reviewWork` check team membership only and **do not re-check circle membership**; leaving a circle does not revoke existing team rights (now documented as the intended design) | `TEAM_CIRCLE_POLICY.zh-CN.md` (Issue #30, closed) |
 | 4 | The contract source is **not verified on Etherscan**; consistency relies on local recompilation plus runtime code comparison | `DEPLOYMENTS.md` |
 | 5 | The escrow deployment's source files differ in bytes from the current LF sources; reproducing it requires `evidence/escrow-deployment-sources.json` | Freeze draft §6 |
-| 6 | Rejection feedback depends on a revert during `eth_estimateGas` rather than an explicit UI guard | Frozen regression §3 |
+| 6 | Some rules still rely on contract rejection during `eth_estimateGas` as a backstop; non-member posting and replying already have explicit frontend guards and explanations through `syncPostGate` | §5.2; PR #23; `web/social.js` |
 | 7 | The second device performed read-only verification only; no cross-device signed write | D1 acceptance §5 |
 | 8 | Storing long text on-chain makes writes expensive (`createPost` measured at 1.58M gas) | §5.3 of this report |
 | 9 | On macOS, the ganache uWS native module has an ABI mismatch under Node 24 and falls back to pure JS (no impact on results) | macOS clone record |
@@ -482,13 +489,13 @@ Each item below is **confirmed**, not speculative:
 
 ## 9. Team Contributions
 
-Names and student IDs were supplied by the team on 2026-11-03. Names are written in Hanyu Pinyin with the given name before the family name. The report coordinator uses `daizhiqi`. Contributions below reflect the delivery candidate based on main `7062999`, including report integration #70, post-report release records #71 and Social recording #74/#75, plus the actual work submitted in #76. Contributions follow repository evidence and member descriptions, not PR counts. Report #70 was approved and merged; the final-video revision and new submission materials remain subject to peer review. Final freezing and course submission are not yet complete.
+Names and student IDs were supplied by the team on 2026-11-03. Names are written in Hanyu Pinyin with the given name before the family name. The report coordinator uses `daizhiqi`. Contributions below reflect the delivery candidate based on main `7389bbe`, including report integration #70, post-report release records #71, Social recording #74/#75 and README screenshot refresh #77, plus the actual work submitted in #76. Contributions follow repository evidence and member descriptions, not PR counts. Report #70 was approved and merged; the final-video revision and new submission materials remain subject to peer review. Final freezing and course submission are not yet complete.
 
 | Member / GitHub account / student ID | Recorded actual contribution | Main evidence |
 | --- | --- | --- |
 | Haipeng Wang / PAisHere / 3036841371 | Community interface visuals, icons and statistics layout; collaboration and work illustrations; workflow guide and interface copy. QiuQiu-xuan integrated the visual changes while retaining the original authorship. | #40, #51; integration #54 |
 | Dian Li / ffmitrg / 3036841890 | Independent permission/content-boundary review and input-normalisation regressions; agent cards, market filters, hire/order/review flows, sample agent service and HTTP payments; demo and rehearsal preparation. | #58, #59; original commits integrated through #60 |
-| Qing Zhang / Zqqq-qq / 3036843862 | Wallet connection and failure recovery, Sepolia community/escrow deployment, escrow integration and real-transaction acceptance; personal wallet confirmations, tests and evidence preparation. Mobile interaction, permission/content-boundary review and regressions; macOS clean-clone/startup validation. Social DApp rationale and user story; collaboration-history and account-activity implementation. Additional documented work includes PDF/freeze tooling, provenance/licence checks, configuration-aware captions and service-defect reproduction. | #13, #14, #16, #22, #32, #34, #35, #41, #47, #48; #43, #49, #52, #53, #57, #64; review of #59; #66, #67 |
+| Qing Zhang / Zqqq-qq / 3036843862 | Wallet connection and failure recovery, Sepolia community/escrow deployment, escrow integration and real-transaction acceptance; personal wallet confirmations, tests and evidence preparation. Mobile interaction, permission/content-boundary review and regressions; macOS clean-clone/startup validation. Social DApp rationale and user story; collaboration-history and account-activity implementation. Additional documented work includes PDF/freeze tooling, provenance/licence checks, configuration-aware captions, service-defect reproduction and current Demo README screenshots. | #13, #14, #16, #22, #32, #34, #35, #41, #47, #48; #43, #49, #52, #53, #57, #64; review of #59; #66, #67, #77 |
 | Yaxuan Qiu / QiuQiu-xuan / 3036842040 | Cross-platform and artefact consistency, D1/D2 tests and regressions, membership guidance and error messages; report drafts/PDF iterations, demo materials and release preparation. Visual integration, service payment/signature and delivery-persistence fixes; review of the new social views and report/freeze-record alignment. Recorded the new social pages and revised Social v2 footage, actually used in final-video segments 07-10. | #15, #19, #23, #33, #36, #37, #54, #60; review of #67; #68, #69; #74, #75 |
 | Zhiqi Dai / daizhiqi / 3036841979 | Reviewed and integrated the team report, architecture diagram/PDF and contribution evidence through #70; updated post-report release records through #71. Recorded supplementary Demo and local permission-test footage, performed segmented trial recordings and retakes, recorded all 16 English narration segments, and assembled the captioned final video. Prepared submission materials and addressed #76 review feedback with Codex assistance. Final peer approval, freeze and submission remain separate steps. | #70 (merged), #71 (merged); #76 delivery candidate; FINAL_DEMO_2026-11-08.zh-CN.md; CONTRIBUTIONS.md |
 
@@ -518,15 +525,17 @@ The 16-segment narration, supplementary footage, segmented trial recordings and 
 
 ### 11.1 Evidence index
 
+All file paths in this index are relative to the submitted source-package root. Open these files from the source ZIP; private GitHub access is not required.
+
 | Category | Location |
 | --- | --- |
 | Deployment and receipts | `docs/project/DEPLOYMENTS.md`, `docs/project/evidence/community-sepolia-*.json` |
-| Escrow | `docs/project/ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28.zh-CN.md`, `evidence/escrow-*.json`, `evidence/escrow-screenshots/`, `evidence/job{1,2,3}-*` |
-| Cross-module (team 3 -> job 5) | `docs/project/TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md`, `evidence/team3-job5/`, `scripts/verify-team3-acceptance.mjs` |
+| Escrow | `docs/project/ESCROW_SEPOLIA_ACCEPTANCE_2026-10-28.zh-CN.md`, `docs/project/evidence/escrow-*.json`, `docs/project/evidence/escrow-screenshots/`, `docs/project/evidence/job{1,2,3}-*` |
+| Cross-module (team 3 -> job 5) | `docs/project/TEAM3_ESCROW_SEPOLIA_ACCEPTANCE_2026-10-29.zh-CN.md`, `docs/project/evidence/team3-job5/`, `scripts/verify-team3-acceptance.mjs` |
 | D1 acceptance | `docs/project/ACCEPTANCE_D1.zh-CN.md` (including §7, the closing review) |
-| A1 UI acceptance | `docs/project/A1_UI_ACCEPTANCE_2026-10-28.zh-CN.md`, `evidence/a1-ui/` (22 screenshots plus measurements) |
+| A1 UI acceptance | `docs/project/A1_UI_ACCEPTANCE_2026-10-28.zh-CN.md`, `docs/project/evidence/a1-ui/` (22 screenshots plus measurements) |
 | Circle/team policy | `docs/project/TEAM_CIRCLE_POLICY.zh-CN.md`, `tests/team-circle-independence.test.mjs` |
-| A2 status guidance | `docs/project/A2_STATUS_ACCEPTANCE_2026-10-29.zh-CN.md`, `evidence/a2-guidance/` (10 screenshots plus measurements) |
+| A2 status guidance | `docs/project/A2_STATUS_ACCEPTANCE_2026-10-29.zh-CN.md`, `docs/project/evidence/a2-guidance/` (10 screenshots plus measurements) |
 | Content boundaries | `docs/project/CONTENT_BOUNDARY_REVIEW_2026-10-29.zh-CN.md`, `tests/community-content-boundaries.test.mjs` |
 | Source provenance | `docs/project/SOURCE_PROVENANCE.zh-CN.md`, `backend-provenance.json`, `scripts/verify-provenance.mjs` |
 | Agent service / x402 | `agent-service/`, `web/agent-card.js`, `web/market.js`, `web/x402.js`, `tests/agent-service.test.mjs`, `tests/marketplace.test.mjs` |
@@ -538,8 +547,9 @@ The 16-segment narration, supplementary footage, segmented trial recordings and 
 | Reproduction tools | `scripts/verify-community.mjs`, `scripts/verify-escrow-acceptance.mjs`, `scripts/verify-team3-acceptance.mjs`, `scripts/verify-provenance.mjs`, `scripts/release-freeze.mjs` + `docs/project/evidence/release-manifest.json` |
 | Report PDF generation | `scripts/report-pdf.mjs`, `scripts/lib/chrome-path.mjs`, `docs/project/REPORT_PDF_GENERATION.zh-CN.md`, `tests/report-pdf.test.mjs` |
 | Submission requirements | `docs/project/SUBMISSION_REQUIREMENTS_2026-11-08.zh-CN.md` |
+| Current README screenshots | `docs/assets/screenshots/README.md`, `docs/assets/screenshots/community-feed-demo.png`, `docs/assets/screenshots/my-activity-demo.png`, `docs/assets/screenshots/collaboration-history-demo.png` (Demo data; capture scope and source in the adjacent README) |
 | Presentation slides | `docs/project/5-AgentLedger-Slides.pptx` |
-| Final narrated demonstration | `docs/project/assets/AgentLedger-final-v1.mp4`, `AgentLedger-final-v1.en.srt`, `DEMO_SCRIPT.en.md`, `FINAL_DEMO_2026-11-08.zh-CN.md` |
+| Final narrated demonstration | `docs/project/assets/AgentLedger-final-v1.mp4`, `docs/project/assets/AgentLedger-final-v1.en.srt`, `docs/project/DEMO_SCRIPT.en.md`, `docs/project/FINAL_DEMO_2026-11-08.zh-CN.md` |
 | Freeze policy | `scripts/release-freeze.mjs`, `tests/release-freeze.test.mjs`, `docs/project/RELEASE_CHECKLIST.zh-CN.md` |
 
 ### 11.2 Reproduction environment
@@ -550,30 +560,29 @@ Node 24.x, pnpm 11.25.0 (pinned by `packageManager`), solc 0.8.30.
 git clone https://github.com/Zqqq-qq/comp7610-agentledger.git
 cd comp7610-agentledger
 pnpm install --frozen-lockfile
-pnpm test        # expect 112 passing tests
+pnpm test        # 112 tests; see section 7.1 for platform-specific skips
 pnpm build
 ```
 
 ---
 
-## 12. Outstanding Items (not fabricated; they require the team)
+## 12. Delivery Status and Outstanding Items
 
-| # | Missing | Impact | Owner |
+| # | Item and status | Evidence or remaining action | Owner |
 | --- | --- | --- | --- |
-| 1 | Implementation architecture diagram (done) | `docs/assets/architecture.svg` (English) and `architecture.zh-CN.svg`, embedded in §4.1 | - |
+| 1 | Implementation architecture diagram (done) | `docs/assets/architecture.svg` (English) and `docs/assets/architecture.zh-CN.svg`, embedded in §4.1 | - |
 | 2 | **Member details and contributions recorded** | Five names, student IDs and delivery-stage contributions are in §9; confidential contribution percentages belong to each member's individual Moodle peer evaluation. | Team members |
 | 3 | **Final delivery review and publication pending** | E1 #70 and release records #71 are merged. #76 final-video/report revisions and new slides require peer review; actual final SHA/tag, backup and submission remain under #11. | daizhiqi |
 | 4 | **Individual peer evaluation submission pending** | Moodle requires each member to submit the peer form independently, listing all members including themselves and percentages totalling 100%. The form prohibits sharing completed evaluations. | Each member |
-| 5 | **Narrated demonstration produced; peer delivery review pending** | A 06:59.92 English-narrated video with captions, 16 chapters and five-member credits was assembled on 2026-11-08. The timecoded script and final delivery record are indexed in §11.1. Peer review, backup and course-requirement checks remain under #10/#11. | daizhiqi |
+| 5 | **Narrated demonstration produced; peer delivery review pending** | A 06:59.92 English-narrated video with captions, 16 chapters and five-member credits was assembled on 2026-11-08. The timecoded script and final delivery record are indexed in §11.1. Human review, teacher-accessible video hosting/link documentation, final backup and submission remain under #10/#11; the Moodle requirements have already been checked. | daizhiqi |
 | 6 | **Deployment gas attribution** | Operation/tool record added in §5.3; deployer cannot recall manual gas/fee edits. Wallet settings and execution-level explanation of 17.18M remain unconfirmed; no attribution claimed | Zqqq-qq |
 
-Two items that were open when this report was first drafted are now closed and are recorded here so the record is not silently edited:
-
-- **Cross-module entry point** (community team -> funded escrow job): executed end to end on 2026-10-28 (post 4 -> team 4 -> job 4, Completed, balances 99 / 1 / 0). See §7.6.
-- **English deliverables**: the report, README, architecture diagram, demonstration captions and narration now exist in English. The final narrated video was assembled on 2026-11-08; delivery review, backup and submission checks remain (item 5).
+Previously open evidence gaps are closed: the post 4 / team 4 / job 4 cross-module run was completed on 2026-10-28 (§7.6), and the English report, README, architecture, captions and narration are available (§11.1).
 
 ### 12.1 Demonstration delivery status (2026-11-08)
 
-Zhiqi Dai recorded the 16 narration segments and carried out segmented trial recordings, listening previews and retakes on 2026-11-08, then assembled the complete video with Codex assistance. The local requester confirmed the complete cut was acceptable; this is not a claim of independent peer approval. The team arrangement in Issue #10 uses one narrator, rather than five separate presentations or a five-person rehearsal. The five members retain their actual contribution credits.
+Zhiqi Dai recorded the 16 narration segments, performed segmented trial recordings, listening previews and retakes on 2026-11-08, and assembled the video with Codex assistance. Local preview confirmation does not establish independent peer approval. Issue #10 calls for one narrator; the five members retain their actual contribution credits.
 
-The video includes the Research & Insights example, My activity and My collaboration history, separate archived wallet/escrow evidence, and a newly recorded local Ganache permission-test run (2 passing tests, not new Sepolia transactions). Demo sessions were recorded separately and are not presented as one live acceptance run. Detailed sources, actual chapter times and remaining checks are in `FINAL_DEMO_2026-11-08.zh-CN.md`. The Moodle Final Project page requires one group representative to submit the report, presentation slides, a video link in Word/TXT, and code, with filenames based on “Number of team members-Project name”. It displays a deadline of 2026-11-08 at 23:59, a 100 MB per-file limit and at most 20 files. Individual peer evaluation is a separate Moodle assignment. These requirements were read on 2026-11-08; see SUBMISSION_REQUIREMENTS_2026-11-08.zh-CN.md. Teacher-accessible video hosting, final peer approval, the final version/backup and actual submission receipts remain pending. Existing historical acceptance and deployment-gas uncertainties are unchanged.
+The video covers the Research & Insights example, My activity and My collaboration history, separate archived wallet/escrow evidence, and a recorded local Ganache permission-test run (2 passing tests). The Demo sessions are separate recordings, not one continuous acceptance run or new Sepolia transactions. Actual chapter times, sources and checks are in `docs/project/FINAL_DEMO_2026-11-08.zh-CN.md`.
+
+Moodle requirements are recorded in `docs/project/SUBMISSION_REQUIREMENTS_2026-11-08.zh-CN.md`: one representative submits the report, slides, a Word/TXT video link and code by the displayed 2026-11-08 23:59 deadline (100 MB per file, at most 20 files). Individual peer evaluation is separate. Human review, teacher-accessible video hosting, final version/backup and actual submission receipts remain pending. Historical acceptance and deployment-gas uncertainties are unchanged.

@@ -1,6 +1,6 @@
 # Reproducing the report review PDF
 
-The v1.0 delivery-candidate PDF is generated from `docs/project/REPORT.md` and `docs/assets/architecture.svg` with the adjacent `render-report-review.py`. The English text uses standard PDF fonts; no external font, wallet, RPC or browser is required.
+The v1.0-delivery-candidate-r2 PDF is generated from `docs/project/REPORT.md` and `docs/assets/architecture.svg` with the adjacent `render-report-review.py`. The English text uses standard PDF fonts; no external font, wallet, RPC or browser is required.
 
 ```sh
 python3 -m pip install reportlab==4.4.9

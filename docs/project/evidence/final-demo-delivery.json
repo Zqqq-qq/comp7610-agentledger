@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "status": "candidate-before-peer-review-and-merge",
   "date": "2026-11-08",
-  "baseCommit": "70629990d78a62c059a53d6df5c3c3c2b9e9a08e",
+  "baseCommit": "7389bbe93fb27c98f042a83bd837d7ca767eb61a",
   "functionalBaseline": "2e59b10",
   "issues": [
     10,
     11
   ],
-  "note": "Working-tree delivery candidate hashes, not a Git revision freeze. After review and merge, regenerate official manifests from actual final Git blobs and record final commit/tag. Existing manifests remain historical. This manifest excludes itself. Updated after a4fb588 review: video timing, report section 9 and official requirements. Audio/captions/chapter times unchanged. Slides added as an unapproved submission candidate.",
+  "note": "Working-tree delivery candidate hashes, not a Git revision freeze. After review and merge, regenerate official manifests from actual final Git blobs and record final commit/tag. Existing manifests remain historical. This manifest excludes itself. Updated after a4fb588 review: video timing, report section 9 and official requirements. Audio/captions/chapter times unchanged. Slides added as an unapproved submission candidate. Report consistency audit r2 incorporates merged README screenshot PR #77. Historical manifests remain historical; no final freeze claimed.",
   "video": {
     "durationSeconds": 419.92,
     "chapters": 16,
@@ -44,11 +44,24 @@
       "slides": "10 pages; package, layout/font and reimport passed; visually reviewed"
     },
     "fullSuiteCI": {
-      "head": "a4fb5887830330a4696313b8fb45a860b81964ff",
+      "head": "44adbb5eea18df6048e155b7f5998bc68c3f4c10",
       "passed": 112,
       "failed": 0,
-      "run": "https://github.com/Zqqq-qq/comp7610-agentledger/actions/runs/42460157056",
-      "scope": "Previous PR head before this documentation/video-only revision"
+      "run": "https://github.com/Zqqq-qq/comp7610-agentledger/actions/runs/42462640689",
+      "scope": "Named previous PR revision before report r2"
+    },
+    "selfCheckR2": {
+      "status": "passed",
+      "evidenceIndexPaths": 61,
+      "countsVerified": {
+        "webJs": 17,
+        "contracts": 5,
+        "testFiles": 21
+      },
+      "relativePdfUriAnnotations": 0,
+      "gasTableTotal": 24457402,
+      "unchangedMediaAndCodeFrom": "44adbb5",
+      "scope": "Agent technical checks only; independent human review remains pending."
     }
   },
   "pending": [
@@ -70,13 +83,13 @@
     },
     {
       "path": "docs/project/REPORT.md",
-      "bytes": 62745,
-      "sha256": "ef2f224695c65cca67cc1e70d2208cf056be0c94d8f06c272212367caf8a88b7"
+      "bytes": 64108,
+      "sha256": "3e0ff98d51d12f78222f7c0e3388122bafe153d7e5a8182f38454f5c0948e38e"
     },
     {
       "path": "docs/project/REPORT.pdf",
-      "bytes": 74658,
-      "sha256": "7ae128a87ecce5a7e41374cad340b7b52d73b70fc4157c94ffc7b33d39a16dea"
+      "bytes": 75653,
+      "sha256": "7cb3e56554b93440cb8a248b1cd99741e64cffad8a5106e50e84855db48e4dfe"
     },
     {
       "path": "docs/assets/architecture.svg",
@@ -85,13 +98,13 @@
     },
     {
       "path": "docs/project/CONTRIBUTIONS.md",
-      "bytes": 24026,
-      "sha256": "2c4adbb68fb6873e7d031bdf291d48f4eca9e527d9a6d159ec085e379c3b5d7d"
+      "bytes": 24568,
+      "sha256": "08f17b670ab1ad43d07febd53b02c23cb34ac28c501acdf948c1ab51b9a775b8"
     },
     {
       "path": "docs/project/FINAL_DEMO_2026-11-08.zh-CN.md",
-      "bytes": 7265,
-      "sha256": "127d2d20120b215603858033328ffe2e8bad87dead2e8995e41955b16f51d277"
+      "bytes": 8168,
+      "sha256": "cbe3eb67f64eb5e1e6de31819cef72f51289978006fb5b839776e47b7d394c70"
     },
     {
       "path": "docs/project/DEMO_SCRIPT.en.md",
@@ -105,23 +118,23 @@
     },
     {
       "path": "docs/project/RELEASE_CHECKLIST.zh-CN.md",
-      "bytes": 5176,
-      "sha256": "a5657a2893e0fcb7a6a4de0150a6edd0a374e440807417819e53f16f14d9ab68"
+      "bytes": 5212,
+      "sha256": "33d39ce35d283d75143d0fb0cf360486bd30a704b21136c0c773a5efc256c067"
     },
     {
       "path": "docs/project/RELEASE_FREEZE_DRAFT.zh-CN.md",
-      "bytes": 10960,
-      "sha256": "7f95983af231835f55bf6607d30e100fc585b8c2c1734e4c35a99832db00f689"
+      "bytes": 11037,
+      "sha256": "d6ba816328603fc983f1506b89b96e6ccd173d5a26d6b58f4f274f6d6e338afa"
     },
     {
       "path": "docs/project/REPORT_RENDERING.md",
-      "bytes": 886,
-      "sha256": "066a683cc59a5d115297776613b6b056fc72df9fe0039ada5bd12c54085809f2"
+      "bytes": 889,
+      "sha256": "a3e16189386e3ec1320e25edfcc81d95bc04b92c559e7340804d52a0fe90047b"
     },
     {
       "path": "docs/project/render-report-review.py",
-      "bytes": 7000,
-      "sha256": "0deedcd7dca6e4c06994b28431afc777d0dfcac5eccd3b4a037d3620316503df"
+      "bytes": 7003,
+      "sha256": "d6e4ee69c5f8f3f0755b89dcad9083df0ac36408e99f9bd24802ae12f96cf5e3"
     },
     {
       "path": "docs/project/5-AgentLedger-Slides.pptx",
@@ -130,8 +143,44 @@
     },
     {
       "path": "docs/project/SUBMISSION_REQUIREMENTS_2026-11-08.zh-CN.md",
-      "bytes": 2085,
-      "sha256": "06e939236709c98af82058821835b2a97a070f0f4e6d139690876fa8170f804e"
+      "bytes": 2091,
+      "sha256": "28446c647006677874fae048ba7d97dcfbf212b61c0a91384f2901d3d27465a7"
+    },
+    {
+      "path": "README.md",
+      "bytes": 19173,
+      "sha256": "599b4b492f350dffc6b7357c2be1319d2ee735c13164b25102823381eb487ace"
+    },
+    {
+      "path": "README.zh-CN.md",
+      "bytes": 16149,
+      "sha256": "3e3a6cd436ef62c1296190783a001cf07b7f6c7abfddef5775c9398f9e338a67"
+    },
+    {
+      "path": "docs/assets/screenshots/README.md",
+      "bytes": 1705,
+      "sha256": "ae9ad167b612acd5ea9640a0b3010112a850fd3098499398a9fd25a7dc33efd9"
+    },
+    {
+      "path": "docs/assets/screenshots/community-feed-demo.png",
+      "bytes": 173100,
+      "sha256": "deb8753b7ec073121427e739f8a05ae04f76804ebf38534127a80c05092f2201"
+    },
+    {
+      "path": "docs/assets/screenshots/my-activity-demo.png",
+      "bytes": 133713,
+      "sha256": "1de2891e5b8518130980f9b4310d7b596e0a53a7e3eba9f6978c1ccb4777be5e"
+    },
+    {
+      "path": "docs/assets/screenshots/collaboration-history-demo.png",
+      "bytes": 155606,
+      "sha256": "8fb8ba9612c4eb5da63cbc1759a743e98176f82afbfb15b2ee592feaffca76ca"
+    },
+    {
+      "path": "docs/project/DELIVERY_SELF_CHECK_2026-11-08.zh-CN.md",
+      "bytes": 2846,
+      "sha256": "52463a2a47f03a969e9ba2b845990e3cc34be4504599643db1e8f260d5cfbcb7"
     }
-  ]
+  ],
+  "reportVersion": "v1.0-delivery-candidate-r2"
 }

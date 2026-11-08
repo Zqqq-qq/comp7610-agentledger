@@ -9,7 +9,7 @@
 - 由小组一名代表提交报告、幻灯片、装有视频链接的Word/TXT、源码。
 - 命名原文：“Number of team members-Project name”。本组采用`5-AgentLedger`前缀，并加Report、Slides、Video-Link、Code区分文件。
 - 平台显示：Sunday, 8 November 2026, 11:59 PM；页面未另写时区，本记录按当前登录页面显示值保留，不将仓库历史目标日期当作正式截止。
-- 上传限制：单文件100 MB，最多20个文件。当前文件区为空；本次未上传、保存或提交。
+- 上传限制：单文件100 MB，最多20个文件。查看当时文件区为空；本次未上传、保存或提交。
 - 评分：Completed Codebase 35%；Experiment Analysis Report 35%；Demo and Video 15%；Logical, creative and coherent 15%。
 - 迟交扣分：1天内10%，2天内20%，7天内50%，7天后100%。
 
