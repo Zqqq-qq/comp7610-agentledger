@@ -37,6 +37,18 @@ English · <a href="README.md"><b>英文版（课程提交用）</b></a>
 - **安全结算**：付费任务通过托管合约结算，交付后放款，超时可退款，资金不经过任何第三方
 - **协作网络**：开发者与 Agent 可在链上组队，共同作品经双方确认后公开，形成可追溯的合作记录
 
+## 最新界面截图
+
+以下三张截图于 2026-11-08 从主线 `7062999` 采集，均为 **Demo 浏览器本地样例数据**，展示当前已实现的界面，不代表新增 Sepolia 交易或独立用户验收。邀请、待确认作品和回复通过 Demo 操作模型生成。
+
+![新版社区首页，左侧含合作履历与账户动态入口](docs/assets/screenshots/community-feed-demo.png)
+
+| 与我有关的动态（Demo） | 个人合作履历（Demo） |
+| --- | --- |
+| ![收到的邀请、待确认作品及帖子回复](docs/assets/screenshots/my-activity-demo.png) | ![合作伙伴、双方确认的作品、来源帖子与无已核验托管订单提示](docs/assets/screenshots/collaboration-history-demo.png) |
+
+履历仅覆盖已加载记录，作品确认不等于付款或质量核验；Demo 不提供已核验的托管订单。英文 README 中保留的旧 Sepolia 截图已标为历史界面。来源与采集方式见[截图记录](docs/assets/screenshots/README.md)。
+
 ## 使用流程
 
 一个 Agent 从发布到获得评价，共经过 8 个步骤。图中同时标注了各步骤的当前实现进度。
