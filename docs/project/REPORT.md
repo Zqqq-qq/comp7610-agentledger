@@ -1,10 +1,10 @@
 # AgentLedger: A Trusted Collaboration and Settlement Community for Agents
 
-**COMP7610 Final Project Report (draft)**
+**COMP7610 Final Project Report**
 
-- Version: v0.9-review (2026-11-03; member details and Issue #9 acceptance-scope clarification)
-- Source snapshot: main `78be5327e1fcb3fa0a0d5ebf3a58033ee0e78ee0`, including merged PRs #66-#69. Functional code baseline: `2e59b10` (#67). This document builds on the repository report v0.7 and preserves its historical acceptance evidence. The source contains 21 top-level test files; the recorded suite result is 112 tests (see §7.1). No contract, ABI, generated artefact or deployment address is changed by this report revision.
-- Release scope: a report review revision after the #69 freeze record for `d126891`. This report and PDF have new bytes; the previous manifest/tag does not automatically cover them. After peer review and merge, release must record the new report hashes and submission version. This revision makes no claim of a new Sepolia run, independent-user study, completed peer review or final submission.
+- Version: v1.0-delivery-candidate (2026-11-08; final narrated demonstration and delivery-status synchronisation)
+- Source snapshot: main `70629990d78a62c059a53d6df5c3c3c2b9e9a08e`, including report integration #70 and Social v2 recording #75. Functional code baseline remains `2e59b10` (#67). The recorded historical suite result is 112 tests (see §7.1); video production does not establish a new full-suite result or deployment. No application, contract, ABI, generated artefact or deployment address is changed by this delivery revision.
+- Release scope: the v0.9 report was approved and merged through #70, closing #9. This candidate synchronises the report with the narrated demonstration produced on 2026-11-08. The candidate still requires peer review; refreshed report/PDF/video hashes and the final submission version must be recorded after merge under #11. No new Sepolia run, independent-user study, final freeze or course submission is claimed.
 - Every figure in this report is taken from a file in the repository or from an on-chain receipt. Items that could not be verified are listed in §12 instead of being filled with estimates.
 
 ---
@@ -537,6 +537,7 @@ Final narration, rehearsal, release and course submission are recorded only when
 | Community deployment acceptance | `docs/project/SEPOLIA_ACCEPTANCE_2026-10-27.zh-CN.md` |
 | Reproduction tools | `scripts/verify-community.mjs`, `scripts/verify-escrow-acceptance.mjs`, `scripts/verify-team3-acceptance.mjs`, `scripts/verify-provenance.mjs`, `scripts/release-freeze.mjs` + `docs/project/evidence/release-manifest.json` |
 | Report PDF generation | `scripts/report-pdf.mjs`, `scripts/lib/chrome-path.mjs`, `docs/project/REPORT_PDF_GENERATION.zh-CN.md`, `tests/report-pdf.test.mjs` |
+| Final narrated demonstration | `docs/project/assets/AgentLedger-final-v1.mp4`, `AgentLedger-final-v1.en.srt`, `DEMO_SCRIPT.en.md`, `FINAL_DEMO_2026-11-08.zh-CN.md` |
 | Freeze policy | `scripts/release-freeze.mjs`, `tests/release-freeze.test.mjs`, `docs/project/RELEASE_CHECKLIST.zh-CN.md` |
 
 ### 11.2 Reproduction environment
@@ -561,10 +562,16 @@ pnpm build
 | 2 | **Member details recorded; remaining confirmations** | All five names in Hanyu Pinyin and student IDs are recorded in §9; confirm final contribution descriptions and any course-required effort allocation | Team members |
 | 3 | **E/R final confirmation and publication** | E1 revision and checks are recorded; PR approval/merge are tracked under #9, and final release/submission remain under #11 | daizhiqi |
 | 4 | **Peer assignment** (individual submission) | Required by the course; not tracked anywhere in this repository, format still unknown | Course information needed |
-| 5 | **Demo narration audio** | Script is complete (`docs/project/DEMO_SCRIPT.en.md`, timecoded, English); the video itself has visuals plus the real wallet segment but no audio track | Recorder |
+| 5 | **Narrated demonstration produced; peer delivery review pending** | A 06:59.92 English-narrated video with captions, 16 chapters and five-member credits was assembled on 2026-11-08. The timecoded script and final delivery record are indexed in §11.1. Peer review, backup and course-requirement checks remain under #10/#11. | daizhiqi |
 | 6 | **Deployment gas attribution** | Operation/tool record added in §5.3; deployer cannot recall manual gas/fee edits. Wallet settings and execution-level explanation of 17.18M remain unconfirmed; no attribution claimed | Zqqq-qq |
 
 Two items that were open when this report was first drafted are now closed and are recorded here so the record is not silently edited:
 
 - **Cross-module entry point** (community team -> funded escrow job): executed end to end on 2026-10-28 (post 4 -> team 4 -> job 4, Completed, balances 99 / 1 / 0). See §7.6.
-- **English deliverables**: the report, the README, the architecture diagram and the demo captions now exist in English; the remaining English gap is the narration audio (item 5).
+- **English deliverables**: the report, README, architecture diagram, demonstration captions and narration now exist in English. The final narrated video was assembled on 2026-11-08; delivery review, backup and submission checks remain (item 5).
+
+### 12.1 Demonstration delivery status (2026-11-08)
+
+Zhiqi Dai recorded the 16 narration segments and carried out segmented trial recordings, listening previews and retakes on 2026-11-08, then assembled the complete video with Codex assistance. The local requester confirmed the complete cut was acceptable; this is not a claim of independent peer approval. The team arrangement in Issue #10 uses one narrator, rather than five separate presentations or a five-person rehearsal. The five members retain their actual contribution credits.
+
+The video includes the Research & Insights example, My activity and My collaboration history, separate archived wallet/escrow evidence, and a newly recorded local Ganache permission-test run (2 passing tests, not new Sepolia transactions). Demo sessions were recorded separately and are not presented as one live acceptance run. Detailed sources, actual chapter times and remaining checks are in `FINAL_DEMO_2026-11-08.zh-CN.md`. Course requirements, final version/backup and the actual submission receipt remain unresolved; existing historical acceptance and deployment-gas uncertainties are unchanged.

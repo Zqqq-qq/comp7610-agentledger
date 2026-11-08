@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "status": "candidate-before-peer-review-and-merge",
+  "date": "2026-11-08",
+  "baseCommit": "70629990d78a62c059a53d6df5c3c3c2b9e9a08e",
+  "functionalBaseline": "2e59b10",
+  "issues": [
+    10,
+    11
+  ],
+  "note": "Working-tree delivery candidate hashes, not a Git revision freeze. After review and merge, regenerate official manifests from actual final Git blobs and record final commit/tag. Existing manifests remain historical. This manifest excludes itself.",
+  "video": {
+    "durationSeconds": 419.92,
+    "chapters": 16,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "narrator": "Zhiqi Dai / daizhiqi"
+  },
+  "checks": {
+    "build": "passed",
+    "reportPdfAndReleaseFreezeTests": {
+      "passed": 11,
+      "failed": 0
+    },
+    "pdfPages": 22,
+    "pdfVisualReview": "22-page contact sheet and key pages reviewed",
+    "mediaBytes": "match accepted local export",
+    "fullVideoDecode": "passed during final export verification",
+    "newSepoliaTransactions": false,
+    "newFullSuiteRun": false
+  },
+  "pending": [
+    "peer review",
+    "remote backup / unified download location",
+    "official course requirements and deadline source",
+    "post-merge final Git freeze and version tag",
+    "actual course submission receipt"
+  ],
+  "files": [
+    {
+      "path": "docs/project/assets/AgentLedger-final-v1.mp4",
+      "bytes": 16151313,
+      "sha256": "6f92447a98c5f46bcfe52bb2ff74082bd16e9628cd7ee41e2720cb66dcf061d8"
+    },
+    {
+      "path": "docs/project/assets/AgentLedger-final-v1.en.srt",
+      "bytes": 8130,
+      "sha256": "b6925ac71f04762b23d872e2c4e7e3958d092e1a8ecd1daf232bc5760b74cb4d"
+    },
+    {
+      "path": "docs/project/REPORT.md",
+      "bytes": 61158,
+      "sha256": "cf35a7b1518db7dfe4fdcdd70a0958e8148f7c4688892d31036f3a8aee1d7181"
+    },
+    {
+      "path": "docs/project/REPORT.pdf",
+      "bytes": 73668,
+      "sha256": "875d0b7e6aaa7ed40c6ef26eb548d363578f6529fdf92294274a1bb179b4c9c2"
+    },
+    {
+      "path": "docs/assets/architecture.svg",
+      "bytes": 6799,
+      "sha256": "e49519bb3fd71d03afe38101e0dace481894dc388c7753d475936cb2daf27f4a"
+    },
+    {
+      "path": "docs/project/CONTRIBUTIONS.md",
+      "bytes": 23464,
+      "sha256": "b31626745da6b9d19ac72ddbabc147ce0a07f33740217487d084487f4c2a79b7"
+    },
+    {
+      "path": "docs/project/FINAL_DEMO_2026-11-08.zh-CN.md",
+      "bytes": 6067,
+      "sha256": "e9f2be98d3aaf2b070cc05fee9807b943e5f900c9292c3538cd295920b3b9a13"
+    },
+    {
+      "path": "docs/project/DEMO_SCRIPT.en.md",
+      "bytes": 7338,
+      "sha256": "6743782504c5d8c57912911edc1a1dc601b04a992a5d0fd9121e2a8a9c559660"
+    },
+    {
+      "path": "docs/project/DEMO_RECORDING_SCENES.zh-CN.md",
+      "bytes": 10696,
+      "sha256": "9e61b16a09f2771269a45c74083417fc91d567dd4f5379c1fca089a8b0f42229"
+    },
+    {
+      "path": "docs/project/RELEASE_CHECKLIST.zh-CN.md",
+      "bytes": 4960,
+      "sha256": "1cb5d5aab4456b9ef2f71ee745b43f1668945d19864aeec2aa9ed267452daf87"
+    },
+    {
+      "path": "docs/project/RELEASE_FREEZE_DRAFT.zh-CN.md",
+      "bytes": 10868,
+      "sha256": "05401ecfb7cb722b23de563a523dcb3bd93f6c4e39b54d05de9e0fd3c4e04262"
+    },
+    {
+      "path": "docs/project/REPORT_RENDERING.md",
+      "bytes": 886,
+      "sha256": "066a683cc59a5d115297776613b6b056fc72df9fe0039ada5bd12c54085809f2"
+    },
+    {
+      "path": "docs/project/render-report-review.py",
+      "bytes": 7000,
+      "sha256": "0deedcd7dca6e4c06994b28431afc777d0dfcac5eccd3b4a037d3620316503df"
+    }
+  ]
+}

@@ -11,3 +11,8 @@ web/generated/*.json text eol=lf
 
 # This exact file is hashed in Sepolia job 5; preserve its LF bytes on every platform.
 docs/project/evidence/team3-job5/job5-deliverable.md text eol=lf
+
+# Delivery binaries must retain exact bytes; captions use stable LF lines.
+*.pdf binary
+*.mp4 binary
+*.srt text eol=lf
