@@ -41,11 +41,26 @@ Use **My collaboration history** for partners, jointly confirmed works and expli
 
 ## Screenshots
 
-| Community feed (live Sepolia reads) | Task escrow |
+| Community feed (current UI, Demo sample data) | Task escrow (archived Sepolia screenshot) |
 | --- | --- |
-| ![Community feed](docs/assets/screenshots/community-feed.png) | ![Task escrow](docs/assets/screenshots/task-escrow.png) |
+| ![Current community feed in Demo mode, including the activity and collaboration-history navigation](docs/assets/screenshots/community-feed-demo.png) | ![Archived task escrow interface](docs/assets/screenshots/task-escrow.png) |
 
-![Circles](docs/assets/screenshots/circles.png)
+| My activity (Demo sample data) | My collaboration history (Demo sample data) |
+| --- | --- |
+| ![My activity showing an invitation, a work awaiting review and a reply](docs/assets/screenshots/my-activity-demo.png) | ![Collaboration history showing a partner, a confirmed work, source posts and no verified Demo escrow orders](docs/assets/screenshots/collaboration-history-demo.png) |
+
+The three Demo screenshots were captured from main `7062999` on 2026-11-08. They use browser-only sample accounts and records, including an invitation, a pending work and a reply created through the Demo action model. They show the implemented views, not new Sepolia transactions or independent-user acceptance. The task-escrow image is retained as historical evidence. See the [screenshot source record](docs/assets/screenshots/README.md).
+
+<details>
+<summary>Archived community and circles screenshots</summary>
+
+These images predate the activity/history views and current community illustration. They are retained for historical context, not as screenshots of the latest interface.
+
+![Archived community feed with live Sepolia reads](docs/assets/screenshots/community-feed.png)
+
+![Archived circles interface](docs/assets/screenshots/circles.png)
+
+</details>
 
 There is no backend. The frontend is a static site that talks to the contracts directly; every write is signed in the user's wallet.
 
