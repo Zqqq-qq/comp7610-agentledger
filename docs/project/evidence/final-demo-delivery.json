@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "status": "candidate-before-peer-review-and-merge",
+  "date": "2026-11-08",
+  "baseCommit": "7389bbe93fb27c98f042a83bd837d7ca767eb61a",
+  "functionalBaseline": "2e59b10",
+  "issues": [
+    10,
+    11
+  ],
+  "note": "Working-tree delivery candidate hashes, not a Git revision freeze. After review and merge, regenerate official manifests from actual final Git blobs and record final commit/tag. Existing manifests remain historical. This manifest excludes itself. Updated after a4fb588 review: video timing, report section 9 and official requirements. Audio/captions/chapter times unchanged. Slides added as an unapproved submission candidate. Report consistency audit r2 incorporates merged README screenshot PR #77. Historical manifests remain historical; no final freeze claimed. Slides revised after c5241f4: 11 pages; report PDF/video unchanged. Prior 10-page slide checks describe historical candidates. Branding handoff: full-colour HKU CDS lockup and course name added only to slides 1 and 11 of the a3a00b5 11-slide deck. Candidate hashes refreshed; final Git freeze and human review remain separate. Branding r2: full-colour lockup retained on cover/closing with course name; smaller matching lockup added to every interior slide. Body content unchanged. Updated candidate hashes do not replace final human review/Git freeze.",
+  "video": {
+    "durationSeconds": 419.92,
+    "chapters": 16,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "narrator": "Zhiqi Dai / daizhiqi"
+  },
+  "checks": {
+    "build": "passed",
+    "reportPdfAndReleaseFreezeTests": {
+      "passed": 11,
+      "failed": 0
+    },
+    "pdfPages": 22,
+    "pdfVisualReview": "22-page contact sheet and key pages reviewed",
+    "mediaBytes": "match accepted local export",
+    "fullVideoDecode": "passed during final export verification",
+    "newSepoliaTransactions": false,
+    "newFullSuiteRun": false,
+    "reviewFix": {
+      "fullDecode": "passed",
+      "changedSceneDecodedAudio": "unchanged",
+      "visualStateChecksSeconds": [
+        157.9,
+        158.1,
+        160.0,
+        203.3,
+        203.5,
+        204.0
+      ],
+      "captions": "SRT and narration unchanged; burned subtitles retained",
+      "slides": "10 pages; package, layout/font and reimport passed; visually reviewed"
+    },
+    "fullSuiteCI": {
+      "head": "c5241f4a516af6906acab8bdd211a27b2ff672db",
+      "passed": 112,
+      "failed": 0,
+      "run": "https://github.com/Zqqq-qq/comp7610-agentledger/actions/runs/42471190794",
+      "scope": "Verified preceding report/source revision, before this slide revision"
+    },
+    "selfCheckR2": {
+      "status": "passed",
+      "evidenceIndexPaths": 61,
+      "countsVerified": {
+        "webJs": 17,
+        "contracts": 5,
+        "testFiles": 21
+      },
+      "relativePdfUriAnnotations": 0,
+      "gasTableTotal": 24457402,
+      "unchangedMediaAndCodeFrom": "44adbb5",
+      "scope": "Agent technical checks only; independent human review remains pending."
+    },
+    "slidesRevisionR2": {
+      "pages": 11,
+      "nativeTables": 6,
+      "package": "passed",
+      "fontAndLayout": "passed, zero findings/warnings",
+      "firstPartyReimport": "passed",
+      "visualReview": "all 11 Artifact Tool renders; bundled LibreOffice export and changed-page inspection",
+      "sourceCiSnapshot": "c5241f4",
+      "independentHumanReview": "pending"
+    }
+  },
+  "pending": [
+    "peer review of timing/report revisions and new slides",
+    "teacher-accessible video URL after review",
+    "post-merge final Git freeze/version and backup",
+    "actual group and individual course submission receipts"
+  ],
+  "files": [
+    {
+      "path": "docs/project/assets/AgentLedger-final-v1.mp4",
+      "bytes": 16135940,
+      "sha256": "95ca9e0ec46e30f82e5e6d352399d15ef47d0f438d55653ee29707da24d4bb09"
+    },
+    {
+      "path": "docs/project/assets/AgentLedger-final-v1.en.srt",
+      "bytes": 8130,
+      "sha256": "b6925ac71f04762b23d872e2c4e7e3958d092e1a8ecd1daf232bc5760b74cb4d"
+    },
+    {
+      "path": "docs/project/REPORT.md",
+      "bytes": 64108,
+      "sha256": "3e0ff98d51d12f78222f7c0e3388122bafe153d7e5a8182f38454f5c0948e38e"
+    },
+    {
+      "path": "docs/project/REPORT.pdf",
+      "bytes": 75653,
+      "sha256": "7cb3e56554b93440cb8a248b1cd99741e64cffad8a5106e50e84855db48e4dfe"
+    },
+    {
+      "path": "docs/assets/architecture.svg",
+      "bytes": 6799,
+      "sha256": "e49519bb3fd71d03afe38101e0dace481894dc388c7753d475936cb2daf27f4a"
+    },
+    {
+      "path": "docs/project/CONTRIBUTIONS.md",
+      "bytes": 25000,
+      "sha256": "14127b1eb263a96e8abaa45d9d45be375a2c058214fa2b40d562da47308dd4dc"
+    },
+    {
+      "path": "docs/project/FINAL_DEMO_2026-11-08.zh-CN.md",
+      "bytes": 8500,
+      "sha256": "cbe098c280e993acefc17b0fe2339767cd4498ae5d2f50c49ec534e207c3698d"
+    },
+    {
+      "path": "docs/project/DEMO_SCRIPT.en.md",
+      "bytes": 7338,
+      "sha256": "6743782504c5d8c57912911edc1a1dc601b04a992a5d0fd9121e2a8a9c559660"
+    },
+    {
+      "path": "docs/project/DEMO_RECORDING_SCENES.zh-CN.md",
+      "bytes": 10696,
+      "sha256": "9e61b16a09f2771269a45c74083417fc91d567dd4f5379c1fca089a8b0f42229"
+    },
+    {
+      "path": "docs/project/RELEASE_CHECKLIST.zh-CN.md",
+      "bytes": 5220,
+      "sha256": "60aef8997b92de7484bc50c2dd5b6af63877ce7329cf33e950213a9ccbd8f944"
+    },
+    {
+      "path": "docs/project/RELEASE_FREEZE_DRAFT.zh-CN.md",
+      "bytes": 11045,
+      "sha256": "9fe5f2ded0bba806ab62f451bed6559449355344c206978074d377653e83d779"
+    },
+    {
+      "path": "docs/project/REPORT_RENDERING.md",
+      "bytes": 889,
+      "sha256": "a3e16189386e3ec1320e25edfcc81d95bc04b92c559e7340804d52a0fe90047b"
+    },
+    {
+      "path": "docs/project/render-report-review.py",
+      "bytes": 7003,
+      "sha256": "d6e4ee69c5f8f3f0755b89dcad9083df0ac36408e99f9bd24802ae12f96cf5e3"
+    },
+    {
+      "path": "docs/project/5-AgentLedger-Slides.pptx",
+      "bytes": 823436,
+      "sha256": "3bbfff70a4a5acaaf9e76db49ace7cc4eefa0c95de6f2c95b00370aa369e21a5"
+    },
+    {
+      "path": "docs/project/SUBMISSION_REQUIREMENTS_2026-11-08.zh-CN.md",
+      "bytes": 2091,
+      "sha256": "28446c647006677874fae048ba7d97dcfbf212b61c0a91384f2901d3d27465a7"
+    },
+    {
+      "path": "README.md",
+      "bytes": 19173,
+      "sha256": "599b4b492f350dffc6b7357c2be1319d2ee735c13164b25102823381eb487ace"
+    },
+    {
+      "path": "README.zh-CN.md",
+      "bytes": 16149,
+      "sha256": "3e3a6cd436ef62c1296190783a001cf07b7f6c7abfddef5775c9398f9e338a67"
+    },
+    {
+      "path": "docs/assets/screenshots/README.md",
+      "bytes": 1705,
+      "sha256": "ae9ad167b612acd5ea9640a0b3010112a850fd3098499398a9fd25a7dc33efd9"
+    },
+    {
+      "path": "docs/assets/screenshots/community-feed-demo.png",
+      "bytes": 173100,
+      "sha256": "deb8753b7ec073121427e739f8a05ae04f76804ebf38534127a80c05092f2201"
+    },
+    {
+      "path": "docs/assets/screenshots/my-activity-demo.png",
+      "bytes": 133713,
+      "sha256": "1de2891e5b8518130980f9b4310d7b596e0a53a7e3eba9f6978c1ccb4777be5e"
+    },
+    {
+      "path": "docs/assets/screenshots/collaboration-history-demo.png",
+      "bytes": 155606,
+      "sha256": "8fb8ba9612c4eb5da63cbc1759a743e98176f82afbfb15b2ee592feaffca76ca"
+    },
+    {
+      "path": "docs/project/DELIVERY_SELF_CHECK_2026-11-08.zh-CN.md",
+      "bytes": 3027,
+      "sha256": "147c751d655f975b2f1ce6f04834796dea1098078be98830dca06e5fc0d34c81"
+    },
+    {
+      "path": "docs/project/SLIDES_REVISION_2026-11-08.zh-CN.md",
+      "bytes": 2215,
+      "sha256": "d0435ecbcd4df9247c7a497a4ccc03fadf74a6a6dde26015da7feb1baf56cf42"
+    },
+    {
+      "path": "docs/assets/hku-cds-full-colour.png",
+      "bytes": 16560,
+      "sha256": "b94f6f208bf8a18e8ed52eda2aa5a651592bfd9e23bb944d95ac4f79c4146ada"
+    },
+    {
+      "path": "docs/project/SLIDES_BRANDING_2026-11-08.zh-CN.md",
+      "bytes": 2393,
+      "sha256": "c20299176ed6690171d9636b547723d8af808ca9c970a30840749200ce5a439a"
+    }
+  ],
+  "reportVersion": "v1.0-delivery-candidate-r2",
+  "slidesVersion": "r2-11-slides"
+}

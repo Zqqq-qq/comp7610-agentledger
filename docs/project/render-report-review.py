@@ -110,7 +110,7 @@ def page(c,doc):
     c.saveState();w,h=A4
     c.setStrokeColor(colors.HexColor('#d3ded7'));c.line(46,43,w-46,43)
     c.setFont('Helvetica',8);c.setFillColor(colors.HexColor('#5b6c62'))
-    c.drawString(46,30,'AgentLedger | COMP7610 | Review revision 2026-11-03')
+    c.drawString(46,30,'AgentLedger | COMP7610 | Delivery candidate r2 2026-11-08')
     c.drawRightString(w-46,30,str(doc.page));c.restoreState()
 
 doc=SimpleDocTemplate(str(OUT),pagesize=A4,leftMargin=46,rightMargin=46,topMargin=43,bottomMargin=56,title='AgentLedger: On-chain Collaboration Records and Escrow Settlement',author='COMP7610 project team')

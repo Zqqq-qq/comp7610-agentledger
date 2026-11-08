@@ -1,0 +1,295 @@
+1
+00:00:00,760 --> 00:00:06,660
+AgentLedger is a social DApp prototype for agent developers and operators.
+
+2
+00:00:06,660 --> 00:00:13,100
+It connects finding a collaborator, agreeing on responsibilities, and acknowledging shared work.
+
+3
+00:00:13,100 --> 00:00:22,760
+We will follow one example collaboration, then show separate evidence of real wallet interactions and optional payment settlement.
+
+4
+00:00:23,730 --> 00:00:30,380
+Imagine Alex operates a data-analysis agent and needs help presenting its results.
+
+5
+00:00:31,000 --> 00:00:35,030
+Maya can contribute charts and explain the visual choices.
+
+6
+00:00:35,450 --> 00:00:40,750
+Their goal is a clear division of work and a record they can revisit.
+
+7
+00:00:41,070 --> 00:00:48,590
+This illustrative scenario guides our demonstration; it is not an observed study of independent users.
+
+8
+00:00:50,150 --> 00:00:56,190
+The core DApp uses public RPC for reads and the user's wallet for signed writes.
+
+9
+00:00:56,290 --> 00:00:58,680
+An optional agent service runs separately.
+
+10
+00:00:59,310 --> 00:01:06,870
+Contracts record who accepted an invitation and acknowledged a work: neither participant can approve for the other.
+
+11
+00:01:07,260 --> 00:01:14,770
+These records are inspectable, but public storage brings cost and privacy trade-offs, without guaranteeing quality.
+
+12
+00:01:16,750 --> 00:01:23,180
+We now enter the local Demo sandbox, using Alex and Maya as sample accounts in this browser.
+
+13
+00:01:23,770 --> 00:01:26,290
+No Sepolia transactions are sent here.
+
+14
+00:01:26,960 --> 00:01:33,900
+Alex publishes an open task requesting a chart and an explanation of an analysis result.
+
+15
+00:01:34,290 --> 00:01:41,230
+The description states what help is needed and what Alex will contribute: checking the analysis and sources.
+
+16
+00:01:41,890 --> 00:01:45,440
+This gives potential collaborators a concrete starting point.
+
+17
+00:01:46,850 --> 00:01:53,570
+Maya opens Alex's task and offers to create the chart and explain the visual choices.
+
+18
+00:01:53,890 --> 00:01:59,070
+Her reply stays with the original request, keeping the discussion in context.
+
+19
+00:01:59,720 --> 00:02:03,890
+They have expressed interest; the next step is to agree on a team.
+
+20
+00:02:05,250 --> 00:02:08,810
+Alex invites Maya to the analysis visualisation team.
+
+21
+00:02:09,420 --> 00:02:15,200
+The proposed roles distinguish analysis and source checking from charts and explanation.
+
+22
+00:02:15,480 --> 00:02:17,940
+The interface shows Invitation pending.
+
+23
+00:02:18,430 --> 00:02:22,660
+This records Alex's proposal, but the team is not active yet.
+
+24
+00:02:22,760 --> 00:02:26,690
+Maya must review the roles and accept from her own account.
+
+25
+00:02:28,217 --> 00:02:30,937
+We switch to Maya and open My activity.
+
+26
+00:02:31,727 --> 00:02:37,277
+The invitation links back to the source team, where she can review the roles before accepting.
+
+27
+00:02:38,007 --> 00:02:40,067
+The interface then shows Active team.
+
+28
+00:02:40,887 --> 00:02:46,417
+This brings account-related actions together and helps Maya return to their context.
+
+29
+00:02:47,007 --> 00:02:49,627
+It is not a push-notification service.
+
+30
+00:02:50,717 --> 00:02:55,247
+Maya now proposes a shared work called Analysis chart draft.
+
+31
+00:02:55,347 --> 00:02:57,687
+Its summary identifies both contributions.
+
+32
+00:02:58,327 --> 00:03:03,887
+We use an example link to demonstrate the workflow, not a real AI-generated deliverable.
+
+33
+00:03:04,587 --> 00:03:10,977
+The interface shows Awaiting partner: the proposal is recorded, but Maya cannot confirm it herself.
+
+34
+00:03:11,387 --> 00:03:13,167
+The contract calls this state Proposed.
+
+35
+00:03:15,450 --> 00:03:19,580
+Back in Alex's account, My activity shows the work awaiting review.
+
+36
+00:03:20,230 --> 00:03:22,840
+Alex opens the proposal and confirms it.
+
+37
+00:03:23,380 --> 00:03:28,830
+The interface now shows Jointly confirmed, corresponding to the contract's Published state.
+
+38
+00:03:29,620 --> 00:03:37,820
+This records the other account's acknowledgement; it does not prove output quality or that the accounts belong to different people.
+
+39
+00:03:39,183 --> 00:03:45,413
+My collaboration history now connects the confirmed work with the partner and its source discussions.
+
+40
+00:03:45,673 --> 00:03:55,283
+We can follow the record back to the team and the original task, rather than inspect an isolated title.
+
+41
+00:03:55,983 --> 00:03:58,103
+This is the lasting record in our example journey.
+
+42
+00:03:58,623 --> 00:04:01,033
+These views cover loaded records, not a guaranteed lifetime history.
+
+43
+00:04:01,733 --> 00:04:08,443
+The Demo has no verified escrow orders; live order references require separate validation.
+
+44
+00:04:09,617 --> 00:04:15,795
+We now switch to archived real-wallet footage from October twenty-eighth, separate from the Demo story.
+
+45
+00:04:16,441 --> 00:04:20,724
+Joining a circle opens MetaMask for the operator's confirmation.
+
+46
+00:04:21,329 --> 00:04:26,041
+The application waits for a transaction receipt before updating membership.
+
+47
+00:04:26,522 --> 00:04:28,621
+The edit shortens that waiting time.
+
+48
+00:04:29,366 --> 00:04:33,298
+We then see the operator leave the circle and cancel a later request.
+
+49
+00:04:33,911 --> 00:04:41,399
+Together, these moments show the difference between requesting an action, confirming it in the wallet, and observing the result.
+
+50
+00:04:41,693 --> 00:04:45,728
+Cancelling a wallet request is not a contract permission failure.
+
+51
+00:04:47,965 --> 00:04:52,348
+Three separate archived Sepolia jobs demonstrate settlement.
+
+52
+00:04:52,693 --> 00:04:56,023
+Job one paid the provider after client approval.
+
+53
+00:04:56,508 --> 00:05:02,706
+Job two refunded the client after the delivery deadline passed without a submitted delivery digest.
+
+54
+00:05:03,159 --> 00:05:11,155
+In job three, the provider submitted delivery and claimed payment after the review window expired without client action.
+
+55
+00:05:11,910 --> 00:05:16,810
+Receipts establish these paths; a Completed label alone does not.
+
+56
+00:05:17,422 --> 00:05:20,099
+All payments use valueless test mUSD.
+
+57
+00:05:21,250 --> 00:05:26,579
+A separate archived run linked team three to job five and settled one test mUSD.
+
+58
+00:05:26,946 --> 00:05:29,477
+One operator controlled both accounts.
+
+59
+00:05:29,801 --> 00:05:32,752
+This is not a payment by the Demo team shown earlier.
+
+60
+00:05:34,016 --> 00:05:38,389
+Here we show local Ganache contract tests, not Sepolia transactions.
+
+61
+00:05:38,912 --> 00:05:42,222
+The proposing address attempts to confirm its own work.
+
+62
+00:05:42,865 --> 00:05:52,105
+The test checks the reason, only other member, verifies that the work remains Proposed, and checks that the collaboration count stays zero.
+
+63
+00:05:52,931 --> 00:05:56,646
+A passing negative test means the forbidden action was rejected.
+
+64
+00:05:57,166 --> 00:06:02,258
+We then show the positive control: the other participant can confirm through the main flow.
+
+65
+00:06:02,893 --> 00:06:06,943
+Both the assertion code and the actual execution result are visible.
+
+66
+00:06:08,150 --> 00:06:10,684
+Each type of evidence answers a different question.
+
+67
+00:06:11,162 --> 00:06:21,089
+Local tests check contract rules; Demo and simulated browser checks exercise interfaces; archived Sepolia records show particular transactions.
+
+68
+00:06:21,922 --> 00:06:26,268
+The new views cover a loading window and have no push or unread service.
+
+69
+00:06:26,786 --> 00:06:31,972
+Confirmation does not prove quality, and a community reference does not enforce payment.
+
+70
+00:06:32,631 --> 00:06:35,727
+The sample service performs placeholder work.
+
+71
+00:06:36,339 --> 00:06:40,606
+Demand, adoption and retention still need investigation.
+
+72
+00:06:42,317 --> 00:06:47,057
+AgentLedger makes participation, agreement and settlement records inspectable.
+
+73
+00:06:47,157 --> 00:06:54,426
+The report and repository explain the implementation, its checks, reused components and remaining limits.
+
+74
+00:06:54,711 --> 00:06:58,847
+Thank you for watching our team's demonstration.

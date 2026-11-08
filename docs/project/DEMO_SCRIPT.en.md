@@ -1,87 +1,71 @@
-# Demo Video Script (English narration)
+# Final demonstration script (English)
 
-- Target: `docs/project/assets/demo-full-en.mp4` — 1:49 total (0:00–1:49)
-- Structure: 0:00–0:29 walks through seven screens as stills with English captions; 0:29–1:49 is an unedited screen recording of the real wallet flow
-- Speaker notes below match the timestamps of the current cut. Read at a natural pace; the gaps are generous.
-- **Every figure quoted here is verifiable on-chain** (blocks and hashes are in `DEPLOYMENTS.md` and the report). Do not add claims that are not in the report.
+- Recorded and assembled: 2026-11-08, Asia/Shanghai. Narration: Zhiqi Dai (@daizhiqi).
+- Video: [AgentLedger-final-v1.mp4](assets/AgentLedger-final-v1.mp4), 06:59.92, 1920x1080, 30 fps, AAC mono 48 kHz.
+- [Captions](assets/AgentLedger-final-v1.en.srt) are also burned into the video; do not enable a second subtitle overlay.
+- Actual chapter timing below replaces the previous 1:49 archive script. Technical scope and materials are in [final delivery record](FINAL_DEMO_2026-11-08.zh-CN.md).
+- The example story combines separately prepared Demo sessions, followed by separate historical Sepolia records and local Ganache tests. It is not one continuous live acceptance run.
 
----
+## voice-01 | 00:00.0-00:23.4 | AgentLedger
 
-## Part 1 — Seven screens (0:00–0:29)
+AgentLedger is a social DApp prototype for agent developers and operators. It connects finding a collaborator, agreeing on responsibilities, and acknowledging shared work. We will follow one example collaboration, then show separate evidence of real wallet interactions and optional payment settlement.
 
-**0:00 — 1/7 Community feed**
+## voice-02 | 00:23.4-00:49.9 | An example collaboration
 
-> "AgentLedger is a community where agents — and the people behind them — find complementary partners, agree on the work, confirm the result, and get paid. Everything you see is read from the Sepolia testnet; there is no backend and no database in between."
+Imagine Alex operates a data-analysis agent and needs help presenting its results. Maya can contribute charts and explain the visual choices. Their goal is a clear division of work and a record they can revisit. This illustrative scenario guides our demonstration; it is not an observed study of independent users.
 
-**0:03 — 2/7 Post detail**
+## voice-03 | 00:49.9-01:16.5 | Architecture and trust boundaries
 
-> "A post is the starting point. Here is a real task: one member asks for a bilingual event guide, and another member has already replied. Notice the button in the corner — it reflects whether the connected account has joined this circle."
+The core DApp uses public RPC for reads and the user's wallet for signed writes. An optional agent service runs separately. Contracts record who accepted an invitation and acknowledged a work: neither participant can approve for the other. These records are inspectable, but public storage brings cost and privacy trade-offs, without guaranteeing quality.
 
-**0:06 — 3/7 Shared works**
+## voice-04 | 01:16.5-01:46.6 | Alex publishes an open task
 
-> "Work only becomes public after both sides confirm. That is enforced by the contract, not by the interface: the member who proposed the work cannot confirm it themselves."
+We now enter the local Demo sandbox, using Alex and Maya as sample accounts in this browser. No Sepolia transactions are sent here. Alex publishes an open task requesting a chart and an explanation of an analysis result. The description states what help is needed and what Alex will contribute: checking the analysis and sources. This gives potential collaborators a concrete starting point.
 
-**0:09 — 4/7 Work detail**
+## voice-05 | 01:46.6-02:05.0 | Maya offers a contribution
 
-> "Each shared work records who proposed it, what each side contributed, and its confirmation state — so the collaboration record is evidence, not a claim."
+Maya opens Alex's task and offers to create the chart and explain the visual choices. Her reply stays with the original request, keeping the discussion in context. They have expressed interest; the next step is to agree on a team.
 
-**0:12 — 5/7 Task escrow, job 1**
+## voice-06 | 02:05.0-02:28.0 | Alex proposes a team
 
-> "Payments go through an escrow contract. Job one was funded with one test mUSD and released after the client accepted the delivery. The balances are read live: this job is settled, so no further payment or refund is possible."
+Alex invites Maya to the analysis visualisation team. The proposed roles distinguish analysis and source checking from charts and explanation. The interface shows Invitation pending. This records Alex's proposal, but the team is not active yet. Maya must review the roles and accept from her own account.
 
-**0:15 — 6/7 Jobs 2 and 3**
+## voice-07 | 02:28.0-02:50.5 | Maya reviews the invitation
 
-> "Two more settlement paths. Job two was refunded because the deadline passed without delivery. Job three shows the boundary case: the client did nothing, so the provider claimed the funds — but only after the sixty-second review window had actually expired. At the exact boundary block the contract still refused."
+We switch to Maya and open My activity. The invitation links back to the source team, where she can review the roles before accepting. The interface then shows Active team. This brings account-related actions together and helps Maya return to their context. It is not a push-notification service.
 
-**0:21 — 7/7 Circles**
+## voice-08 | 02:50.5-03:15.2 | Maya proposes a shared work
 
-> "There is no wallet connected in this part of the walkthrough, so every circle shows 'Join circle'. Once a wallet is connected, circles the account has already joined show 'Leave circle' instead — which is exactly what the next part demonstrates."
+Maya now proposes a shared work called Analysis chart draft. Its summary identifies both contributions. We use an example link to demonstrate the workflow, not a real AI-generated deliverable. The interface shows Awaiting partner: the proposal is recorded, but Maya cannot confirm it herself. The contract calls this state Proposed.
 
----
+## voice-09 | 03:15.2-03:38.9 | Alex reviews and confirms
 
-## Part 2 — Live wallet flow (0:29–1:49)
+Back in Alex's account, My activity shows the work awaiting review. Alex opens the proposal and confirms it. The interface now shows Jointly confirmed, corresponding to the contract's Published state. This records the other account's acknowledgement; it does not prove output quality or that the accounts belong to different people.
 
-**0:29 — connecting and opening the circles page**
+## voice-10 | 03:38.9-04:09.4 | A traceable collaboration history
 
-> "Now the same application, with a real wallet. This is account 0x4469…e1723 on Sepolia. The screen is recorded directly, so you are seeing the actual wallet and the actual transactions."
+My collaboration history now connects the confirmed work with the partner and its source discussions. We can follow the record back to the team and the original task, rather than inspect an isolated title. This is the lasting record in our example journey. These views cover loaded records, not a guaranteed lifetime history. The Demo has no verified escrow orders; live order references require separate validation.
 
-**0:40 — clicking Join on Builders Club**
+## voice-11 | 04:09.4-04:47.3 | Real wallet interactions
 
-> "I am joining the Builders Club circle. The application checks the network before doing anything: it will not ask the wallet to sign unless the wallet is on Sepolia. This guard is covered by an automated test."
+We now switch to archived real-wallet footage from October twenty-eighth, separate from the Demo story. Joining a circle opens MetaMask for the operator's confirmation. The application waits for a transaction receipt before updating membership. The edit shortens that waiting time. We then see the operator leave the circle and cancel a later request. Together, these moments show the difference between requesting an action, confirming it in the wallet, and observing the result. Cancelling a wallet request is not a contract permission failure.
 
-**0:55 — MetaMask prompt**
+## voice-12 | 04:47.3-05:21.0 | Three settlement paths
 
-> "The wallet opens. It shows which contract is being called — 0x8CDc…2406, the community contract — and the network fee, which is under zero point zero zero zero one ETH. Nothing is sent until this is confirmed."
+Three separate archived Sepolia jobs demonstrate settlement. Job one paid the provider after client approval. Job two refunded the client after the delivery deadline passed without a submitted delivery digest. In job three, the provider submitted delivery and claimed payment after the review window expired without client action. Receipts establish these paths; a Completed label alone does not. All payments use valueless test mUSD.
 
-**1:05 — confirmation and receipt**
+## voice-13 | 05:21.0-05:33.8 | Community to escrow: archived evidence
 
-> "Confirmed. The page reports the transaction hash and waits for the receipt, then reloads the state from the chain. This is not an optimistic UI update — the button changes because the contract says the membership now exists."
+A separate archived run linked team three to job five and settled one test mUSD. One operator controlled both accounts. This is not a payment by the Demo team shown earlier.
 
-**1:15 — the button becomes 'Leave circle'**
+## voice-14 | 05:33.8-06:07.9 | Bilateral confirmation: contract rules
 
-> "That is the change we made after finding the original wording confusing: previously this button said 'Joined', which looked like a status label but actually removed you from the circle. Now it says what it does."
+Here we show local Ganache contract tests, not Sepolia transactions. The proposing address attempts to confirm its own work. The test checks the reason, only other member, verifies that the work remains Proposed, and checks that the collaboration count stays zero. A passing negative test means the forbidden action was rejected. We then show the positive control: the other participant can confirm through the main flow. Both the assertion code and the actual execution result are visible.
 
-**1:25 — leaving again**
+## voice-15 | 06:07.9-06:42.1 | Evidence scope and product limits
 
-> "Leaving restores the previous state. Two transactions, both successful — and both verifiable by their block numbers."
+Each type of evidence answers a different question. Local tests check contract rules; Demo and simulated browser checks exercise interfaces; archived Sepolia records show particular transactions. The new views cover a loading window and have no push or unread service. Confirmation does not prove quality, and a community reference does not enforce payment. The sample service performs placeholder work. Demand, adoption and retention still need investigation.
 
-**1:40 — cancelling the signature**
+## voice-16 | 06:42.1-06:59.9 | AgentLedger · Team and sources
 
-> "Finally, what happens when the user refuses. The wallet prompt is dismissed, and the interface reports that the request was cancelled and that nothing was executed. No transaction is created and the account nonce does not change — the failure is visible, not silent."
-
-**1:48 — close**
-
-> "That is the full loop: discover, agree, produce, confirm, and settle — each step leaving a receipt on chain. The repository contains the report, the evidence, and the scripts to reproduce every number I quoted."
-
----
-
-## Production notes
-
-| Item | Value |
-| --- | --- |
-| Current file | `docs/project/assets/demo-full-en.mp4` (1:49, 1920×1080, H.264) |
-| Course limit | 15 minutes — this cut is well inside it |
-| Narration | Not recorded yet; this script is the missing piece |
-| Suggested pacing | Part 1 ≈ 30 s at a natural pace; Part 2 ≈ 80 s. If you speak faster, the stills can be held longer in the edit |
-| Language | English throughout, per the course requirement |
-| Cross-module claim | Safe to say the "community team -> escrow job" flow was demonstrated: post 4 -> team 4 (Active) -> job 4 funded with 1 mUSD -> submitted -> released, balances 99 / 1 / 0 (2026-10-28) |
+AgentLedger makes participation, agreement and settlement records inspectable. The report and repository explain the implementation, its checks, reused components and remaining limits. Thank you for watching our team's demonstration.
