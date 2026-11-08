@@ -1,3 +1,20 @@
+## 最终提交内容冻结（2026-11-08）
+
+- #78 已合入 #76，#76 已合入 main；提交内容固定为 `e078085334958f11f311365fef1ceea3d26db0e3`，版本标记 `v1.0.1-submission`。旧 `v1.0.0-submission` 不移动。后续记录 PR 只更新发布元数据，不改变本次审核通过的报告/PPT/视频/功能代码。
+- main verify CI 已通过：https://github.com/Zqqq-qq/comp7610-agentledger/actions/runs/42486690033/job/128749999340 。
+- PDF 22 页，SHA-256 `7cb3e56554b93440cb8a248b1cd99741e64cffad8a5106e50e84855db48e4dfe`。
+- PPT 11 页，全页校徽，6 个原生表格，823436 字节，SHA-256 `3bbfff70a4a5acaaf9e76db49ace7cc4eefa0c95de6f2c95b00370aa369e21a5`。提交名 `5-AgentLedger-Slides.pptx`，报告提交名 `5-AgentLedger-Report.pdf`。
+- 规范脚本从真实 Git blob 重算14项清单，补充23项，共37项（25项交付候选全部交叉核对）。五个合约地址从同一提交配置读取。
+- 源码包 `5-AgentLedger-Code.zip` 从该 SHA 直接 git archive；257 个文件逐一与 Git blob 比较，ZIP CRC 通过。视频包包含最终 MP4 和 SRT。
+- 本地材料及备份目录：`outputs/final-submission-2026-11-08`，校验信息见 `PACKAGE-MANIFEST.json`；完整备份另存 `outputs/backups`。不含个人互评表。
+- 组员审核完成情况来自张青本人通过 #76 comment-6722501989 转达；本次 agent 只做技术核对和打包，不冒充成员本人试听。
+- 仓库已公开。Chrome 无痕窗口确认文件页可免登录访问，Raw 会触发下载；GitHub 因文件较大不提供内嵌播放器。因此记录为公开下载可用，**未验证浏览器内在线播放**。视频链接 TXT 明确说明下载后播放方法。
+- 四项材料：报告PDF、PPTX、视频链接TXT、源码ZIP；另附视频ZIP供备份/必要时补交。**尚未操作 Moodle 提交，未产生回执，#11 保持开放。**
+
+以下段落保留为历史阶段记录；其中待审、旧哈希和旧标签不代表当前状态。
+
+---
+
 # 2026-11-08演示候选更新（尚未最终冻结）
 
 最终旁白视频已产出并提交本轮审阅；报告正文/PDF同步为v1.0-delivery-candidate-r2（22页）；当前整合基准main 7389bbe，包含#77的新README截图。成片与字幕的实际摘要及来源见[最终演示记录](FINAL_DEMO_2026-11-08.zh-CN.md)和`evidence/final-demo-delivery.json`。本轮未移动tag，未把工作副本候选摘要冒充合并后的规范冻结清单。
