@@ -1,0 +1,14 @@
+AgentLedger - COMP7610 final project demonstration
+
+Video file (public; no GitHub account required):
+https://raw.githubusercontent.com/Zqqq-qq/comp7610-agentledger/e078085334958f11f311365fef1ceea3d26db0e3/docs/project/assets/AgentLedger-final-v1.mp4
+
+Repository file page:
+https://github.com/Zqqq-qq/comp7610-agentledger/blob/e078085334958f11f311365fef1ceea3d26db0e3/docs/project/assets/AgentLedger-final-v1.mp4
+
+If your browser downloads the MP4 instead of playing it inline, open the downloaded file in a media player. GitHub's repository file preview does not embed this file.
+
+Duration: 6 minutes 59.92 seconds; 1920 x 1080, 30 fps; English narration and burned-in English captions.
+Frozen source commit: e078085334958f11f311365fef1ceea3d26db0e3
+Version tag: v1.0.1-submission
+Video SHA-256: 95ca9e0ec46e30f82e5e6d352399d15ef47d0f438d55653ee29707da24d4bb09

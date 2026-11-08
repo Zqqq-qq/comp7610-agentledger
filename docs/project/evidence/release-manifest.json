@@ -1,18 +1,18 @@
 {
   "schema": "agentledger-release-manifest-v1",
-  "generatedAt": "2026-11-03T09:03:24.225Z",
-  "commit": "bdb0a6f7d4b4057c88040b741b39ab53ceb89408",
-  "shortCommit": "bdb0a6f",
-  "tree": "1532491c497af9aeb7941542cd5933a02faaf949",
-  "commitSubject": "Merge pull request #70 from Zqqq-qq/codex/9-report-integration",
-  "commitDate": "2026-11-03T16:36:27+08:00",
+  "generatedAt": "2026-11-08T15:06:09.795Z",
+  "commit": "e078085334958f11f311365fef1ceea3d26db0e3",
+  "shortCommit": "e078085",
+  "tree": "628de45f6a2da1cfdd0e7a4e3774937e2bbbad88",
+  "commitSubject": "Merge pull request #76 from Zqqq-qq/codex/10-final-demo",
+  "commitDate": "2026-11-08T21:48:17+08:00",
   "isAncestorOfMain": true,
   "mainRef": "origin/main",
   "mainAncestry": {
     "origin/main": true,
-    "main": true
+    "main": false
   },
-  "tag": null,
+  "tag": "v1.0.1-submission",
   "deployment": {
     "chainId": 11155111,
     "chainName": "Ethereum Sepolia",
@@ -88,13 +88,13 @@
     },
     {
       "path": "docs/project/REPORT.md",
-      "bytes": 59609,
-      "sha256": "6295f5dafe6ae35adb5c64797b26bb89215671b7d00e5fbb2d2d4640ab549f69"
+      "bytes": 64108,
+      "sha256": "3e0ff98d51d12f78222f7c0e3388122bafe153d7e5a8182f38454f5c0948e38e"
     },
     {
       "path": "docs/project/REPORT.pdf",
-      "bytes": 71697,
-      "sha256": "a003ab601d93ec4bec491d57d79eac9d44b563cfee0e6327173e68ebcc7924c2"
+      "bytes": 75653,
+      "sha256": "7cb3e56554b93440cb8a248b1cd99741e64cffad8a5106e50e84855db48e4dfe"
     }
   ],
   "filePolicy": {
