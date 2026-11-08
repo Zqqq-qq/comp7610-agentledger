@@ -8,7 +8,7 @@
     10,
     11
   ],
-  "note": "Working-tree delivery candidate hashes, not a Git revision freeze. After review and merge, regenerate official manifests from actual final Git blobs and record final commit/tag. Existing manifests remain historical. This manifest excludes itself. Updated after a4fb588 review: video timing, report section 9 and official requirements. Audio/captions/chapter times unchanged. Slides added as an unapproved submission candidate. Report consistency audit r2 incorporates merged README screenshot PR #77. Historical manifests remain historical; no final freeze claimed.",
+  "note": "Working-tree delivery candidate hashes, not a Git revision freeze. After review and merge, regenerate official manifests from actual final Git blobs and record final commit/tag. Existing manifests remain historical. This manifest excludes itself. Updated after a4fb588 review: video timing, report section 9 and official requirements. Audio/captions/chapter times unchanged. Slides added as an unapproved submission candidate. Report consistency audit r2 incorporates merged README screenshot PR #77. Historical manifests remain historical; no final freeze claimed. Slides revised after c5241f4: 11 pages; report PDF/video unchanged. Prior 10-page slide checks describe historical candidates.",
   "video": {
     "durationSeconds": 419.92,
     "chapters": 16,
@@ -44,11 +44,11 @@
       "slides": "10 pages; package, layout/font and reimport passed; visually reviewed"
     },
     "fullSuiteCI": {
-      "head": "44adbb5eea18df6048e155b7f5998bc68c3f4c10",
+      "head": "c5241f4a516af6906acab8bdd211a27b2ff672db",
       "passed": 112,
       "failed": 0,
-      "run": "https://github.com/Zqqq-qq/comp7610-agentledger/actions/runs/42462640689",
-      "scope": "Named previous PR revision before report r2"
+      "run": "https://github.com/Zqqq-qq/comp7610-agentledger/actions/runs/42471190794",
+      "scope": "Verified preceding report/source revision, before this slide revision"
     },
     "selfCheckR2": {
       "status": "passed",
@@ -62,6 +62,16 @@
       "gasTableTotal": 24457402,
       "unchangedMediaAndCodeFrom": "44adbb5",
       "scope": "Agent technical checks only; independent human review remains pending."
+    },
+    "slidesRevisionR2": {
+      "pages": 11,
+      "nativeTables": 6,
+      "package": "passed",
+      "fontAndLayout": "passed, zero findings/warnings",
+      "firstPartyReimport": "passed",
+      "visualReview": "all 11 Artifact Tool renders; bundled LibreOffice export and changed-page inspection",
+      "sourceCiSnapshot": "c5241f4",
+      "independentHumanReview": "pending"
     }
   },
   "pending": [
@@ -98,13 +108,13 @@
     },
     {
       "path": "docs/project/CONTRIBUTIONS.md",
-      "bytes": 24568,
-      "sha256": "08f17b670ab1ad43d07febd53b02c23cb34ac28c501acdf948c1ab51b9a775b8"
+      "bytes": 25000,
+      "sha256": "14127b1eb263a96e8abaa45d9d45be375a2c058214fa2b40d562da47308dd4dc"
     },
     {
       "path": "docs/project/FINAL_DEMO_2026-11-08.zh-CN.md",
-      "bytes": 8168,
-      "sha256": "cbe3eb67f64eb5e1e6de31819cef72f51289978006fb5b839776e47b7d394c70"
+      "bytes": 8500,
+      "sha256": "cbe098c280e993acefc17b0fe2339767cd4498ae5d2f50c49ec534e207c3698d"
     },
     {
       "path": "docs/project/DEMO_SCRIPT.en.md",
@@ -118,13 +128,13 @@
     },
     {
       "path": "docs/project/RELEASE_CHECKLIST.zh-CN.md",
-      "bytes": 5212,
-      "sha256": "33d39ce35d283d75143d0fb0cf360486bd30a704b21136c0c773a5efc256c067"
+      "bytes": 5220,
+      "sha256": "60aef8997b92de7484bc50c2dd5b6af63877ce7329cf33e950213a9ccbd8f944"
     },
     {
       "path": "docs/project/RELEASE_FREEZE_DRAFT.zh-CN.md",
-      "bytes": 11037,
-      "sha256": "d6ba816328603fc983f1506b89b96e6ccd173d5a26d6b58f4f274f6d6e338afa"
+      "bytes": 11045,
+      "sha256": "9fe5f2ded0bba806ab62f451bed6559449355344c206978074d377653e83d779"
     },
     {
       "path": "docs/project/REPORT_RENDERING.md",
@@ -138,8 +148,8 @@
     },
     {
       "path": "docs/project/5-AgentLedger-Slides.pptx",
-      "bytes": 1208683,
-      "sha256": "80c47c3fb4461843ca177866983b4cddc35223c822ff10f53807f7a4f04be7de"
+      "bytes": 635818,
+      "sha256": "fdad5ebf08e1a4a0d0276b3974d89c3238449c71f897ca100d6d7f9bbc749d10"
     },
     {
       "path": "docs/project/SUBMISSION_REQUIREMENTS_2026-11-08.zh-CN.md",
@@ -178,9 +188,15 @@
     },
     {
       "path": "docs/project/DELIVERY_SELF_CHECK_2026-11-08.zh-CN.md",
-      "bytes": 2846,
-      "sha256": "52463a2a47f03a969e9ba2b845990e3cc34be4504599643db1e8f260d5cfbcb7"
+      "bytes": 3027,
+      "sha256": "147c751d655f975b2f1ce6f04834796dea1098078be98830dca06e5fc0d34c81"
+    },
+    {
+      "path": "docs/project/SLIDES_REVISION_2026-11-08.zh-CN.md",
+      "bytes": 2215,
+      "sha256": "d0435ecbcd4df9247c7a497a4ccc03fadf74a6a6dde26015da7feb1baf56cf42"
     }
   ],
-  "reportVersion": "v1.0-delivery-candidate-r2"
+  "reportVersion": "v1.0-delivery-candidate-r2",
+  "slidesVersion": "r2-11-slides"
 }
