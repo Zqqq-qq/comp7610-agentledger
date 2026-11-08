@@ -8,7 +8,7 @@
     10,
     11
   ],
-  "note": "Working-tree delivery candidate hashes, not a Git revision freeze. After review and merge, regenerate official manifests from actual final Git blobs and record final commit/tag. Existing manifests remain historical. This manifest excludes itself.",
+  "note": "Working-tree delivery candidate hashes, not a Git revision freeze. After review and merge, regenerate official manifests from actual final Git blobs and record final commit/tag. Existing manifests remain historical. This manifest excludes itself. Updated after a4fb588 review: video timing, report section 9 and official requirements. Audio/captions/chapter times unchanged. Slides added as an unapproved submission candidate.",
   "video": {
     "durationSeconds": 419.92,
     "chapters": 16,
@@ -28,20 +28,40 @@
     "mediaBytes": "match accepted local export",
     "fullVideoDecode": "passed during final export verification",
     "newSepoliaTransactions": false,
-    "newFullSuiteRun": false
+    "newFullSuiteRun": false,
+    "reviewFix": {
+      "fullDecode": "passed",
+      "changedSceneDecodedAudio": "unchanged",
+      "visualStateChecksSeconds": [
+        157.9,
+        158.1,
+        160.0,
+        203.3,
+        203.5,
+        204.0
+      ],
+      "captions": "SRT and narration unchanged; burned subtitles retained",
+      "slides": "10 pages; package, layout/font and reimport passed; visually reviewed"
+    },
+    "fullSuiteCI": {
+      "head": "a4fb5887830330a4696313b8fb45a860b81964ff",
+      "passed": 112,
+      "failed": 0,
+      "run": "https://github.com/Zqqq-qq/comp7610-agentledger/actions/runs/42460157056",
+      "scope": "Previous PR head before this documentation/video-only revision"
+    }
   },
   "pending": [
-    "peer review",
-    "remote backup / unified download location",
-    "official course requirements and deadline source",
-    "post-merge final Git freeze and version tag",
-    "actual course submission receipt"
+    "peer review of timing/report revisions and new slides",
+    "teacher-accessible video URL after review",
+    "post-merge final Git freeze/version and backup",
+    "actual group and individual course submission receipts"
   ],
   "files": [
     {
       "path": "docs/project/assets/AgentLedger-final-v1.mp4",
-      "bytes": 16151313,
-      "sha256": "6f92447a98c5f46bcfe52bb2ff74082bd16e9628cd7ee41e2720cb66dcf061d8"
+      "bytes": 16135940,
+      "sha256": "95ca9e0ec46e30f82e5e6d352399d15ef47d0f438d55653ee29707da24d4bb09"
     },
     {
       "path": "docs/project/assets/AgentLedger-final-v1.en.srt",
@@ -50,13 +70,13 @@
     },
     {
       "path": "docs/project/REPORT.md",
-      "bytes": 61158,
-      "sha256": "cf35a7b1518db7dfe4fdcdd70a0958e8148f7c4688892d31036f3a8aee1d7181"
+      "bytes": 62745,
+      "sha256": "ef2f224695c65cca67cc1e70d2208cf056be0c94d8f06c272212367caf8a88b7"
     },
     {
       "path": "docs/project/REPORT.pdf",
-      "bytes": 73668,
-      "sha256": "875d0b7e6aaa7ed40c6ef26eb548d363578f6529fdf92294274a1bb179b4c9c2"
+      "bytes": 74658,
+      "sha256": "7ae128a87ecce5a7e41374cad340b7b52d73b70fc4157c94ffc7b33d39a16dea"
     },
     {
       "path": "docs/assets/architecture.svg",
@@ -65,13 +85,13 @@
     },
     {
       "path": "docs/project/CONTRIBUTIONS.md",
-      "bytes": 23464,
-      "sha256": "b31626745da6b9d19ac72ddbabc147ce0a07f33740217487d084487f4c2a79b7"
+      "bytes": 24026,
+      "sha256": "2c4adbb68fb6873e7d031bdf291d48f4eca9e527d9a6d159ec085e379c3b5d7d"
     },
     {
       "path": "docs/project/FINAL_DEMO_2026-11-08.zh-CN.md",
-      "bytes": 6067,
-      "sha256": "e9f2be98d3aaf2b070cc05fee9807b943e5f900c9292c3538cd295920b3b9a13"
+      "bytes": 7265,
+      "sha256": "127d2d20120b215603858033328ffe2e8bad87dead2e8995e41955b16f51d277"
     },
     {
       "path": "docs/project/DEMO_SCRIPT.en.md",
@@ -85,13 +105,13 @@
     },
     {
       "path": "docs/project/RELEASE_CHECKLIST.zh-CN.md",
-      "bytes": 4960,
-      "sha256": "1cb5d5aab4456b9ef2f71ee745b43f1668945d19864aeec2aa9ed267452daf87"
+      "bytes": 5176,
+      "sha256": "a5657a2893e0fcb7a6a4de0150a6edd0a374e440807417819e53f16f14d9ab68"
     },
     {
       "path": "docs/project/RELEASE_FREEZE_DRAFT.zh-CN.md",
-      "bytes": 10868,
-      "sha256": "05401ecfb7cb722b23de563a523dcb3bd93f6c4e39b54d05de9e0fd3c4e04262"
+      "bytes": 10960,
+      "sha256": "7f95983af231835f55bf6607d30e100fc585b8c2c1734e4c35a99832db00f689"
     },
     {
       "path": "docs/project/REPORT_RENDERING.md",
@@ -102,6 +122,16 @@
       "path": "docs/project/render-report-review.py",
       "bytes": 7000,
       "sha256": "0deedcd7dca6e4c06994b28431afc777d0dfcac5eccd3b4a037d3620316503df"
+    },
+    {
+      "path": "docs/project/5-AgentLedger-Slides.pptx",
+      "bytes": 1208683,
+      "sha256": "80c47c3fb4461843ca177866983b4cddc35223c822ff10f53807f7a4f04be7de"
+    },
+    {
+      "path": "docs/project/SUBMISSION_REQUIREMENTS_2026-11-08.zh-CN.md",
+      "bytes": 2085,
+      "sha256": "06e939236709c98af82058821835b2a97a070f0f4e6d139690876fa8170f804e"
     }
   ]
 }
