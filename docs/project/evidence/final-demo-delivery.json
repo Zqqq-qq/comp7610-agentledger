@@ -8,7 +8,7 @@
     10,
     11
   ],
-  "note": "Working-tree delivery candidate hashes, not a Git revision freeze. After review and merge, regenerate official manifests from actual final Git blobs and record final commit/tag. Existing manifests remain historical. This manifest excludes itself. Updated after a4fb588 review: video timing, report section 9 and official requirements. Audio/captions/chapter times unchanged. Slides added as an unapproved submission candidate. Report consistency audit r2 incorporates merged README screenshot PR #77. Historical manifests remain historical; no final freeze claimed. Slides revised after c5241f4: 11 pages; report PDF/video unchanged. Prior 10-page slide checks describe historical candidates. Branding handoff: full-colour HKU CDS lockup and course name added only to slides 1 and 11 of the a3a00b5 11-slide deck. Candidate hashes refreshed; final Git freeze and human review remain separate.",
+  "note": "Working-tree delivery candidate hashes, not a Git revision freeze. After review and merge, regenerate official manifests from actual final Git blobs and record final commit/tag. Existing manifests remain historical. This manifest excludes itself. Updated after a4fb588 review: video timing, report section 9 and official requirements. Audio/captions/chapter times unchanged. Slides added as an unapproved submission candidate. Report consistency audit r2 incorporates merged README screenshot PR #77. Historical manifests remain historical; no final freeze claimed. Slides revised after c5241f4: 11 pages; report PDF/video unchanged. Prior 10-page slide checks describe historical candidates. Branding handoff: full-colour HKU CDS lockup and course name added only to slides 1 and 11 of the a3a00b5 11-slide deck. Candidate hashes refreshed; final Git freeze and human review remain separate. Branding r2: full-colour lockup retained on cover/closing with course name; smaller matching lockup added to every interior slide. Body content unchanged. Updated candidate hashes do not replace final human review/Git freeze.",
   "video": {
     "durationSeconds": 419.92,
     "chapters": 16,
@@ -148,8 +148,8 @@
     },
     {
       "path": "docs/project/5-AgentLedger-Slides.pptx",
-      "bytes": 670415,
-      "sha256": "5d2faace6a98bd54065ae6d52946d6c77357b31efbab0e9874736f013c04be4f"
+      "bytes": 823436,
+      "sha256": "3bbfff70a4a5acaaf9e76db49ace7cc4eefa0c95de6f2c95b00370aa369e21a5"
     },
     {
       "path": "docs/project/SUBMISSION_REQUIREMENTS_2026-11-08.zh-CN.md",
@@ -203,8 +203,8 @@
     },
     {
       "path": "docs/project/SLIDES_BRANDING_2026-11-08.zh-CN.md",
-      "bytes": 1688,
-      "sha256": "75f83a896aaa0b2bcd50919eab89b5e468b000f7ff82c6964683f7a69d290816"
+      "bytes": 2393,
+      "sha256": "c20299176ed6690171d9636b547723d8af808ca9c970a30840749200ce5a439a"
     }
   ],
   "reportVersion": "v1.0-delivery-candidate-r2",
